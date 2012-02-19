@@ -8,12 +8,14 @@ package ge2012;
  *
  * @author dcentore
  */
-public class GE2012 {
+public class GE2012
+{
 
     /**
      * @param args the command line arguments
      */
-    public static void main(String[] args) {
+    public static void main(String[] args)
+    {
         System.out.println("Hello folks");
     }
 }
