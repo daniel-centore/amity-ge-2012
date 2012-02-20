@@ -19,24 +19,32 @@ public class GE2012
         System.out.println("Hello folks");
         System.out.println("Okay, so what I'm going to show you how to do is commit.");
         System.out.println("Committing in mercurial (hg) is NOT like svn. It only keeps it on your local hard drive. Watch.");
-        
+
         System.out.println("It went away! Okay, we just reverted a code change. Now let's make a change that I decide is ready for the main repo.");
-        
+
         foo();
-        
+
         System.out.println("Okay, first lets commit this to mine.");
 
         // So, see how it kept all my code? Sweet, eh?
         // Alright, so here's how we commit in NetBeans
-        
+
         // Okay, looks like I'm ready to push it onto the main repo
-        
+
+
+        // Now, what happens if TWO PEOPLE MAKE A CHANGE AT THE SAME TIME (gasp).
         // Now, for the sake of netbeans (ew) let's show you how to do the same stuff there.
-        
+
         bar();
     }
-    //CONFLICT!!
-    
+
+    // Looks like I made a change :-o
+    // But NetBeans added comments! Gasp!
+    // So, now first I commit then I'll push.
+    static void foo()
+    {
+    }
+
     private static void bar()
     {
 		// Looks like I made a change :-o
@@ -45,8 +53,5 @@ public class GE2012
     	// So, now first I commit then I'll push.
 	}
 
-	static void foo()
-    {
-    	// CONFLICT!!
-    }
+    
 }
