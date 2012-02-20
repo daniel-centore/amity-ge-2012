@@ -25,9 +25,21 @@ public class GE2012
         foo();
         
         System.out.println("Okay, first lets commit this to mine.");
+
+        // Now, for the sake of netbeans (ew) let's show you how to do the same stuff there.
+        
+        bar();
     }
     
-    static void foo()
+    private static void bar()
+    {
+		// Looks like I made a change :-o
+		
+    	// But NetBeans added comments! Gasp!
+    	// So, now first I commit then I'll push.
+	}
+
+	static void foo()
     {
     	
     }
