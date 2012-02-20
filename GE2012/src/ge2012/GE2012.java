@@ -26,6 +26,11 @@ public class GE2012
         
         System.out.println("Okay, first lets commit this to mine.");
 
+        // So, see how it kept all my code? Sweet, eh?
+        // Alright, so here's how we commit in NetBeans
+        
+        // Okay, looks like I'm ready to push it onto the main repo
+        
         // Now, for the sake of netbeans (ew) let's show you how to do the same stuff there.
         
         bar();
