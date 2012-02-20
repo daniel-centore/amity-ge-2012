@@ -28,6 +28,8 @@ public class GE2012
         
         // So, see how it kept all my code? Sweet, eh?
         // Alright, so here's how we commit in NetBeans
+        
+        // Okay, looks like I'm ready to push it onto the main repo
     }
     
     static void foo()
