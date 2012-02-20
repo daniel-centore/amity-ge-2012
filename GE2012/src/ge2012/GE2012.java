@@ -35,6 +35,7 @@ public class GE2012
         
         bar();
     }
+    //CONFLICT!!
     
     private static void bar()
     {
@@ -46,6 +47,6 @@ public class GE2012
 
 	static void foo()
     {
-    	
+    	// CONFLICT!!
     }
 }
