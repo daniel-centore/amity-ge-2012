@@ -25,6 +25,9 @@ public class GE2012
         foo();
         
         System.out.println("Okay, first lets commit this to mine.");
+        
+        // So, see how it kept all my code? Sweet, eh?
+        // Alright, so here's how we commit in NetBeans
     }
     
     static void foo()
