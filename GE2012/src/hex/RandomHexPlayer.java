@@ -25,9 +25,9 @@ public class RandomHexPlayer extends GamePlayer {
 		int which = Util.randInt(0, list.size()-1);
 		return list.get(which);
 	}
-	public static void main(String [] args)
-	{
-		GamePlayer p = new RandomHexPlayer("Random+");
-		p.compete(args, 1);
-	}
+//	public static void main(String [] args)
+//	{
+//		GamePlayer p = new RandomHexPlayer("Random+");
+//		p.compete(args, 1);
+//	}
 }

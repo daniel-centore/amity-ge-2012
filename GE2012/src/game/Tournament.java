@@ -247,11 +247,21 @@ public class Tournament {
 		System.out.println();
 	}
 
-	public static void main(String[] args)
+//	public static void main(String[] args)
+//	{
+//		tournamentParams = new Params("config/tournament.txt");
+//		System.out.println("Starting Hex tournament");
+//		System.out.printf("%d clients%n", tournamentParams.integer("NUMCLIENTS"));
+//		gameParams = new Params("config/hex.txt");
+//		Tournament.launchTournament(new HexState(),	new HexMove());
+//		System.out.println("Tournament is over");
+//	}
+	
+	public static void initializeServer()
 	{
 		tournamentParams = new Params("config/tournament.txt");
 		System.out.println("Starting Hex tournament");
-		System.out.printf("%d clients%n", tournamentParams.integer("NUMCLIENTS"));
+//		System.out.printf("%d clients%n", tournamentParams.integer("NUMCLIENTS"));
 		gameParams = new Params("config/hex.txt");
 		Tournament.launchTournament(new HexState(),	new HexMove());
 		System.out.println("Tournament is over");
