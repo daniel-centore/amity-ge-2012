@@ -1,5 +1,7 @@
 package solution;
 
+import java.util.ArrayList;
+
 import hex.*;
 import game.*;
 
@@ -69,8 +71,24 @@ public class HexPlayer_Amity extends GamePlayer
 	 */
 	public GameMove getMove(GameState state, String lastMove)
 	{
-		HexState board = (HexState)state;
-		return null;
+		HexState board = (HexState) state;
+		board.printConnectivity();
+		ArrayList<HexMove> list = new ArrayList<HexMove>();
+		HexMove mv = new HexMove();
+		for (int r = 0; r < HexState.N; r++)
+		{
+			for (int c = 0; c < HexState.N; c++)
+			{
+				mv.row = r;
+				mv.col = c;
+				if (board.moveOK(mv))
+				{
+					list.add((HexMove) mv.clone());
+				}
+			}
+		}
+		int which = Util.randInt(0, list.size() - 1);
+		return list.get(which);
 	}
 
 }

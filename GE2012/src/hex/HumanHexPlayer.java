@@ -13,6 +13,7 @@ public class HumanHexPlayer extends RandomHexPlayer {
 		super(nname);
 		frame = new GameFrame(nickname, new HexCanvas());
 		frame.setVisible(true);
+		frame.setResizable(false);
 		gameState = new HexState();
 	}
 	public void timeOfLastMove(double secs) {
@@ -41,7 +42,10 @@ public class HumanHexPlayer extends RandomHexPlayer {
 			catch (Exception e) { 		}
 			OK = game.moveOK(move);
 			if (!OK) {
-				JOptionPane.showMessageDialog(null, "Bad move" + move.toString(), "Error", JOptionPane.ERROR_MESSAGE);
+				if (move.col == 5 || move.row == 5)
+					JOptionPane.showMessageDialog(null, "You may not start in the middle!", "Illegal Move", JOptionPane.ERROR_MESSAGE);
+				
+				// otherwise you clicked on the line which we don't care about
 			}
 		} while (!OK);
 
