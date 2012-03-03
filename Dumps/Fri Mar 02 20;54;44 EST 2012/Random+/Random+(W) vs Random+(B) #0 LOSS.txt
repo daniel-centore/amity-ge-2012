@@ -1,0 +1,415 @@
+Random+ (W) played 3-4
+.......
+.......
+.......
+....W..
+.......
+.......
+.......
+[AWAY 1 GAME_ON]
+Random+ (B) played 6-1
+.......
+.......
+.......
+....W..
+.......
+.......
+.B.....
+[HOME 2 GAME_ON]
+Random+ (W) played 1-1
+.......
+.W.....
+.......
+....W..
+.......
+.......
+.B.....
+[AWAY 3 GAME_ON]
+Random+ (B) played 4-2
+.......
+.W.....
+.......
+....W..
+..B....
+.......
+.B.....
+[HOME 4 GAME_ON]
+Random+ (W) played 3-1
+.......
+.W.....
+.......
+.W..W..
+..B....
+.......
+.B.....
+[AWAY 5 GAME_ON]
+Random+ (B) played 0-2
+..B....
+.W.....
+.......
+.W..W..
+..B....
+.......
+.B.....
+[HOME 6 GAME_ON]
+Random+ (W) played 2-2
+..B....
+.W.....
+..W....
+.W..W..
+..B....
+.......
+.B.....
+[AWAY 7 GAME_ON]
+Random+ (B) played 1-4
+..B....
+.W..B..
+..W....
+.W..W..
+..B....
+.......
+.B.....
+[HOME 8 GAME_ON]
+Random+ (W) played 1-6
+..B....
+.W..B.W
+..W....
+.W..W..
+..B....
+.......
+.B.....
+[AWAY 9 GAME_ON]
+Random+ (B) played 5-3
+..B....
+.W..B.W
+..W....
+.W..W..
+..B....
+...B...
+.B.....
+[HOME 10 GAME_ON]
+Random+ (W) played 5-5
+..B....
+.W..B.W
+..W....
+.W..W..
+..B....
+...B.W.
+.B.....
+[AWAY 11 GAME_ON]
+Random+ (B) played 1-2
+..B....
+.WB.B.W
+..W....
+.W..W..
+..B....
+...B.W.
+.B.....
+[HOME 12 GAME_ON]
+Random+ (W) played 2-3
+..B....
+.WB.B.W
+..WW...
+.W..W..
+..B....
+...B.W.
+.B.....
+[AWAY 13 GAME_ON]
+Random+ (B) played 0-1
+.BB....
+.WB.B.W
+..WW...
+.W..W..
+..B....
+...B.W.
+.B.....
+[HOME 14 GAME_ON]
+Random+ (W) played 5-2
+.BB....
+.WB.B.W
+..WW...
+.W..W..
+..B....
+..WB.W.
+.B.....
+[AWAY 15 GAME_ON]
+Random+ (B) played 4-4
+.BB....
+.WB.B.W
+..WW...
+.W..W..
+..B.B..
+..WB.W.
+.B.....
+[HOME 16 GAME_ON]
+Random+ (W) played 5-6
+.BB....
+.WB.B.W
+..WW...
+.W..W..
+..B.B..
+..WB.WW
+.B.....
+[AWAY 17 GAME_ON]
+Random+ (B) played 2-5
+.BB....
+.WB.B.W
+..WW.B.
+.W..W..
+..B.B..
+..WB.WW
+.B.....
+[HOME 18 GAME_ON]
+Random+ (W) played 4-0
+.BB....
+.WB.B.W
+..WW.B.
+.W..W..
+W.B.B..
+..WB.WW
+.B.....
+[AWAY 19 GAME_ON]
+Random+ (B) played 4-6
+.BB....
+.WB.B.W
+..WW.B.
+.W..W..
+W.B.B.B
+..WB.WW
+.B.....
+[HOME 20 GAME_ON]
+Random+ (W) played 6-5
+.BB....
+.WB.B.W
+..WW.B.
+.W..W..
+W.B.B.B
+..WB.WW
+.B...W.
+[AWAY 21 GAME_ON]
+Random+ (B) played 6-0
+.BB....
+.WB.B.W
+..WW.B.
+.W..W..
+W.B.B.B
+..WB.WW
+BB...W.
+[HOME 22 GAME_ON]
+Random+ (W) played 3-2
+.BB....
+.WB.B.W
+..WW.B.
+.WW.W..
+W.B.B.B
+..WB.WW
+BB...W.
+[AWAY 23 GAME_ON]
+Random+ (B) played 0-3
+.BBB...
+.WB.B.W
+..WW.B.
+.WW.W..
+W.B.B.B
+..WB.WW
+BB...W.
+[HOME 24 GAME_ON]
+Random+ (W) played 2-4
+.BBB...
+.WB.B.W
+..WWWB.
+.WW.W..
+W.B.B.B
+..WB.WW
+BB...W.
+[AWAY 25 GAME_ON]
+Random+ (B) played 2-1
+.BBB...
+.WB.B.W
+.BWWWB.
+.WW.W..
+W.B.B.B
+..WB.WW
+BB...W.
+[HOME 26 GAME_ON]
+Random+ (W) played 6-6
+.BBB...
+.WB.B.W
+.BWWWB.
+.WW.W..
+W.B.B.B
+..WB.WW
+BB...WW
+[AWAY 27 GAME_ON]
+Random+ (B) played 1-0
+.BBB...
+BWB.B.W
+.BWWWB.
+.WW.W..
+W.B.B.B
+..WB.WW
+BB...WW
+[HOME 28 GAME_ON]
+Random+ (W) played 5-1
+.BBB...
+BWB.B.W
+.BWWWB.
+.WW.W..
+W.B.B.B
+.WWB.WW
+BB...WW
+[AWAY 29 GAME_ON]
+Random+ (B) played 5-0
+.BBB...
+BWB.B.W
+.BWWWB.
+.WW.W..
+W.B.B.B
+BWWB.WW
+BB...WW
+[HOME 30 GAME_ON]
+Random+ (W) played 3-6
+.BBB...
+BWB.B.W
+.BWWWB.
+.WW.W.W
+W.B.B.B
+BWWB.WW
+BB...WW
+[AWAY 31 GAME_ON]
+Random+ (B) played 2-0
+.BBB...
+BWB.B.W
+BBWWWB.
+.WW.W.W
+W.B.B.B
+BWWB.WW
+BB...WW
+[HOME 32 GAME_ON]
+Random+ (W) played 0-4
+.BBBW..
+BWB.B.W
+BBWWWB.
+.WW.W.W
+W.B.B.B
+BWWB.WW
+BB...WW
+[AWAY 33 GAME_ON]
+Random+ (B) played 3-5
+.BBBW..
+BWB.B.W
+BBWWWB.
+.WW.WBW
+W.B.B.B
+BWWB.WW
+BB...WW
+[HOME 34 GAME_ON]
+Random+ (W) played 1-3
+.BBBW..
+BWBWB.W
+BBWWWB.
+.WW.WBW
+W.B.B.B
+BWWB.WW
+BB...WW
+[AWAY 35 GAME_ON]
+Random+ (B) played 0-5
+.BBBWB.
+BWBWB.W
+BBWWWB.
+.WW.WBW
+W.B.B.B
+BWWB.WW
+BB...WW
+[HOME 36 GAME_ON]
+Random+ (W) played 0-0
+WBBBWB.
+BWBWB.W
+BBWWWB.
+.WW.WBW
+W.B.B.B
+BWWB.WW
+BB...WW
+[AWAY 37 GAME_ON]
+Random+ (B) played 1-5
+WBBBWB.
+BWBWBBW
+BBWWWB.
+.WW.WBW
+W.B.B.B
+BWWB.WW
+BB...WW
+[HOME 38 GAME_ON]
+Random+ (W) played 4-3
+WBBBWB.
+BWBWBBW
+BBWWWB.
+.WW.WBW
+W.BWB.B
+BWWB.WW
+BB...WW
+[AWAY 39 GAME_ON]
+Random+ (B) played 5-4
+WBBBWB.
+BWBWBBW
+BBWWWB.
+.WW.WBW
+W.BWB.B
+BWWBBWW
+BB...WW
+[HOME 40 GAME_ON]
+Random+ (W) played 0-6
+WBBBWBW
+BWBWBBW
+BBWWWB.
+.WW.WBW
+W.BWB.B
+BWWBBWW
+BB...WW
+[AWAY 41 GAME_ON]
+Random+ (B) played 3-3
+WBBBWBW
+BWBWBBW
+BBWWWB.
+.WWBWBW
+W.BWB.B
+BWWBBWW
+BB...WW
+[HOME 42 GAME_ON]
+Random+ (W) played 4-5
+WBBBWBW
+BWBWBBW
+BBWWWB.
+.WWBWBW
+W.BWBWB
+BWWBBWW
+BB...WW
+[AWAY 43 GAME_ON]
+Random+ (B) played 2-6
+WBBBWBW
+BWBWBBW
+BBWWWBB
+.WWBWBW
+W.BWBWB
+BWWBBWW
+BB...WW
+[HOME 44 GAME_ON]
+Random+ (W) played 4-1
+WBBBWBW
+BWBWBBW
+BBWWWBB
+.WWBWBW
+WWBWBWB
+BWWBBWW
+BB...WW
+[AWAY 45 GAME_ON]
+Random+ (B) played 6-2
+WBBBWBW
+BWBWBBW
+BBWWWBB
+.WWBWBW
+WWBWBWB
+BWWBBWW
+BBB..WW
+[HOME 46 AWAY_WIN]
+Random+ (B) won.

@@ -74,6 +74,9 @@ public class HexCanvas extends GameCanvas {
     public void paint(Graphics g)
     {
     	HexState st = (HexState)state;
+    	if (st == null)
+    		return;
+    	
     	if (null == st.board) {
     		System.out.println("null board");
     	}
