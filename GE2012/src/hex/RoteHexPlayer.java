@@ -35,9 +35,9 @@ public class RoteHexPlayer extends GamePlayer {
 		return null;
 	}
 
-	public static void main(String [] args)
-	{
-		GamePlayer p = new RoteHexPlayer("Rote+");
-		p.compete(args, 1);
-	}
+//	public static void main(String [] args)
+//	{
+//		GamePlayer p = new RoteHexPlayer("Rote+");
+//		p.compete(args, 1);
+//	}
 }

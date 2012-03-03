@@ -64,9 +64,9 @@ public class HumanHexPlayer extends RandomHexPlayer {
 		}
 	}
 	
-	public static void main(String[] args)
-	{
-		GamePlayer p = new HumanHexPlayer("HUMAN");	
-		p.compete(args);
-	}
+//	public static void main(String[] args)
+//	{
+//		GamePlayer p = new HumanHexPlayer("HUMAN");	
+//		p.compete(args);
+//	}
 }

@@ -6,9 +6,9 @@ import game.*;
 public class HexPlayer_Amity extends GamePlayer
 {
 
-	public HexPlayer_Amity(String n)
+	public HexPlayer_Amity()
 	{
-		super(n, new HexState(), false);
+		super("Amity Regional High School", new HexState(), false);
 	}
 
 	/**
@@ -72,9 +72,4 @@ public class HexPlayer_Amity extends GamePlayer
 		return null;
 	}
 
-	public static void main(String[] args)
-	{
-		GamePlayer p = new HexPlayer_Amity("Amity Regional High School"); // give your player a name here
-		p.compete(args, 1);
-	}
 }
