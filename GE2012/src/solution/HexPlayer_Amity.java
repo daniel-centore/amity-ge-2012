@@ -69,6 +69,7 @@ public class HexPlayer_Amity extends GamePlayer
 	 */
 	public GameMove getMove(GameState state, String lastMove)
 	{
+		HexState board = (HexState)state;
 		return null;
 	}
 
