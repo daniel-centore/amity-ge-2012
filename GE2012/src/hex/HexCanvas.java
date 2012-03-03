@@ -63,12 +63,18 @@ public class HexCanvas extends GameCanvas {
     	if (who == HexState.homeSym) {
     		g.setColor(Color.WHITE);
     		g.fillPolygon(ptX, ptY, 6);
+    		g.setColor(Color.black);
+    		g.drawString("("+r+","+c+")", (int) cx - 20, (int) cy);
     	} else if (who == HexState.awaySym) {
     		g.setColor(Color.BLACK);
     		g.fillPolygon(ptX, ptY, 6);
+    		g.setColor(Color.white);
+    		g.drawString("("+r+","+c+")", (int) cx - 20, (int) cy);
     	} else {
     		g.setColor(Color.LIGHT_GRAY);
     		g.drawPolygon(ptX, ptY, 6);
+    		g.setColor(Color.black);
+    		g.drawString("("+r+","+c+")", (int) cx - 20, (int) cy);
     	}
     }
     public void paint(Graphics g)
