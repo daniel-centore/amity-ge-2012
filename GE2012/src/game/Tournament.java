@@ -189,7 +189,7 @@ public class Tournament
 							clients[g.h].busy = clients[g.a].busy = true;
 							threads.add(game);
 							schedule.remove(i);
-							// System.out.printf("%s-%s (%d)%n", clients[g.h].name, clients[g.a].name, remain);
+							System.out.printf("%s-%s (%d)%n", clients[g.h].name, clients[g.a].name, remain);
 							cont = true;
 						}
 					}
@@ -251,55 +251,55 @@ public class Tournament
 			{
 				clients[j].simpleMsg("DONE");
 			}
-			// System.out.printf("%13s ", "");
+			System.out.printf("%13s ", "");
 			for (p1 = 0; p1 < NUM_CLIENTS; p1++)
 			{
-				// System.out.printf("%13s ", printableName(clients[p1].name));
+				System.out.printf("%13s ", printableName(clients[p1].name));
 			}
 			System.out.println();
 
 			for (p1 = 0; p1 < NUM_CLIENTS; p1++)
 			{
-				// System.out.printf("%13s ", printableName(clients[p1].name));
+				System.out.printf("%13s ", printableName(clients[p1].name));
 				for (p2 = 0; p2 < NUM_CLIENTS; p2++)
 				{
 					if (p1 == p2)
 					{
-						// System.out.printf("%13s ", "");
+						System.out.printf("%13s ", "");
 					}
 					else
 					{
-						// System.out.printf("(%3d %3d %3d) ", headToHeadSummary[p1][p2][0],
-						// headToHeadSummary[p1][p2][1],
-						// headToHeadSummary[p1][p2][2]);
+						System.out.printf("(%3d %3d %3d) ", headToHeadSummary[p1][p2][0],
+								headToHeadSummary[p1][p2][1],
+								headToHeadSummary[p1][p2][2]);
 					}
 				}
-				// System.out.printf("(%3d %3d %3d)%n", homeSummary[p1][0],
-				// homeSummary[p1][1],
-				// homeSummary[p1][2]);
+				System.out.printf("(%3d %3d %3d)%n", homeSummary[p1][0],
+						homeSummary[p1][1],
+						homeSummary[p1][2]);
 			}
 		} catch (Exception e)
 		{
 			System.out.println("Server problem" + e);
 		}
 
-		// System.out.printf("%13s ", "");
+		System.out.printf("%13s ", "");
 		for (p1 = 0; p1 < NUM_CLIENTS; p1++)
 		{
-			// System.out.printf("(%3d %3d %3d) ", awaySummary[p1][0],
-			// awaySummary[p1][1],
-			// awaySummary[p1][2]);
+			System.out.printf("(%3d %3d %3d) ", awaySummary[p1][0],
+					awaySummary[p1][1],
+					awaySummary[p1][2]);
 		}
 
-		// System.out.printf("%n%n");
+		System.out.printf("%n%n");
 		for (p1 = 0; p1 < NUM_CLIENTS; p1++)
 		{
-			// System.out.printf("%13s %3s (%3d %3d %3d)%n", printableName(clients[p1].name),
-			// clients[p1].DQd ? "DQd" : "  ",
-			// totalSummary[p1][0], totalSummary[p1][1],
-			// totalSummary[p1][2]);
+			System.out.printf("%13s %3s (%3d %3d %3d)%n", printableName(clients[p1].name),
+					clients[p1].DQd ? "DQd" : "  ",
+					totalSummary[p1][0], totalSummary[p1][1],
+					totalSummary[p1][2]);
 		}
-		// System.out.println();
+		System.out.println();
 	}
 
 	// public static void main(String[] args)
