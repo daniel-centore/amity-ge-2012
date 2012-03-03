@@ -10,7 +10,6 @@ public class RandomHexPlayer extends GamePlayer {
 	public GameMove getMove(GameState state, String lastMove)
 	{
 		HexState board = (HexState)state;
-		board.printConnectivity();
 		ArrayList<HexMove> list = new ArrayList<HexMove>();  
 		HexMove mv = new HexMove();
 		for (int r=0; r<HexState.N; r++) {
