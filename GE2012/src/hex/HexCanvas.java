@@ -67,7 +67,7 @@ public class HexCanvas extends GameCanvas
 
 	private void renderHex(Graphics g, int r, int c, char who) // , boolean lastMove
 	{
-        char[] col = new char[]{'a','b','c','d','e','f','g','h','i','j','k','l'};
+		char[] col = new char[] { 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l' };
 		double cx = getX(r, c);
 		double cy = getY(r, c);
 		for (int i = 0; i < 6; i++)
@@ -76,26 +76,28 @@ public class HexCanvas extends GameCanvas
 			ptX[i] = (int) (HEX_RAD * Math.cos(angle) + cx);
 			ptY[i] = (int) (HEX_RAD * Math.sin(angle) + cy);
 		}
+		String k = " " + col[c] + "" + r;
 		if (who == HexState.homeSym)
 		{
 			g.setColor(Color.WHITE);
 			g.fillPolygon(ptX, ptY, 6);
 			g.setColor(Color.black);
-			g.drawString("(" + r + "," + col[c] + ")", (int) cx - 20, (int) cy);
+			g.drawString(k, (int) cx - 20, (int) cy);
 		}
 		else if (who == HexState.awaySym)
 		{
 			g.setColor(Color.BLACK);
 			g.fillPolygon(ptX, ptY, 6);
 			g.setColor(Color.white);
-			g.drawString("(" + r + "," + col[c] + ")", (int) cx - 20, (int) cy);
+			g.drawString(k, (int) cx - 20, (int) cy);
+			// g.drawString("(" + r + "," + col[c] + ")", (int) cx - 20, (int) cy);
 		}
 		else
 		{
 			g.setColor(Color.LIGHT_GRAY);
 			g.drawPolygon(ptX, ptY, 6);
 			g.setColor(Color.black);
-			g.drawString("(" + r + "," + col[c] + ")", (int) cx - 20, (int) cy);
+			g.drawString(k, (int) cx - 20, (int) cy);
 		}
 	}
 
