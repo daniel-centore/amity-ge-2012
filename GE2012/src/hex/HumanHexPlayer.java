@@ -32,8 +32,6 @@ public class HumanHexPlayer extends RandomHexPlayer
 
 	public GameMove getMove(GameState game, String lastMove)
 	{
-		DebugWindow.println("Hello");
-
 		char ch = side == GameState.Who.HOME ? HexState.homeSym : HexState.awaySym;
 		frame.setTitle("My move (" + ch + ")");
 		if (!lastMove.equals("--") && frame.canvas.move != null)

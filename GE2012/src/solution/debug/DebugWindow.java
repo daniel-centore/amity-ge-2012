@@ -1,11 +1,5 @@
 package solution.debug;
 
-import java.awt.BorderLayout;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
-
-import javax.swing.JFrame;
-import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
 public class DebugWindow
@@ -46,6 +40,12 @@ public class DebugWindow
 		updateLabels();
 	}
 	
+	public static void resetGameTime()
+	{
+		ms = System.currentTimeMillis();
+		updateLabels();
+	}
+	
 	public static void updateLabels()
 	{
 		int secs = (int) ((System.currentTimeMillis() - ms) / 1000); // total game secs
@@ -69,7 +69,7 @@ public class DebugWindow
 		int secs = (int) ((System.currentTimeMillis() - ms) / 1000); // total game secs
 
 		JTextArea text = df.getTextArea();
-		text.append(formatSecs(secs) + ">" + s + "\n");
+		text.append(formatSecs(GAME_TIME - secs) + ">" + s + "\n");
 		text.setCaretPosition(text.getDocument().getLength());
 	}
 

@@ -2,6 +2,7 @@ package solution;
 
 import java.util.ArrayList;
 
+import solution.debug.DebugFrame;
 import solution.debug.DebugWindow;
 
 import hex.*;
@@ -23,6 +24,8 @@ public class HexPlayer_Amity extends GamePlayer
 	 */
 	public void init()
 	{
+		DebugWindow.println("Amity: Began Init");
+		DebugWindow.println("Amity: Finished Init");
 	}
 
 	/**
@@ -34,6 +37,9 @@ public class HexPlayer_Amity extends GamePlayer
 	 */
 	public void startGame(String opponent)
 	{
+		DebugWindow.println("Game Started. Opponent: " + opponent);
+		DebugWindow.resetGameTime();
+		DebugWindow.resetMoveTime();
 	}
 
 	/**
@@ -52,6 +58,7 @@ public class HexPlayer_Amity extends GamePlayer
 	 */
 	public void endGame(int result)
 	{
+		DebugWindow.println("Game ended. You " + (result == -1 ? "won" :  "lost"));	// its impossible to have a draw....
 	}
 
 	/**
@@ -75,7 +82,7 @@ public class HexPlayer_Amity extends GamePlayer
 	{
 		DebugWindow.resetMoveTime();
 		// ==
-		
+
 		HexState board = (HexState) state;
 		ArrayList<HexMove> list = new ArrayList<HexMove>();
 		HexMove mv = new HexMove();
@@ -93,7 +100,7 @@ public class HexPlayer_Amity extends GamePlayer
 		}
 		int which = Util.randInt(0, list.size() - 1);
 		GameMove result = list.get(which);
-		
+
 		// ==
 		DebugWindow.resetMoveTime();
 		return result;
