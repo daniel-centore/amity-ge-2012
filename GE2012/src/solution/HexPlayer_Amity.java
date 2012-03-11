@@ -2,6 +2,9 @@ package solution;
 
 import java.util.ArrayList;
 
+import solution.board.BoardInterface;
+import solution.board.NodeInterface;
+import solution.board.Player;
 import solution.debug.DebugFrame;
 import solution.debug.DebugWindow;
 
@@ -10,7 +13,6 @@ import game.*;
 
 public class HexPlayer_Amity extends GamePlayer
 {
-
 	public HexPlayer_Amity()
 	{
 		super("Amity Regional High School", new HexState(), false);
@@ -37,6 +39,8 @@ public class HexPlayer_Amity extends GamePlayer
 	 */
 	public void startGame(String opponent)
 	{
+		
+		// Debug prints
 		DebugWindow.println("Game Started. Opponent: " + opponent);
 		DebugWindow.resetGameTime();
 		DebugWindow.resetMoveTime();
