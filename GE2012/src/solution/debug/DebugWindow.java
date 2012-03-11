@@ -69,7 +69,7 @@ public class DebugWindow
 		int secs = (int) ((System.currentTimeMillis() - ms) / 1000); // total game secs
 
 		JTextArea text = df.getTextArea();
-		text.append(formatSecs(GAME_TIME - secs) + ">" + s + "\n");
+		text.append(formatSecs(GAME_TIME - secs) + "> " + s + "\n");
 		text.setCaretPosition(text.getDocument().getLength());
 	}
 
