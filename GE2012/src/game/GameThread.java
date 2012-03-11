@@ -34,22 +34,23 @@ public class GameThread extends Thread
 
 	private static void copy(File src, String dir, String dest)
 	{
-		Scanner input = null;
-		PrintStream output = null;
-		try
-		{
-			input = new Scanner(src);
-			output = new PrintStream(new File(dir + dest));
-		} catch (Exception e)
-		{
-			output.printf("error");
-		}
-
-		while (input.hasNext())
-		{
-			String line = input.nextLine();
-			output.println(line);
-		}
+//		Scanner input = null;
+//		PrintStream output = null;
+//		try
+//		{
+//			input = new Scanner(src);
+//			output = new PrintStream(new File(dir + dest));
+//		} catch (Exception e)
+//		{
+//			output.printf("error");
+//		}
+//
+//		while (input.hasNext())
+//		{
+//			String line = input.nextLine();
+//			output.println(line);
+//		}
+		System.out.println("I removed dumping!");
 	}
 
 	private static void copyDumpFile(File src, String[] names, String dir, int gameNum, String homeResult)
