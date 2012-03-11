@@ -40,6 +40,7 @@ public class HexPlayer_Amity extends GamePlayer
 		DebugWindow.println("Game Started. Opponent: " + opponent);
 		DebugWindow.resetGameTime();
 		DebugWindow.resetMoveTime();
+		DebugWindow.setUpdate(true);
 	}
 
 	/**
@@ -59,6 +60,7 @@ public class HexPlayer_Amity extends GamePlayer
 	public void endGame(int result)
 	{
 		DebugWindow.println("Game ended. You " + (result == -1 ? "won" :  "lost"));	// its impossible to have a draw....
+		DebugWindow.setUpdate(false);
 	}
 
 	/**
