@@ -2,6 +2,8 @@ package solution;
 
 import java.util.ArrayList;
 
+import solution.debug.DebugWindow;
+
 import hex.*;
 import game.*;
 
@@ -71,6 +73,9 @@ public class HexPlayer_Amity extends GamePlayer
 	 */
 	public GameMove getMove(GameState state, String lastMove)
 	{
+		DebugWindow.resetMoveTime();
+		// ==
+		
 		HexState board = (HexState) state;
 		ArrayList<HexMove> list = new ArrayList<HexMove>();
 		HexMove mv = new HexMove();
@@ -87,7 +92,11 @@ public class HexPlayer_Amity extends GamePlayer
 			}
 		}
 		int which = Util.randInt(0, list.size() - 1);
-		return list.get(which);
+		GameMove result = list.get(which);
+		
+		// ==
+		DebugWindow.resetMoveTime();
+		return result;
 	}
 
 }
