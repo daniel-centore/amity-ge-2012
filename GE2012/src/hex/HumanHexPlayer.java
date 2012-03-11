@@ -3,6 +3,8 @@ package hex;
 import game.*;
 import javax.swing.*;
 
+import solution.debug.DebugWindow;
+
 public class HumanHexPlayer extends RandomHexPlayer
 {
 	private GameFrame frame;
@@ -30,7 +32,8 @@ public class HumanHexPlayer extends RandomHexPlayer
 
 	public GameMove getMove(GameState game, String lastMove)
 	{
-		System.out.println(game);
+		DebugWindow.println("Hello");
+
 		char ch = side == GameState.Who.HOME ? HexState.homeSym : HexState.awaySym;
 		frame.setTitle("My move (" + ch + ")");
 		if (!lastMove.equals("--") && frame.canvas.move != null)
@@ -54,7 +57,7 @@ public class HumanHexPlayer extends RandomHexPlayer
 			OK = game.moveOK(move);
 			if (!OK)
 			{
-				if (move.col == 5 || move.row == 5)
+				if ((move.col == 5 || move.row == 5) && game.getNumMoves() <= 1)
 					JOptionPane.showMessageDialog(null, "You may not start in the middle!", "Illegal Move", JOptionPane.ERROR_MESSAGE);
 
 				// otherwise you clicked on the line which we don't care about
