@@ -13,6 +13,8 @@ import game.*;
 
 public class HexPlayer_Amity extends GamePlayer
 {
+	private CurrentGame currentGame;
+	
 	public HexPlayer_Amity()
 	{
 		super("Amity Regional High School", new HexState(), false);
@@ -27,6 +29,13 @@ public class HexPlayer_Amity extends GamePlayer
 	public void init()
 	{
 		DebugWindow.println("Amity: Began Init");
+		
+		// XXX is there anything beneficial we could do here?
+		// seems kind of pointless to me if we can't load data from files....
+		// ~Daniel
+		
+		System.gc();	// let's clean up other people's junk
+		
 		DebugWindow.println("Amity: Finished Init");
 	}
 
@@ -39,6 +48,7 @@ public class HexPlayer_Amity extends GamePlayer
 	 */
 	public void startGame(String opponent)
 	{
+		currentGame = new CurrentGame();
 		
 		// Debug prints
 		DebugWindow.println("Game Started. Opponent: " + opponent);
@@ -55,6 +65,8 @@ public class HexPlayer_Amity extends GamePlayer
 	 */
 	public void timeOfLastMove(double secs)
 	{
+		// we'll probably do this on our own
+		// TODO Do this on our own :-p
 	}
 
 	/**
@@ -87,28 +99,9 @@ public class HexPlayer_Amity extends GamePlayer
 	public GameMove getMove(GameState state, String lastMove)
 	{
 		DebugWindow.resetMoveTime();
-		// ==
-
-		HexState board = (HexState) state;
-		ArrayList<HexMove> list = new ArrayList<HexMove>();
-		HexMove mv = new HexMove();
-		for (int r = 0; r < HexState.N; r++)
-		{
-			for (int c = 0; c < HexState.N; c++)
-			{
-				mv.row = r;
-				mv.col = c;
-				if (board.moveOK(mv))
-				{
-					list.add((HexMove) mv.clone());
-				}
-			}
-		}
-		int which = Util.randInt(0, list.size() - 1);
-		GameMove result = list.get(which);
-
-		// ==
+		GameMove result = currentGame.getMove(state, lastMove);
 		DebugWindow.resetMoveTime();
+		
 		return result;
 	}
 
