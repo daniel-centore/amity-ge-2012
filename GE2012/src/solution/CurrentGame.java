@@ -8,6 +8,7 @@ import hex.HexState;
 
 import java.util.ArrayList;
 
+import solution.board.BoardController;
 import solution.debug.DebugWindow;
 
 /**
@@ -18,11 +19,19 @@ import solution.debug.DebugWindow;
  */
 public class CurrentGame
 {
+	private BoardController controller;
+	
 	public CurrentGame()
 	{
-		
+		controller = new BoardController();
 	}
 	
+	/**
+	 * Called from {@link HexPlayer_Amity}. We need to return our next move here!
+	 * @param state The current state of the game
+	 * @param lastMove What the last move was
+	 * @return An acceptable move in {@link GameMove} format
+	 */
 	public GameMove getMove(GameState state, String lastMove)
 	{
 		// TODO: Add a board here and update it!

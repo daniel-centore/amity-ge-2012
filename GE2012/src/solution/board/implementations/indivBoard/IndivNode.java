@@ -27,7 +27,7 @@ public class IndivNode implements NodeInterface
 	 */
 	public IndivNode(int x, char y)
 	{
-		this(x, y, Player.nil);
+		this(x, y, Player.EMPTY);
 	}
 	
 	/**
@@ -72,6 +72,12 @@ public class IndivNode implements NodeInterface
 	public Player getOccupied()
 	{
 		return occupied;
+	}
+
+	@Override
+	public String toString()
+	{
+		return "IndivNode [x=" + x + ", y=" + y + ", occupied=" + occupied + "]";
 	}
 
 }
