@@ -80,4 +80,17 @@ public class IndivNode implements NodeInterface
 		return "IndivNode [x=" + x + ", y=" + y + ", occupied=" + occupied + "]";
 	}
 
+	/**
+	 * Sets who owns this square
+	 * @param occupied The {@link Player} who occupies this square
+	 * @throws RuntimeException If we try to set it to {@link Player#EMPTY}
+	 */
+	public void setOccupied(Player occupied)
+	{
+		if (occupied == Player.EMPTY)
+			throw new RuntimeException("We can\'t change to empty once the game has started...");
+		
+		this.occupied = occupied;
+	}
+
 }
