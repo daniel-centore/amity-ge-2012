@@ -8,5 +8,5 @@ package solution.board;
  */
 public enum Player
 {
-	me, you, nil
+	ME, YOU, EMPTY
 }
