@@ -1,5 +1,5 @@
 package solution.solvers;
-import solution.board.BoardInterface;
+import java.util.List;
 
 /**
  * Class documentation.
@@ -9,6 +9,6 @@ import solution.board.BoardInterface;
 public interface AmitySolver 
 {
 	public float getWeight();
-	public BoardInterface 
-
+	public List<WeightedPoint> getPoints();
+	
 }
