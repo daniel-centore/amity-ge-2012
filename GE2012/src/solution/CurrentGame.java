@@ -7,8 +7,7 @@ import hex.HexMove;
 import hex.HexState;
 
 import java.util.ArrayList;
-
-import com.sun.corba.se.impl.orbutil.DenseIntMapImpl;
+import java.util.List;
 
 import solution.board.BoardController;
 import solution.board.HexPoint;
@@ -42,7 +41,6 @@ public class CurrentGame
 		HexPoint point;
 		if ((point = parseTheirString(lastMove)) == null)
 		{
-			// TODO: return a good default move (for both sides)
 			return new HexMove(5, 6);
 		}
 		else
