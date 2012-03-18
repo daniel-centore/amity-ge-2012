@@ -19,4 +19,9 @@ public interface NodeInterface
 	 */
 	public List<HexPoint> getPoints();
 	
+	/**
+	 * @return The {@link Player} that occupies the space atm
+	 */
+	public Player getOccupied();
+	
 }

@@ -1,15 +1,10 @@
 package solution;
 
-import java.util.ArrayList;
-
-import solution.board.BoardInterface;
-import solution.board.NodeInterface;
-import solution.board.Player;
-import solution.debug.DebugFrame;
+import game.GameMove;
+import game.GamePlayer;
+import game.GameState;
+import hex.HexState;
 import solution.debug.DebugWindow;
-
-import hex.*;
-import game.*;
 
 public class HexPlayer_Amity extends GamePlayer
 {

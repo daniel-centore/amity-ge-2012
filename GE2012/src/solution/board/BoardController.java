@@ -3,6 +3,8 @@ package solution.board;
 import java.util.ArrayList;
 import java.util.List;
 
+import solution.board.implementations.indivBoard.IndivBoard;
+
 /**
  * This accepts moves and applies them to all our boards
  * 
@@ -16,6 +18,7 @@ public class BoardController
 	public BoardController()
 	{
 		// Add boards here
+		boards.add(new IndivBoard());
 	}
 
 	/**
