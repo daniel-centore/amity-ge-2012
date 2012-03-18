@@ -60,5 +60,30 @@ public class HexPoint
 	{
 		this.y = y;
 	}
+
+	@Override
+	public boolean equals(Object obj)
+	{
+		if (obj == null)
+		{
+			return false;
+		}
+		if (getClass() != obj.getClass())
+		{
+			return false;
+		}
+		final HexPoint other = (HexPoint) obj;
+		if (this.x != other.x)
+		{
+			return false;
+		}
+		if (this.y != other.y)
+		{
+			return false;
+		}
+		return true;
+	}
+	
+	
 	
 }
