@@ -25,10 +25,6 @@ public class HexPlayer_Amity extends GamePlayer
 	{
 		DebugWindow.println("Amity: Began Init");
 		
-		// XXX is there anything beneficial we could do here?
-		// seems kind of pointless to me if we can't load data from files....
-		// ~Daniel
-		
 		System.gc();	// let's clean up other people's junk
 		
 		DebugWindow.println("Amity: Finished Init");
@@ -61,7 +57,6 @@ public class HexPlayer_Amity extends GamePlayer
 	public void timeOfLastMove(double secs)
 	{
 		// we'll probably do this on our own
-		// TODO Do this on our own :-p
 	}
 
 	/**

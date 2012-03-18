@@ -16,14 +16,14 @@ import solution.debug.DebugWindow;
  */
 public class IndivBoard implements BoardInterface
 {
-	public HashMap<IndivNode, HexPoint> map = new HashMap<IndivNode, HexPoint>();	// map of the points on our grid
+	public HashMap<HexPoint, IndivNode> map = new HashMap<HexPoint, IndivNode>();	// map of the points on our grid
 	
 	public IndivBoard()
 	{
 		for (int i = 1; i <= 11; i++)
 		{
 			for (char c = 'a'; c <= 'z'; c++)
-				map.put(new IndivNode(i, c), new HexPoint(i, c));
+				map.put(new HexPoint(i, c), new IndivNode(i, c));
 		}
 		DebugWindow.println(map.toString());
 	}
@@ -31,8 +31,7 @@ public class IndivBoard implements BoardInterface
 	@Override
 	public NodeInterface getNode(int x, char y)
 	{
-		// TODO Auto-generated method stub
-		return null;
+		return map.get(new HexPoint(x, y));
 	}
 
 	@Override
