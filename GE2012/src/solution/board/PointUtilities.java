@@ -6,6 +6,7 @@ import java.awt.Point;
  * Has untilities for working with {@link HexPoint}s
  * 
  * @author Daniel Centore
+ * @author Mike DiBuduo
  *
  */
 public class PointUtilities
@@ -16,7 +17,8 @@ public class PointUtilities
 	 */
 	public static int toInt(char c)
 	{
-		return ((int) c) - 97;	// 97 is the unicode value of 'a'
+            // TODO: double check if returning correct int value for the column
+            return ((int) c) - 97;	// 97 is the unicode value of 'a'
 	}
 	
 	/**
