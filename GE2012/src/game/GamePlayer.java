@@ -220,7 +220,8 @@ public abstract class GamePlayer
 		} catch (Exception e)
 		{
 			System.err.println("Problem in " + nickname + " " + e);
-			System.err.flush();
+			
+			e.printStackTrace();
 		}
 	}
 

@@ -83,7 +83,10 @@ public class HexPoint
 		}
 		return true;
 	}
-	
-	
+		@Override
+	public String toString()
+	{
+		return "HexPoint [x=" + x + ", y=" + y + "]";
+	}
 	
 }
