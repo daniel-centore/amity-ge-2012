@@ -6,7 +6,6 @@ import solution.board.BoardInterface;
 import solution.board.HexPoint;
 import solution.board.NodeInterface;
 import solution.board.Player;
-import solution.debug.DebugWindow;
 
 /**
  * This is a bard where every single spot has a representation

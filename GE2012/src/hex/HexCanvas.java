@@ -67,9 +67,10 @@ public class HexCanvas extends GameCanvas
 
 	private void renderHex(Graphics g, int r, int c, char who) // , boolean lastMove
 	{
-		char[] col = new char[] { 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l' };
+		char[] col = new char[] { 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L' };
 		double cx = getX(r, c);
 		double cy = getY(r, c);
+		r++;	// so we start counting at 1
 		for (int i = 0; i < 6; i++)
 		{
 			double angle = Math.toRadians(i * 60 + 30);
