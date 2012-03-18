@@ -25,7 +25,6 @@ public class IndivBoard implements BoardInterface
 			for (char c = 'a'; c <= 'z'; c++)
 				map.put(new HexPoint(i, c), new IndivNode(i, c));
 		}
-		DebugWindow.println(map.toString());
 	}
 
 	@Override
@@ -37,8 +36,7 @@ public class IndivBoard implements BoardInterface
 	@Override
 	public void applyMove(int x, char y, Player player)
 	{
-		// TODO Auto-generated method stub
-		
+		map.get(new HexPoint(x, y)).setOccupied(player);
 	}
 
 }

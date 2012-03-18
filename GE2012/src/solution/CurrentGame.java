@@ -8,6 +8,8 @@ import hex.HexState;
 
 import java.util.ArrayList;
 
+import com.sun.corba.se.impl.orbutil.DenseIntMapImpl;
+
 import solution.board.BoardController;
 import solution.debug.DebugWindow;
 
@@ -34,7 +36,7 @@ public class CurrentGame
 	 */
 	public GameMove getMove(GameState state, String lastMove)
 	{
-		// TODO: Add a board here and update it!
+		DebugWindow.println(lastMove);
 		HexState board = (HexState) state;
 		ArrayList<HexMove> list = new ArrayList<HexMove>();
 		HexMove mv = new HexMove();
