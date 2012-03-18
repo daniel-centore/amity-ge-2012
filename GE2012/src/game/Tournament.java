@@ -74,14 +74,14 @@ public class Tournament
 
 	public static void launchTournament(GameState st, GameMove move)
 	{
-		File dumpsDir = new File("Dumps");
-		dumpsDir.mkdir();
-		Date date = new Date();
-		String dumpDir = "Dumps/" + date.toString() + "/";
-		dumpDir = dumpDir.replace(':', ';');
-		File file = new File(dumpDir);
-		file.mkdir();
-		GameThread.dir = dumpDir;
+//		File dumpsDir = new File("Dumps");
+//		dumpsDir.mkdir();
+//		Date date = new Date();
+//		String dumpDir = "Dumps/" + date.toString() + "/";
+//		dumpDir = dumpDir.replace(':', ';');
+//		File file = new File(dumpDir);
+//		file.mkdir();
+//		GameThread.dir = dumpDir;
 		int NUM_CLIENTS = tournamentParams.integer("NUMCLIENTS");
 		int PORT = tournamentParams.integer("PORT");
 		int NUM_GAMES = tournamentParams.integer("NUMGAMES");
@@ -114,8 +114,8 @@ public class Tournament
 					clients[i].moveLimit = clients[i].finalPlayLimit = gameParams.integer("HUMANTIME");
 					clients[i].gameTimeLimit = 10000;
 				}
-				File subdir = new File(dumpDir + "/" + clients[i].name);
-				subdir.mkdir();
+//				File subdir = new File(dumpDir + "/" + clients[i].name);
+//				subdir.mkdir();
 				System.out.printf("%s has joined%n", clients[i].name);
 			}
 

@@ -1,5 +1,6 @@
 package solution;
 
+import solution.debug.DebugWindow;
 import game.GamePlayer;
 import game.Tournament;
 import hex.HumanHexPlayer;
@@ -16,6 +17,7 @@ public class Main
 {
 	public static void main(final String[] args)
 	{
+		DebugWindow.println("Hello");
 		new Thread()
 		{
 			public void run()

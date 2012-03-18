@@ -81,7 +81,6 @@ public class Client
 			System.err.println("DUMP2/3: " + s2);
 			System.err.println("DUMP3/3: " + s3);
 		}
-		// TODO: make it so the data that's here doesn't get printed to console
 		output.println(s1);
 		output.println(s2);
 		output.println(s3);
