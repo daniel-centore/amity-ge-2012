@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import com.sun.corba.se.impl.orbutil.DenseIntMapImpl;
 
 import solution.board.BoardController;
+import solution.board.HexPoint;
 import solution.debug.DebugWindow;
 
 /**
@@ -37,24 +38,52 @@ public class CurrentGame
 	public GameMove getMove(GameState state, String lastMove)
 	{
 		DebugWindow.println(lastMove);
-		HexState board = (HexState) state;
-		ArrayList<HexMove> list = new ArrayList<HexMove>();
-		HexMove mv = new HexMove();
-		for (int r = 0; r < HexState.N; r++)
+		
+		HexPoint point;
+		if ((point = parseTheirString(lastMove)) == null)
 		{
-			for (int c = 0; c < HexState.N; c++)
+			// TODO: return a good default move (for both sides)
+			return new HexMove(5, 6);
+		}
+		else
+		{
+			DebugWindow.println(point.toString());
+			
+			// TODO: apply lastMove to our current board
+			
+			HexState board = (HexState) state;
+			ArrayList<HexMove> list = new ArrayList<HexMove>();
+			HexMove mv = new HexMove();
+			for (int r = 0; r < HexState.N; r++)
 			{
-				mv.row = r;
-				mv.col = c;
-				if (board.moveOK(mv))
+				for (int c = 0; c < HexState.N; c++)
 				{
-					list.add((HexMove) mv.clone());
+					mv.row = r;
+					mv.col = c;
+					if (board.moveOK(mv))
+					{
+						list.add((HexMove) mv.clone());
+					}
 				}
 			}
-		}
-		int which = Util.randInt(0, list.size() - 1);
-		GameMove result = list.get(which);
+			int which = Util.randInt(0, list.size() - 1);
+			GameMove result = list.get(which);
 
-		return result;
+			return result;
+		}
+	}
+	
+	public HexPoint parseTheirString(String move)
+	{
+		// TODO: create an inverse of this method for when we return a HexPoint as a GameMove in getMove
+		
+		String[] k = move.split("-");
+		if (k.length  < 2)
+			return null;
+		
+		int x = Integer.parseInt(k[0]) + 1;
+		char y = (char) (Integer.parseInt(k[1]) + 97);
+		
+		return new HexPoint(x, y);
 	}
 }

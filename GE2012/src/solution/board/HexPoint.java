@@ -60,5 +60,11 @@ public class HexPoint
 	{
 		this.y = y;
 	}
+
+	@Override
+	public String toString()
+	{
+		return "HexPoint [x=" + x + ", y=" + y + "]";
+	}
 	
 }
