@@ -1,13 +1,15 @@
 package solution;
 
-import java.util.ArrayList;
-
-import hex.*;
-import game.*;
+import game.GameMove;
+import game.GamePlayer;
+import game.GameState;
+import hex.HexState;
+import solution.debug.DebugWindow;
 
 public class HexPlayer_Amity extends GamePlayer
 {
-
+	private CurrentGame currentGame;
+	
 	public HexPlayer_Amity()
 	{
 		super("Amity Regional High School", new HexState(), false);
@@ -21,6 +23,11 @@ public class HexPlayer_Amity extends GamePlayer
 	 */
 	public void init()
 	{
+		DebugWindow.println("Amity: Began Init");
+		
+		System.gc();	// let's clean up other people's junk
+		
+		DebugWindow.println("Amity: Finished Init");
 	}
 
 	/**
@@ -32,6 +39,13 @@ public class HexPlayer_Amity extends GamePlayer
 	 */
 	public void startGame(String opponent)
 	{
+		currentGame = new CurrentGame();
+		
+		// Debug prints
+		DebugWindow.println("Game Started. Opponent: " + opponent);
+		DebugWindow.resetGameTime();
+		DebugWindow.resetMoveTime();
+		DebugWindow.setUpdate(true);
 	}
 
 	/**
@@ -42,6 +56,7 @@ public class HexPlayer_Amity extends GamePlayer
 	 */
 	public void timeOfLastMove(double secs)
 	{
+		// we'll probably do this on our own
 	}
 
 	/**
@@ -50,6 +65,8 @@ public class HexPlayer_Amity extends GamePlayer
 	 */
 	public void endGame(int result)
 	{
+		DebugWindow.println("Game ended. You " + (result == -1 ? "won" :  "lost"));	// its impossible to have a draw....
+		DebugWindow.setUpdate(false);
 	}
 
 	/**
@@ -71,23 +88,11 @@ public class HexPlayer_Amity extends GamePlayer
 	 */
 	public GameMove getMove(GameState state, String lastMove)
 	{
-		HexState board = (HexState) state;
-		ArrayList<HexMove> list = new ArrayList<HexMove>();
-		HexMove mv = new HexMove();
-		for (int r = 0; r < HexState.N; r++)
-		{
-			for (int c = 0; c < HexState.N; c++)
-			{
-				mv.row = r;
-				mv.col = c;
-				if (board.moveOK(mv))
-				{
-					list.add((HexMove) mv.clone());
-				}
-			}
-		}
-		int which = Util.randInt(0, list.size() - 1);
-		return list.get(which);
+		DebugWindow.resetMoveTime();
+		GameMove result = currentGame.getMove(state, lastMove);
+		DebugWindow.resetMoveTime();
+		
+		return result;
 	}
 
 }
