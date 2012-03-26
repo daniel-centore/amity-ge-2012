@@ -11,6 +11,7 @@ import java.util.List;
 
 import solution.board.BoardController;
 import solution.board.HexPoint;
+import solution.board.Player;
 import solution.debug.DebugWindow;
 
 /**
@@ -21,11 +22,11 @@ import solution.debug.DebugWindow;
  */
 public class CurrentGame
 {
-	private BoardController controller;
+	private BoardController boardController;
 	
 	public CurrentGame()
 	{
-		controller = new BoardController();
+		boardController = new BoardController();
 	}
 	
 	/**
@@ -35,21 +36,23 @@ public class CurrentGame
 	 * @return An acceptable move in {@link GameMove} format
 	 */
 	public GameMove getMove(GameState state, String lastMove)
-	{
-		DebugWindow.println(lastMove);
+	{	
+		HexMove result = null;
 		
-		HexPoint point;
-		if ((point = parseTheirString(lastMove)) == null)
+		HexPoint point = parseTheirString(lastMove);
+		if (point == null)
 		{
-			// TODO: return a good default move (for both sides)
-			return new HexMove(5, 6);
+			// we're going first - do a nice default move
+			result = new HexMove(5, 6);
 		}
 		else
 		{
-			DebugWindow.println(point.toString());
+			// they just went - time to counter
 			
-			// TODO: apply lastMove to our current board
+			// apply their move to our boards
+			boardController.applyMove(point.getX(), point.getY(), Player.YOU);
 			
+			// calculate our next move
 			HexState board = (HexState) state;
 			ArrayList<HexMove> list = new ArrayList<HexMove>();
 			HexMove mv = new HexMove();
@@ -66,15 +69,20 @@ public class CurrentGame
 				}
 			}
 			int which = Util.randInt(0, list.size() - 1);
-			GameMove result = list.get(which);
-
-			return result;
+			result = list.get(which);
 		}
+		
+		
+		// apply our move to the board
+		point = parseTheirString(result.toString());
+		boardController.applyMove(point.getX(), point.getY(), Player.ME);
+
+		return result;
 	}
 	
 	public HexPoint parseTheirString(String move)
 	{
-		// TODO: create an inverse of this method for when we return a HexPoint as a GameMove in getMove
+		// TODO: create an inverse of this method for when we return a HexPoint as a HexMove in getMove
 		
 		String[] k = move.split("-");
 		if (k.length  < 2)
