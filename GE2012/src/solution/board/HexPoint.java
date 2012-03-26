@@ -62,6 +62,28 @@ public class HexPoint
 	}
 
 	@Override
+	public boolean equals(Object obj)
+	{
+		if (obj == null)
+		{
+			return false;
+		}
+		if (getClass() != obj.getClass())
+		{
+			return false;
+		}
+		final HexPoint other = (HexPoint) obj;
+		if (this.x != other.x)
+		{
+			return false;
+		}
+		if (this.y != other.y)
+		{
+			return false;
+		}
+		return true;
+	}
+		@Override
 	public String toString()
 	{
 		return "HexPoint [x=" + x + ", y=" + y + "]";
