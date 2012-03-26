@@ -41,6 +41,7 @@ public class CurrentGame
 		HexPoint point;
 		if ((point = parseTheirString(lastMove)) == null)
 		{
+			// TODO: return a good default move (for both sides)
 			return new HexMove(5, 6);
 		}
 		else
