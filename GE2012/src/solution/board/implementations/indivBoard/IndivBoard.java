@@ -6,6 +6,7 @@ import solution.board.BoardInterface;
 import solution.board.HexPoint;
 import solution.board.NodeInterface;
 import solution.board.Player;
+import solution.debug.DebugWindow;
 
 /**
  * This is a bard where every single spot has a representation
@@ -36,6 +37,13 @@ public class IndivBoard implements BoardInterface
 	public void applyMove(int x, char y, Player player)
 	{
 		map.get(new HexPoint(x, y)).setOccupied(player);
+		DebugWindow.println(this.toString());
+	}
+
+	@Override
+	public String toString()
+	{
+		return "IndivBoard [map=" + map + "]";
 	}
 
 }
