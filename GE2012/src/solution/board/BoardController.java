@@ -13,7 +13,9 @@ import solution.board.implementations.indivBoard.IndivBoard;
  */
 public class BoardController
 {
-	private List<BoardInterface> boards = new ArrayList<BoardInterface>();
+	private List<BoardInterface> boards = new ArrayList<BoardInterface>();	// all the boards in the game
+	
+	// List of all the boards (so we can get them separately)
 	private IndivBoard indivBoard;
 
 	public BoardController()
@@ -36,11 +38,19 @@ public class BoardController
 		}
 	}
 
+	/**
+	 * Gets a list of all the {@link BoardInterface}s in the game
+	 * @return
+	 */
 	public List<BoardInterface> getBoards()
 	{
 		return boards;
 	}
 
+	/**
+	 * Gets the instance of {@link IndivBoard} for this game
+	 * @return
+	 */
 	public IndivBoard getIndivBoard()
 	{
 		return indivBoard;

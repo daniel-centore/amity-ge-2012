@@ -12,7 +12,7 @@ public class HexPoint
 {
 	private int x;
 	private char y;
-	
+
 	/**
 	 * Creates a representation of a single point on a grid
 	 * Similar to the {@link Point} class in the Java API
@@ -81,9 +81,11 @@ public class HexPoint
 		{
 			return false;
 		}
+		
 		return true;
 	}
-		@Override
+
+	@Override
 	public String toString()
 	{
 		return "HexPoint [x=" + x + ", y=" + y + "]";
@@ -98,5 +100,5 @@ public class HexPoint
 		result = prime * result + y;
 		return result;
 	}
-	
+
 }
