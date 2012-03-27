@@ -14,11 +14,12 @@ import solution.board.implementations.indivBoard.IndivBoard;
 public class BoardController
 {
 	private List<BoardInterface> boards = new ArrayList<BoardInterface>();
+	private IndivBoard indivBoard;
 
 	public BoardController()
 	{
 		// Add boards here
-		boards.add(new IndivBoard());
+		boards.add(indivBoard = new IndivBoard());
 	}
 
 	/**
@@ -33,5 +34,15 @@ public class BoardController
 		{
 			board.applyMove(x, y, player);
 		}
+	}
+
+	public List<BoardInterface> getBoards()
+	{
+		return boards;
+	}
+
+	public IndivBoard getIndivBoard()
+	{
+		return indivBoard;
 	}
 }

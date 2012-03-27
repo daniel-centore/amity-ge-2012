@@ -37,7 +37,6 @@ public class IndivBoard implements BoardInterface
 	public void applyMove(int x, char y, Player player)
 	{
 		map.get(new HexPoint(x, y)).setOccupied(player);
-		DebugWindow.println(this.toString());
 	}
 
 	@Override
