@@ -101,8 +101,6 @@ public class CurrentGame
 
 	public HexPoint parseTheirString(String move)
 	{
-		// TODO: create an inverse of this method for when we return a HexPoint as a HexMove in getMove
-
 		String[] k = move.split("-");
 		if (k.length < 2)
 			return null;

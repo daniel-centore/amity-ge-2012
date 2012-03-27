@@ -17,10 +17,9 @@ public class PointUtilities
 	 */
 	public static int toInt(char c)
 	{
-            // TODO: double check if returning correct int value for the column
-            return ((int) c) - 97;	// 97 is the unicode value of 'a'
+		return ((int) c) - 97; // 97 is the unicode value of 'a'
 	}
-	
+
 	/**
 	 * Converts a {@link HexPoint} into a regular {@link Point}.
 	 * Shouldn't need to be used much

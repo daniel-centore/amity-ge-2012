@@ -8,5 +8,18 @@ package solution.board;
  */
 public enum Player
 {
-	ME, YOU, EMPTY
+	/**
+	 * Represents Amity in the game
+	 */
+	ME,
+
+	/**
+	 * Represents our opponent
+	 */
+	YOU,
+	
+	/**
+	 * Represents an empty hex
+	 */
+	EMPTY
 }
