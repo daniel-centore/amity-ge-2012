@@ -36,7 +36,7 @@ public class MultSolver implements AmitySolver
 		for (int i = 1; i <= 11; i++)
 		{
 			for (char c = 'a'; c <= 'k'; c++)
-				result.add(new WeightedPoint(i, c, i*c));
+				result.add(new WeightedPoint(i, c, ((float) (i*(c-97))) / 121));
 		}
 		
 		return result;
