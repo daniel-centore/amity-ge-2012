@@ -7,7 +7,7 @@ import hex.HumanHexPlayer;
 import hex.RandomHexPlayer;
 
 /**
- * This class should not be included in the final copy.
+ * THIS CLASS SHOULD NOT BE INCLUDED IN THE FINAL COPY
  * It is just so we don't have to run their shitty setup all the time.
  * 
  * @author Daniel Centore
