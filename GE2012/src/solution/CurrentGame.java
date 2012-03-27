@@ -62,7 +62,6 @@ public class CurrentGame
 			// calculate our next move
 			
 			HexPoint move = solverController.getMove().toHexPoint();
-			DebugWindow.println(move.toString());
 			result = toHexMove(move);
 
 			// random here
@@ -112,5 +111,15 @@ public class CurrentGame
 		char y = (char) (Integer.parseInt(k[1]) + 97);
 
 		return new HexPoint(x, y);
+	}
+
+	public BoardController getBoardController()
+	{
+		return boardController;
+	}
+
+	public SolverController getSolverController()
+	{
+		return solverController;
 	}
 }

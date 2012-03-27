@@ -7,6 +7,7 @@ import java.util.List;
 
 import solution.CurrentGame;
 import solution.board.HexPoint;
+import solution.board.Player;
 import solution.board.implementations.indivBoard.IndivNode;
 import solution.solvers.multiplied.MultSolver;
 
@@ -19,10 +20,12 @@ import solution.solvers.multiplied.MultSolver;
 public class SolverController
 {
 	private List<AmitySolver> solvers;
-	public HashMap<HexPoint, WeightedPoint> map;	// map of the points on our grid
+	private HashMap<HexPoint, WeightedPoint> map;	// map of the points on our grid
+	private CurrentGame curr; 
 	
 	public SolverController(CurrentGame curr)
 	{
+		this.curr = curr;
 		solvers = new ArrayList<AmitySolver>();
 		solvers.add(new MultSolver(curr));
 	}
@@ -59,13 +62,16 @@ public class SolverController
 		
 		// find the highest rated move
 		Iterator<WeightedPoint> itr = map.values().iterator();
-		WeightedPoint largest = itr.next();
+		WeightedPoint largest = null;
 		
 		while (itr.hasNext())
 		{
 			WeightedPoint p = itr.next();
-			if (p.getWeight() > largest.getWeight())
-				largest = p;
+			if (largest == null || p.getWeight() > largest.getWeight())
+			{
+				if (curr.getBoardController().getIndivBoard().getNode(p.getX(), p.getY()).getOccupied() == Player.EMPTY)	// only if the space is unoccupied
+					largest = p;
+			}
 		}
 		
 		return largest;
