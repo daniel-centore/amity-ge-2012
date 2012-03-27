@@ -2,6 +2,7 @@ package solution.solvers.h_search;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import solution.board.HexPoint;
 import solution.solvers.AmitySolver;
 import solution.solvers.WeightedPoint;

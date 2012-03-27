@@ -22,7 +22,7 @@ public class IndivBoard implements BoardInterface
 	{
 		for (int i = 1; i <= 11; i++)
 		{
-			for (char c = 'a'; c <= 'z'; c++)
+			for (char c = 'a'; c <= 'k'; c++)
 				map.put(new HexPoint(i, c), new IndivNode(i, c));
 		}
 	}
