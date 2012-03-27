@@ -40,6 +40,7 @@ public class HexPlayer_Amity extends GamePlayer
 	public void startGame(String opponent)
 	{
 		currentGame = new CurrentGame();
+		currentGame.init();
 		
 		// Debug prints
 		DebugWindow.println("Game Started. Opponent: " + opponent);
