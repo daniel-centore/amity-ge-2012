@@ -1,12 +1,12 @@
 package hex;
 
-import game.GameCanvas;
-import game.GameMove;
-import game.GameState;
-
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.event.MouseEvent;
+
+import game.GameCanvas;
+import game.GameMove;
+import game.GameState;
 
 public class HexCanvas extends GameCanvas
 {

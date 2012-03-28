@@ -1,9 +1,8 @@
 package hex;
 
-import game.*;
 import javax.swing.*;
 
-import solution.debug.DebugWindow;
+import game.*;
 
 public class HumanHexPlayer extends RandomHexPlayer
 {
