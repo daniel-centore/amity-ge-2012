@@ -1,9 +1,9 @@
 package game;
 
-import hex.HexCanvas;
-
 import java.io.*;
 import java.net.*;
+
+import hex.HexCanvas;
 
 public abstract class GamePlayer
 {

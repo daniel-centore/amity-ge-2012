@@ -1,7 +1,8 @@
 package game;
-import java.util.*;
-import java.io.*;
 	
+import java.io.*;
+import java.util.*;
+
 public class Params {
 	public HashMap<String, String> map = new HashMap<String, String>();
 	public Params(String fname)

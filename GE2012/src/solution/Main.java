@@ -1,10 +1,11 @@
 package solution;
 
-import solution.debug.DebugWindow;
 import game.GamePlayer;
 import game.Tournament;
+
 import hex.HumanHexPlayer;
-import hex.RandomHexPlayer;
+
+import solution.debug.DebugWindow;
 
 /**
  * THIS CLASS SHOULD NOT BE INCLUDED IN THE FINAL COPY

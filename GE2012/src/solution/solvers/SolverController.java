@@ -8,7 +8,6 @@ import java.util.List;
 import solution.CurrentGame;
 import solution.board.HexPoint;
 import solution.board.Player;
-import solution.board.implementations.indivBoard.IndivNode;
 import solution.solvers.multiplied.MultSolver;
 
 /**

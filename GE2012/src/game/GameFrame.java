@@ -1,4 +1,5 @@
 package game;
+
 import java.awt.*;
 
 public class GameFrame extends Frame {

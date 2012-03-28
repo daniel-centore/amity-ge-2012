@@ -1,4 +1,5 @@
 package game;
+
 import java.util.*;
 
 public abstract class GameState implements Cloneable {

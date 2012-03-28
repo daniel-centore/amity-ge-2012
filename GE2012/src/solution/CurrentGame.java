@@ -2,17 +2,12 @@ package solution;
 
 import game.GameMove;
 import game.GameState;
-import game.Util;
-import hex.HexMove;
-import hex.HexState;
 
-import java.util.ArrayList;
-import java.util.List;
+import hex.HexMove;
 
 import solution.board.BoardController;
 import solution.board.HexPoint;
 import solution.board.Player;
-import solution.debug.DebugWindow;
 import solution.solvers.SolverController;
 
 /**
