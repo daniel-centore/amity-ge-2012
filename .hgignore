@@ -1,5 +1,6 @@
+\.chg\..*$
+\.class$
+\.conflict\~$
 \.orig$
 \.orig\..*$
-\.chg\..*$
 \.rej$
-\.conflict\~$
