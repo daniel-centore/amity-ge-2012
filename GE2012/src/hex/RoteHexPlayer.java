@@ -1,6 +1,8 @@
 package hex;
 
-import game.*;
+import game.GameMove;
+import game.GamePlayer;
+import game.GameState;
 
 public class RoteHexPlayer extends GamePlayer
 {

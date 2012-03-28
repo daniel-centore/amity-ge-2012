@@ -1,6 +1,9 @@
 package hex;
 
-import game.*;
+import game.GameMove;
+import game.GameState;
+import game.Params;
+import game.Util;
 
 public class HexState extends GameState
 {

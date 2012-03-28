@@ -1,6 +1,6 @@
 package game;
 
-import java.awt.*;
+import java.awt.Frame;
 
 public class GameFrame extends Frame {
 	public GameCanvas canvas;

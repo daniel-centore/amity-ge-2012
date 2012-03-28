@@ -1,6 +1,6 @@
 package game;
 
-import java.util.*;
+import java.util.Arrays;
 
 public class Util {
 	public static class Pair {
