@@ -8,6 +8,8 @@ import game.GameCanvas;
 import game.GameMove;
 import game.GameState;
 
+import hex.HexCanvas;
+
 public class HexCanvas extends GameCanvas
 {
 	public static final long serialVersionUID = 0;

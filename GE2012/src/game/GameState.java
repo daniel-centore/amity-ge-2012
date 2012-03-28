@@ -1,6 +1,6 @@
 package game;
 
-import java.util.*;
+import java.util.StringTokenizer;
 
 public abstract class GameState implements Cloneable {
 	public enum Status { GAME_ON, HOME_WIN, AWAY_WIN, DRAW };
