@@ -91,6 +91,11 @@ public class CurrentGame
 		return result;
 	}
 	
+	/**
+	 * Converts one of our {@link HexPoint}s in to one of their {@link HexMove}s
+	 * @param point The {@link HexPoint} to convert
+	 * @return A nice {@link HexMove}
+	 */
 	public HexMove toHexMove(HexPoint point)
 	{
 		int x = point.getX() - 1;
@@ -99,6 +104,11 @@ public class CurrentGame
 		return new HexMove(x, y);
 	}
 
+	/**
+	 * Converts the {@link String} we got with the last move to a {@link HexPoint}
+	 * @param move A {@link String} in the format of x-y (ie 3-4) where x is the row (starting at 0) and y is the column
+	 * @return A {@link HexPoint} following our standards
+	 */
 	public HexPoint parseTheirString(String move)
 	{
 		String[] k = move.split("-");
@@ -111,11 +121,19 @@ public class CurrentGame
 		return new HexPoint(x, y);
 	}
 
+	/**
+	 * Gets the {@link BoardController} we are using in this game
+	 * @return
+	 */
 	public BoardController getBoardController()
 	{
 		return boardController;
 	}
 
+	/**
+	 * Gets the {@link SolverController} we are using in this game
+	 * @return
+	 */
 	public SolverController getSolverController()
 	{
 		return solverController;
