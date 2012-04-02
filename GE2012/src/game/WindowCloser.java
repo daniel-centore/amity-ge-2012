@@ -1,6 +1,8 @@
 package game;
-import java.awt.*;
-import java.awt.event.*;
+
+import java.awt.Window;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 public class WindowCloser extends WindowAdapter {
     public WindowCloser(){

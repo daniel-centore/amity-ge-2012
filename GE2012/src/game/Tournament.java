@@ -1,12 +1,10 @@
 package game;
 
-import hex.HexMove;
-import hex.HexState;
-
-import java.io.File;
 import java.net.ServerSocket;
 import java.util.ArrayList;
-import java.util.Date;
+
+import hex.HexMove;
+import hex.HexState;
 
 public class Tournament
 {

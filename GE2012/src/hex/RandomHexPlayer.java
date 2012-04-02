@@ -1,6 +1,11 @@
 package hex;
-import game.*;
-import java.util.*;
+
+import java.util.ArrayList;
+
+import game.GameMove;
+import game.GamePlayer;
+import game.GameState;
+import game.Util;
 
 public class RandomHexPlayer extends GamePlayer {
 	public RandomHexPlayer(String n) 
