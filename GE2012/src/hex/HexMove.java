@@ -1,6 +1,9 @@
 package hex;
-import game.*;
-import java.util.*;
+
+import java.util.StringTokenizer;
+
+import game.GameMove;
+import game.Util;
 
 public class HexMove extends GameMove {
 	public int row, col;

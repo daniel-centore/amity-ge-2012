@@ -1,9 +1,12 @@
 package hex;
 
-import game.*;
-import javax.swing.*;
+import javax.swing.JOptionPane;
 
-import solution.debug.DebugWindow;
+import game.GameFrame;
+import game.GameMove;
+import game.GameState;
+
+import hex.HumanHexPlayer;
 
 public class HumanHexPlayer extends RandomHexPlayer
 {

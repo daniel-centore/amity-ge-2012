@@ -1,7 +1,10 @@
 package game;
-import java.util.*;
-import java.io.*;
 	
+import java.io.File;
+import java.util.HashMap;
+import java.util.Scanner;
+import java.util.StringTokenizer;
+
 public class Params {
 	public HashMap<String, String> map = new HashMap<String, String>();
 	public Params(String fname)

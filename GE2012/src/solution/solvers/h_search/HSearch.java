@@ -33,24 +33,24 @@ public class HSearch implements AmitySolver {
                         if (g1 == g2) {
                             continue;
                         }
-//LOOP2 over g1, g2 ∈ G such that:
+                        //LOOP2 over g1, g2  G such that:
                         //g1 != g2,
                         //at least one of the lists C(g1, g) or C(g2, g) contains at least one new carrier.
                         //If g is black then, additionally, g1 and g2 should be both empty.
-                        //LOOP3 over c1 ∈ C(g1, g) and c2 ∈ C(g2, g) such that:
+                        //LOOP3 over c1  C(g1, g) and c2  C(g2, g) such that:
                         //At least one of the carriers c1 or c2 is new,
-                        //c1 ∩ c2 = ∅,
-                        //g1 ∈/ c2 and g2 ∈/ c1.
+                        //c1  c2 = ,
+                        //g1 / c2 and g2 / c1.
                         //IF (g is black)
-                        //c = c1 ∪ c2. // the AND Deduction Rule
+                        //c = c1  c2. // the AND Deduction Rule
                         //UPDATE C(g1, g2) with c.
                         //ELSE
-                        //sc = c1 ∪ g ∪ c2. // the AND Deduction Rule
+                        //sc = c1  g  c2. // the AND Deduction Rule
                         //UPDATE SC(g1, g2) with sc.
                         //IF (the last UPDATE is successful)
                         //APPLY_THE_OR_DEDUCTION_RULE_AND_UPDATE
                         //(C_SET = C(g1, g2),
-                        //SC_SET = SC(g1, g2) − sc,
+                        //SC_SET = SC(g1, g2)  sc,
                         //UNION = sc,
                         //INTERSECTION = sc )
                         //END of IF

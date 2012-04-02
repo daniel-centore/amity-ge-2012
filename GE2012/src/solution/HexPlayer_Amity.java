@@ -3,7 +3,9 @@ package solution;
 import game.GameMove;
 import game.GamePlayer;
 import game.GameState;
+
 import hex.HexState;
+
 import solution.debug.DebugWindow;
 
 public class HexPlayer_Amity extends GamePlayer
