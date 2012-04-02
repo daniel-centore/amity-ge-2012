@@ -3,6 +3,7 @@ package solution.board;
 import java.util.ArrayList;
 import java.util.List;
 
+import solution.board.implementations.blobBoard.BlobBoard;
 import solution.board.implementations.indivBoard.IndivBoard;
 
 /**
@@ -17,11 +18,13 @@ public class BoardController
 	
 	// List of all the boards (so we can get them separately)
 	private IndivBoard indivBoard;
+	private BlobBoard blobBoard;
 
 	public BoardController()
 	{
 		// Add boards here
 		boards.add(indivBoard = new IndivBoard());
+		boards.add(blobBoard = new BlobBoard());
 	}
 
 	/**
@@ -54,5 +57,10 @@ public class BoardController
 	public IndivBoard getIndivBoard()
 	{
 		return indivBoard;
+	}
+
+	public BlobBoard getBlobBoard()
+	{
+		return blobBoard;
 	}
 }
