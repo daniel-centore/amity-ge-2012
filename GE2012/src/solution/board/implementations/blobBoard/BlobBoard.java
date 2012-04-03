@@ -7,6 +7,7 @@ import solution.board.BoardInterface;
 import solution.board.HexPoint;
 import solution.board.NodeInterface;
 import solution.board.Player;
+import solution.board.PointUtilities;
 
 /**
  * A board where each group of colors is represented as a blob
@@ -19,22 +20,11 @@ public class BlobBoard implements BoardInterface
 	// All the blobs of color
 	private List<BlobNode> nodes = new ArrayList<BlobNode>();
 
-	// The four colored sides of the board
-	private BlobNode myEndA = new BlobNode(Player.ME, null);
-	private BlobNode myEndB = new BlobNode(Player.ME, null);
-	private BlobNode youEndA = new BlobNode(Player.YOU, null);
-	private BlobNode youEndB = new BlobNode(Player.YOU, null);
-
 	/**
 	 * Generates the board
 	 */
 	public BlobBoard()
 	{
-		nodes.add(myEndA);
-		nodes.add(myEndB);
-		nodes.add(youEndA);
-		nodes.add(youEndB);
-
 		for (int i = 1; i <= 11; i++)
 		{
 			for (char c = 'a'; c <= 'k'; c++)
@@ -45,14 +35,55 @@ public class BlobBoard implements BoardInterface
 	@Override
 	public NodeInterface getNode(int x, char y)
 	{
-		return null;
+		return findNode(new HexPoint(x, y));
 	}
 
 	@Override
 	public void applyMove(int x, char y, Player player)
 	{
 		HexPoint move = new HexPoint(x, y);
-		
+
+		BlobNode node = findNode(move);
+		node.setPlayer(player);
+
+		// Neighbors of the new one which also have the same color
+		List<BlobNode> coloredNeighbors = new ArrayList<BlobNode>();
+
+		for (HexPoint pt : PointUtilities.getNeighbors(move))
+		{
+			BlobNode nd = findNode(pt);
+			
+			if (nd != null && nd.getOccupied() == player && nd != node && !coloredNeighbors.contains(nd))
+			{
+				nodes.remove(nd);
+				coloredNeighbors.add(nd);
+			}
+		}
+
+		for (BlobNode sameColor : coloredNeighbors)
+		{
+			node.addPoints(sameColor.getPoints());
+		}
+
+	}
+
+	/**
+	 * Finds the {@link BlobNode} which contains the point
+	 * @param move The {@link HexPoint} to look for
+	 * @return The {@link BlobNode} (or null if we couldn't find it)
+	 */
+	private BlobNode findNode(HexPoint move)
+	{
+		for (BlobNode node : nodes)
+		{
+			for (HexPoint p : node.getPoints())
+			{
+				if (p != null && p.equals(move))
+					return node;
+			}
+		}
+
+		return null;
 	}
 
 }

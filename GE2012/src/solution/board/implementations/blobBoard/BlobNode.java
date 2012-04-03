@@ -43,6 +43,10 @@ public class BlobNode implements NodeInterface
 		this.player = player;
 	}
 
+	public void addPoints(List<HexPoint> neighbors)
+	{
+		allPoints.addAll(neighbors);
+	}
 
 	public HexPoint getPrimary()
 	{
@@ -53,6 +57,12 @@ public class BlobNode implements NodeInterface
 	public void setPrimary(HexPoint primary)
 	{
 		this.primary = primary;
+	}
+
+	@Override
+	public String toString()
+	{
+		return "BlobNode [player=" + player + ", primary=" + primary + ", allPoints=" + allPoints + "]";
 	}
 
 }

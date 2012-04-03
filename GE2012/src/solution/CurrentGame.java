@@ -79,9 +79,17 @@ public class CurrentGame
 			// result = list.get(which);
 		}
 
+		// \/ ==                                                            == \/
+		// TODO: maybe make this run in a new thread so we can save some time?
+		// On the start of the next move we would need to make sure this has 
+		// completed though!
+		
+		
 		// apply our move to the board
 		point = parseTheirString(result.toString());
+		
 		boardController.applyMove(point.getX(), point.getY(), Player.ME);
+		// /\ ==                                                            == /\
 
 		return result;
 	}
