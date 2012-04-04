@@ -202,8 +202,8 @@ public class HSearch implements AmitySolver
 	 * If there are two SVC's between two points on the board, a VC is created
 	 * @param C The current list of VC's between two points
 	 * @param SC the current list of SVC's between two points
-	 * @param u //TODO find out what this is
-	 * @param i
+	 * @param u union of g, c1, and c2
+	 * @param i same as u
 	 * @return Whether a new virtual connection was created
 	 */
 	private boolean applyOrDeductionRuleAndUpdate(List<SpecialHexPoint> C, List<SpecialHexPoint> SC,
