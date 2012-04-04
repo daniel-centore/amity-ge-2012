@@ -10,6 +10,7 @@ import solution.board.implementations.indivBoard.IndivBoard;
  * This accepts moves and applies them to all our boards
  * 
  * @author Daniel Centore
+ * @author Mike
  *
  */
 public class BoardController
@@ -43,7 +44,7 @@ public class BoardController
 
 	/**
 	 * Gets a list of all the {@link BoardInterface}s in the game
-	 * @return
+	 * @return boards
 	 */
 	public List<BoardInterface> getBoards()
 	{
@@ -52,7 +53,7 @@ public class BoardController
 
 	/**
 	 * Gets the instance of {@link IndivBoard} for this game
-	 * @return
+	 * @return indivBoard
 	 */
 	public IndivBoard getIndivBoard()
 	{

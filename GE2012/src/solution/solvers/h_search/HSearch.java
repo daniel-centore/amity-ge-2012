@@ -8,23 +8,24 @@ import solution.solvers.AmitySolver;
 import solution.solvers.WeightedPoint;
 
 /**
- * Class documentation.
- *
+ * One method of finding if we have a unblockable connection to the other side of the board
+ * A Virtual Connection (VC) is an unblockable path from one point to another
+ * A Semi-Virtual Connection(SVC) is a path that if it is not our turn, the oppponent can block the connection
  * @author Mike DiBuduo
  * @author Scott DellaTorre
  */
 public class HSearch implements AmitySolver {
 
     private void hSearch(List<HexPoint> G) {
-        List[][] C = new List[121][121], SC = new List[121][121];
+        List[][] C = new List[121][121], SC = new List[121][121];//creates a list of all possible points
         for (int i = 0; i < C.length; i++) {
             for (int j = 0; j < C[i].length; j++) {
                 C[i][j] = new ArrayList<SpecialHexPoint>();
             }
         }
         
-        List<VirtualConnection> VCs = new ArrayList<VirtualConnection>();
-        List<VirtualConnection> newVCs = new ArrayList<VirtualConnection>();
+        List<VirtualConnection> VCs = new ArrayList<VirtualConnection>();//list of the VC's
+        List<VirtualConnection> newVCs = new ArrayList<VirtualConnection>();//list of the SVC's
         do {
             for (HexPoint g : G) {
                 for (HexPoint g1 : G) {
@@ -67,6 +68,14 @@ public class HSearch implements AmitySolver {
 
     }
 
+    /**
+     * Analyzes the SCV's and determines if a VC can be created
+     * If there are two SVC's between two points on the board, a VC is created
+     * @param C The current list of VC's between two points
+     * @param SC the current list of SVC's bwtween two points
+     * @param u //TODO find out what this is
+     * @param i
+     */
     private void orDeductionAndUpdate(List<HexPoint> C, List<HexPoint> SC,
             List<HexPoint> u, List<HexPoint> i) {
         for (HexPoint sc1 : SC) {
