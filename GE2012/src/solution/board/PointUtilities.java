@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Has untilities for working with {@link HexPoint}s
+ * Has utilities for working with {@link HexPoint}s
  * 
  * @author Daniel Centore
  * @author Mike DiBuduo

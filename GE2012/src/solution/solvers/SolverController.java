@@ -14,13 +14,14 @@ import solution.solvers.multiplied.MultSolver;
  * This controls all our solvers and generates the master weight table
  * 
  * @author Daniel Centore
+ * @author Mike
  *
  */
 public class SolverController
 {
-	private List<AmitySolver> solvers;
+	private List<AmitySolver> solvers; //list of solvers
 	private HashMap<HexPoint, WeightedPoint> map;	// map of the points on our grid
-	private CurrentGame curr; 
+	private CurrentGame curr; //Current game
 	
 	public SolverController(CurrentGame curr)
 	{
@@ -31,7 +32,7 @@ public class SolverController
 	
 	/**
 	 * Gets the highest rated move. PROBABLY VERY SLOW.
-	 * @return
+	 * @return the "best move" possible according to our solver
 	 */
 	public WeightedPoint getMove()
 	{
