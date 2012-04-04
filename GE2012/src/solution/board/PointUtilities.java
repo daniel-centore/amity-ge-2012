@@ -62,4 +62,14 @@ public class PointUtilities
 		
 		return result;
 	}
+	
+	/**
+	 * Checks if two {@link HexPoint}s are neighbors
+	 * @param hp1 first {@link HexPOint}
+	 * @param hp2 second {@link HexPoint}
+	 * @return Whether they are neighbors
+	 */
+	public static boolean areNeighbors(HexPoint hp1, HexPoint hp2) {
+		return getNeighbors(hp1).contains(hp2);
+	}
 }

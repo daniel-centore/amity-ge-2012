@@ -86,7 +86,7 @@ public class HexPoint
 	}
 
 	/**
-	 * returns a String representaiton of a HexPoint
+	 * returns a String representation of a HexPoint
 	 */
 	@Override
 	public String toString()

@@ -1,147 +1,291 @@
 package solution.solvers.h_search;
 
+import hex.HexState;
+
 import java.util.ArrayList;
 import java.util.List;
 
+import solution.board.BoardInterface;
 import solution.board.HexPoint;
+import solution.board.Player;
+import solution.board.PointUtilities;
 import solution.solvers.AmitySolver;
 import solution.solvers.WeightedPoint;
 
 /**
  * One method of finding if we have a unblockable connection to the other side of the board
  * A Virtual Connection (VC) is an unblockable path from one point to another
- * A Semi-Virtual Connection(SVC) is a path that if it is not our turn, the oppponent can block the connection
+ * A Semi-Virtual Connection(SVC) is a path that if it is not our turn, the opponent can block the connection
  * @author Mike DiBuduo
  * @author Scott DellaTorre
  */
-public class HSearch implements AmitySolver {
+public class HSearch implements AmitySolver
+{
 
-    private void hSearch(List<HexPoint> G) {
-        List[][] C = new List[121][121], SC = new List[121][121];//creates a list of all possible points
-        for (int i = 0; i < C.length; i++) {
-            for (int j = 0; j < C[i].length; j++) {
-                C[i][j] = new ArrayList<SpecialHexPoint>();
-            }
-        }
-        
-        List<VirtualConnection> VCs = new ArrayList<VirtualConnection>();//list of the VC's
-        List<VirtualConnection> newVCs = new ArrayList<VirtualConnection>();//list of the SVC's
-        do {
-            for (HexPoint g : G) {
-                for (HexPoint g1 : G) {
-                    for (HexPoint g2 : G) {
+	private final BoardInterface board;
+	private final List[][][][] C, SC;
 
-                        if (g1 == g2) {
-                            continue;
-                        }
-                        //LOOP2 over g1, g2  G such that:
-                        //g1 != g2,
-                        //at least one of the lists C(g1, g) or C(g2, g) contains at least one new carrier.
-                        //If g is black then, additionally, g1 and g2 should be both empty.
-                        //LOOP3 over c1  C(g1, g) and c2  C(g2, g) such that:
-                        //At least one of the carriers c1 or c2 is new,
-                        //c1  c2 = ,
-                        //g1 / c2 and g2 / c1.
-                        //IF (g is black)
-                        //c = c1  c2. // the AND Deduction Rule
-                        //UPDATE C(g1, g2) with c.
-                        //ELSE
-                        //sc = c1  g  c2. // the AND Deduction Rule
-                        //UPDATE SC(g1, g2) with sc.
-                        //IF (the last UPDATE is successful)
-                        //APPLY_THE_OR_DEDUCTION_RULE_AND_UPDATE
-                        //(C_SET = C(g1, g2),
-                        //SC_SET = SC(g1, g2)  sc,
-                        //UNION = sc,
-                        //INTERSECTION = sc )
-                        //END of IF
-                        //END of IF
-                        //END of LOOP3
-                        //END of LOOP2
-                        //END of LOOP1
-                        {
-                        }
-                    }
-                }
-            }
-        } while (!newVCs.isEmpty());
+	public HSearch(BoardInterface board)
+	{
+		this.board = board;
+		int N = HexState.N;
+		C = new List[N][N][N][N];
+		SC = new List[N][N][N][N];
+	}
 
-    }
+	private void hSearch()
+	{
+		int N = HexState.N;
+		int step = 0;
 
-    /**
-     * Analyzes the SCV's and determines if a VC can be created
-     * If there are two SVC's between two points on the board, a VC is created
-     * @param C The current list of VC's between two points
-     * @param SC the current list of SVC's bwtween two points
-     * @param u //TODO find out what this is
-     * @param i
-     */
-    private void orDeductionAndUpdate(List<HexPoint> C, List<HexPoint> SC,
-            List<HexPoint> u, List<HexPoint> i) {
-        for (HexPoint sc1 : SC) {
-            List<HexPoint> u1 = new ArrayList<HexPoint>(u); //union
-            u1.add(sc1);
+		for (int x1 = 0; x1 < N; x1++)
+		{
+			for (int y1 = 0; y1 < N; y1++)
+			{
+				for (int x2 = 0; x2 < N; x2++)
+				{
+					for (int y2 = 0; y2 < N; y2++)
+					{
+						C[x1][y1][x2][y2] = new ArrayList<SpecialHexPoint>();
+						SC[x1][y1][x2][y2] = new ArrayList<SpecialHexPoint>();
 
-            List<HexPoint> i1 = new ArrayList<HexPoint>();
-            if (i.contains(sc1)) {
-                i1.add(sc1);
-                List<HexPoint> newSC = new ArrayList<HexPoint>(SC);
-                newSC.remove(sc1);
-                orDeductionAndUpdate(C, newSC, u1, i1);
-            } else {
-                C.addAll(u1);
-                //C = u1;
-                //idk which one it means by update
-            }
+						if (PointUtilities.areNeighbors(new HexPoint(x1, (char) ('A' + y1)),
+								new HexPoint(x2, (char) ('A' + y2))))
+						{
+							C[x1][y1][x2][y2].add(new SpecialHexPoint(null, step));
+						}
+					}
+				}
 
-        }
+			}
+		}
 
-    }
+		boolean newVC;
+		do
+		{
+			newVC = false;
+			step++;
 
-    private class SpecialHexPoint extends HexPoint {
+			for (int x = 0; x < N; x++)
+			{
+				for (int y = 0; y < N; y++)
+				{
 
-        private boolean isNew = true;
+					HexPoint g = new HexPoint(x, (char) ('A' + y));
 
-        public SpecialHexPoint(int x, char y) {
-            super(x, y);
-        }
+					for (int x1 = 0; x1 < N; x1++)
+					{
+						for (int y1 = 0; y1 < N; y1++)
+						{
 
-        public SpecialHexPoint(HexPoint hexPoint) {
-            super(hexPoint.getX(), hexPoint.getY());
-        }
+							HexPoint g1 = new HexPoint(x1, (char) ('A' + y1));
 
-        private void setOld() {
-            isNew = false;
-        }
-    }
+							for (int x2 = 0; x2 < N; x2++)
+							{
+								for (int y2 = 0; y2 < N; y2++)
+								{
 
-    private class VirtualConnection {
+									HexPoint g2 = new HexPoint(x2, (char) ('A' + y2));
 
-        private final ArrayList<HexPoint> carriers;
-        private boolean isNew = true;
-        private final HexPoint x, y;
+									// g1 must not equal g2
+									if (g1.equals(g2))
+									{
+										continue;
+									}
 
-        private VirtualConnection(ArrayList<HexPoint> carriers, HexPoint x,
-                HexPoint y) {
-            this.carriers = carriers;
-            this.x = x;
-            this.y = y;
-        }
+									// C(g1, g) or C(g2, g) must contain at least one new carrier
+									boolean containsNewCarrier = false;
+									for (SpecialHexPoint c1 : (List<SpecialHexPoint>) C[x1][y1][x][y])
+									{
+										if (step - c1.creationStep <= 1)
+										{
+											containsNewCarrier = true;
+										}
+									}
+									for (SpecialHexPoint c2 : (List<SpecialHexPoint>) C[x2][y2][x][y])
+									{
+										if (step - c2.creationStep <= 1)
+										{
+											containsNewCarrier = true;
+										}
+									}
+									if (!containsNewCarrier)
+									{
+										continue;
+									}
 
-        private void setOld() {
-            isNew = false;
-        }
-    }
+									// If g has your color, g1 and g2 must both be empty
+									if (board.getNode(g.getX(), g.getY()).getOccupied().equals(Player.ME))
+									{
+										if (!board.getNode(g1.getX(), g1.getY()).getOccupied().equals(Player.EMPTY))
+										{
+											continue;
+										}
+										if (!board.getNode(g2.getX(), g2.getY()).getOccupied().equals(Player.EMPTY))
+										{
+											continue;
+										}
+									}
 
-    @Override
-    public float getWeight() {
-        //TODO: Calculate weight
-        return 1;
-    }
+									for (SpecialHexPoint c1 : (List<SpecialHexPoint>) C[x1][y1][x][y])
+									{
 
-    @Override
-    public List<WeightedPoint> getPoints() {
-        //TODO: get points
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
+										for (SpecialHexPoint c2 : (List<SpecialHexPoint>) C[x2][y2][x][y])
+										{
+
+											// At least one of the carriers c1 or c2 must be new
+											if (step - c1.creationStep > 1 && step - c2.creationStep > 1)
+											{
+												continue;
+											}
+
+											// c1 and c2 must not be equal (my interpretation might not be correct here)
+											if (c1.hexPoint.equals(c2.hexPoint))
+											{
+												continue;
+											}
+
+											// g1 must not equal c2
+											if (g1.equals(c2))
+											{
+												continue;
+											}
+
+											// g2 must not equal c1
+											if (g2.equals(c1))
+											{
+												continue;
+											}
+
+											if (board.getNode(g.getX(), g.getY()).getOccupied().equals(Player.ME))
+											{
+												C[x1][y1][x2][y2].add(new SpecialHexPoint(c1.hexPoint, step));
+												C[x1][y1][x2][y2].add(new SpecialHexPoint(c2.hexPoint, step));
+												newVC = true;
+											}
+											else
+											{
+												List<SpecialHexPoint> sc = new ArrayList<>();
+												sc.add(new SpecialHexPoint(g, step));
+												sc.add(new SpecialHexPoint(c1.hexPoint, step));
+												sc.add(new SpecialHexPoint(c2.hexPoint, step));
+
+												SC[x1][y1][x2][y2].addAll(sc);
+
+												// If the last update is successful??? (idk what they mean by that)
+												// maybe if SC(g1, g2) doesn't already contain sc, continue???
+
+												List<SpecialHexPoint> scSet = new ArrayList<SpecialHexPoint>(SC[x1][y2][x2][y2]);
+												scSet.removeAll(sc);
+												if (applyOrDeductionRuleAndUpdate(C[x1][y1][x2][y2], scSet, sc, sc))
+												{
+													newVC = true;
+												}
+											}
+
+										}
+
+									}
+
+								}
+							}
+						}
+					}
+				}
+			}
+		} while (newVC);
+
+	}
+
+	/**
+	 * Analyzes the SCV's and determines if a VC can be created
+	 * If there are two SVC's between two points on the board, a VC is created
+	 * @param C The current list of VC's between two points
+	 * @param SC the current list of SVC's between two points
+	 * @param u //TODO find out what this is
+	 * @param i
+	 * @return Whether a new virtual connection was created
+	 */
+	private boolean applyOrDeductionRuleAndUpdate(List<SpecialHexPoint> C, List<SpecialHexPoint> SC,
+			List<SpecialHexPoint> u, List<SpecialHexPoint> i)
+	{
+
+		boolean newVC = false;
+
+		for (SpecialHexPoint sc1 : SC)
+		{
+			List<SpecialHexPoint> u1 = new ArrayList<SpecialHexPoint>(u); // union
+			u1.add(sc1);
+
+			List<SpecialHexPoint> i1 = new ArrayList<SpecialHexPoint>();
+			if (i.contains(sc1))
+			{
+				i1.add(sc1);
+				List<SpecialHexPoint> newSC = new ArrayList<SpecialHexPoint>(SC);
+				newSC.remove(sc1);
+				if (applyOrDeductionRuleAndUpdate(C, newSC, u1, i1))
+				{
+					newVC = true;
+				}
+			}
+			else
+			{
+				C.addAll(u1);
+				newVC = true;
+			}
+
+		}
+
+		return newVC;
+
+	}
+
+	private class SpecialHexPoint
+	{
+
+		private final int creationStep;
+		private final HexPoint hexPoint;
+
+		public SpecialHexPoint(HexPoint point, int step)
+		{
+			creationStep = step;
+			hexPoint = point;
+		}
+
+	}
+
+	private class VirtualConnection
+	{
+
+		private final ArrayList<HexPoint> carriers;
+		private boolean isNew = true;
+		private final HexPoint x, y;
+
+		private VirtualConnection(ArrayList<HexPoint> carriers, HexPoint x,
+				HexPoint y)
+		{
+			this.carriers = carriers;
+			this.x = x;
+			this.y = y;
+		}
+
+		private void setOld()
+		{
+			isNew = false;
+		}
+	}
+
+	@Override
+	public float getWeight()
+	{
+		return 1;
+	}
+
+	@Override
+	public List<WeightedPoint> getPoints()
+	{
+		hSearch();
+		return new ArrayList<WeightedPoint>();
+
+	}
 }
