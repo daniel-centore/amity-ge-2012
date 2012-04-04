@@ -8,7 +8,7 @@ import solution.board.NodeInterface;
 import solution.board.Player;
 
 /**
- * This is a bard where every single spot has a representation
+ * This is a board where every single spot has a representation
  * 
  * @author Daniel Centore
  *
@@ -17,6 +17,9 @@ public class IndivBoard implements BoardInterface
 {
 	public HashMap<HexPoint, IndivNode> map = new HashMap<HexPoint, IndivNode>();	// map of the points on our grid
 	
+	/**
+	 * Creates a new HexPoint for all points on a regular 11x11 board
+	 */
 	public IndivBoard()
 	{
 		for (int i = 1; i <= 11; i++)

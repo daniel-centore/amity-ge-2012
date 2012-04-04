@@ -8,6 +8,11 @@ import hex.HexState;
 
 import solution.debug.DebugWindow;
 
+/**
+ * Our own custom solver designed to compete in a Hex tornament
+ * @author Mike DiBuduo
+ *
+ */
 public class HexPlayer_Amity extends GamePlayer
 {
 	private CurrentGame currentGame;

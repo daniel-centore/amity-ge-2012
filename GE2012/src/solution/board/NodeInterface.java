@@ -8,6 +8,7 @@ import java.util.List;
  * Some may have it represent one position, others may have it represent blobs.
  * 
  * @author Daniel Centore
+ * @author Mike
  *
  */
 public interface NodeInterface
@@ -20,7 +21,8 @@ public interface NodeInterface
 	public List<HexPoint> getPoints();
 	
 	/**
-	 * @return The {@link Player} that occupies the space atm
+	 * Returns the {@link Player} that occupies the space
+	 * @return {@link Player} that occupies the space currently
 	 */
 	public Player getOccupied();
 	
