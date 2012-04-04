@@ -165,7 +165,7 @@ public class HSearch implements AmitySolver
 											}
 											else
 											{
-												List<SpecialHexPoint> sc = new ArrayList<>();
+												List<SpecialHexPoint> sc = new ArrayList<SpecialHexPoint>();
 												sc.add(new SpecialHexPoint(g, step));
 												sc.add(new SpecialHexPoint(c1.hexPoint, step));
 												sc.add(new SpecialHexPoint(c2.hexPoint, step));
