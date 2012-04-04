@@ -23,7 +23,7 @@ public class HSearch implements AmitySolver
 {
 
 	private final BoardInterface board;
-	private final List[][][][] C, SC;
+	private final List<SpecialHexPoint>[][][][] C, SC;
 
 	public HSearch(BoardInterface board)
 	{
@@ -252,27 +252,6 @@ public class HSearch implements AmitySolver
 			hexPoint = point;
 		}
 
-	}
-
-	private class VirtualConnection
-	{
-
-		private final ArrayList<HexPoint> carriers;
-		private boolean isNew = true;
-		private final HexPoint x, y;
-
-		private VirtualConnection(ArrayList<HexPoint> carriers, HexPoint x,
-				HexPoint y)
-		{
-			this.carriers = carriers;
-			this.x = x;
-			this.y = y;
-		}
-
-		private void setOld()
-		{
-			isNew = false;
-		}
 	}
 
 	@Override
