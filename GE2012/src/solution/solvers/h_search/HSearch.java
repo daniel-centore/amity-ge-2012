@@ -3,12 +3,14 @@ package solution.solvers.h_search;
 import hex.HexState;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import solution.board.BoardInterface;
 import solution.board.HexPoint;
 import solution.board.Player;
 import solution.board.PointUtilities;
+import solution.board.implementations.indivBoard.IndivBoard;
 import solution.solvers.AmitySolver;
 import solution.solvers.WeightedPoint;
 
@@ -22,20 +24,49 @@ import solution.solvers.WeightedPoint;
 public class HSearch implements AmitySolver
 {
 
+	public static void main(String[] args)
+	{
+		IndivBoard board = new IndivBoard();
+		board.applyMove(1, 'a', Player.ME);
+		board.applyMove(2, 'b', Player.ME);
+		
+		HSearch hey = new HSearch(board);
+		hey.hSearch();
+		
+		for (List[][][] start : hey.C)
+		{
+			for (List[][] start2 : start)
+			{
+				for (List[] start3 : start2)
+				{
+					for (List val : start3)
+					{
+						System.out.println(val);						
+					}
+					
+				}
+				
+			}
+			
+		}
+	}
+	
 	private final BoardInterface board;
 	private final List<SpecialHexPoint>[][][][] C, SC;
+	private final int N;
 
 	public HSearch(BoardInterface board)
 	{
 		this.board = board;
-		int N = HexState.N;
+		N = 11;		//TODO PUT BACK LIKE OLD
+		//int N = HexState.N;
 		C = new List[N][N][N][N];
 		SC = new List[N][N][N][N];
 	}
 
 	private void hSearch()
 	{
-		int N = HexState.N;
+		//int N = HexState.N;
 		int step = 0;
 
 		for (int x1 = 0; x1 < N; x1++)
@@ -49,8 +80,8 @@ public class HSearch implements AmitySolver
 						C[x1][y1][x2][y2] = new ArrayList<SpecialHexPoint>();
 						SC[x1][y1][x2][y2] = new ArrayList<SpecialHexPoint>();
 
-						if (PointUtilities.areNeighbors(new HexPoint(x1, (char) ('A' + y1)),
-								new HexPoint(x2, (char) ('A' + y2))))
+						if (PointUtilities.areNeighbors(new HexPoint(x1, (char) ('a' + y1)),
+								new HexPoint(x2, (char) ('a' + y2))))
 						{
 							C[x1][y1][x2][y2].add(new SpecialHexPoint(null, step));
 						}
@@ -71,21 +102,21 @@ public class HSearch implements AmitySolver
 				for (int y = 0; y < N; y++)
 				{
 
-					HexPoint g = new HexPoint(x, (char) ('A' + y));
+					HexPoint g = new HexPoint(x, (char) ('a' + y));
 
 					for (int x1 = 0; x1 < N; x1++)
 					{
 						for (int y1 = 0; y1 < N; y1++)
 						{
 
-							HexPoint g1 = new HexPoint(x1, (char) ('A' + y1));
+							HexPoint g1 = new HexPoint(x1, (char) ('a' + y1));
 
 							for (int x2 = 0; x2 < N; x2++)
 							{
 								for (int y2 = 0; y2 < N; y2++)
 								{
 
-									HexPoint g2 = new HexPoint(x2, (char) ('A' + y2));
+									HexPoint g2 = new HexPoint(x2, (char) ('a' + y2));
 
 									// g1 must not equal g2
 									if (g1.equals(g2))
