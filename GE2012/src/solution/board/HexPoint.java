@@ -27,7 +27,7 @@ public class HexPoint
 
 	/**
 	 * Gets the row (integer) of the point
-	 * @return
+	 * @return x
 	 */
 	public int getX()
 	{
@@ -45,7 +45,7 @@ public class HexPoint
 
 	/**
 	 * Gets the column as a char
-	 * @return The column
+	 * @return y
 	 */
 	public char getY()
 	{
@@ -54,7 +54,7 @@ public class HexPoint
 
 	/**
 	 * Sets the column
-	 * @param y The column to set it to
+	 * @param y 
 	 */
 	public void setY(char y)
 	{
@@ -85,6 +85,9 @@ public class HexPoint
 		return true;
 	}
 
+	/**
+	 * returns a String representaiton of a HexPoint
+	 */
 	@Override
 	public String toString()
 	{
