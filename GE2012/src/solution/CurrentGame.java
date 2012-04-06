@@ -1,13 +1,18 @@
 package solution;
 
+import java.util.ArrayList;
+
 import game.GameMove;
 import game.GameState;
+import game.Util;
 
 import hex.HexMove;
+import hex.HexState;
 
 import solution.board.BoardController;
 import solution.board.HexPoint;
 import solution.board.Player;
+import solution.debug.DebugWindow;
 import solution.solvers.SolverController;
 
 /**
@@ -75,23 +80,48 @@ public class CurrentGame
 					initial = new HexPoint(7, 'f');
 				else
 					initial = new HexPoint(5, 'f');
-				
+
 				solverController.setInitial(initial);
 
 				connectRoute = CONNECT_LETTERS;
-				
+
 				result = toHexMove(initial);
 			}
 			else
 			{
 				HexPoint move = solverController.getMove();// .toHexPoint();
-				result = toHexMove(move);
+
+				if (move == null)
+				{
+					DebugWindow.println("WARNING: Resorting to random due to failed move");
+					HexState board = (HexState) state;
+					ArrayList<HexMove> list = new ArrayList<HexMove>();
+					HexMove mv = new HexMove();
+					for (int r = 0; r < HexState.N; r++)
+					{
+						for (int c = 0; c < HexState.N; c++)
+						{
+							mv.row = r;
+							mv.col = c;
+							if (board.moveOK(mv))
+							{
+								list.add((HexMove) mv.clone());
+							}
+						}
+					}
+					int which = Util.randInt(0, list.size() - 1);
+					result = list.get(which);
+				}
+				else
+					result = toHexMove(move);
 			}
 
 		}
 
 		// apply our move to the board
 		point = parseTheirString(result.toString());
+
+		DebugWindow.println(point.toString());
 
 		boardController.applyMove(point.getX(), point.getY(), Player.ME);
 		// /\ == == /\

@@ -48,7 +48,7 @@ public class SolverController
 		if (broken != null)
 			return broken;
 
-		//DebugWindow.println(across(true) + " " + across(false));
+		// DebugWindow.println(across(true) + " " + across(false));
 
 		// follow chain down board
 		return followChain();
@@ -65,7 +65,7 @@ public class SolverController
 	 */
 	private boolean across(boolean left)
 	{
-		// if we have one in a B row on both sides then basically we do (TODO: check the
+		// if we have one in a B row on both sides then basically we do (TODO: check the wall for broken connections)
 
 		boolean a = false;
 		boolean b = false;
@@ -113,7 +113,7 @@ public class SolverController
 			}
 		}
 
-		//DebugWindow.println(possible.toString());
+		// DebugWindow.println(possible.toString());
 		Iterator<HexPoint> itr = possible.iterator();
 
 		int left = Integer.MAX_VALUE;
@@ -204,7 +204,7 @@ public class SolverController
 			retn = Math.min(i, j);
 		}
 
-		//DebugWindow.println(pnt.toString() + " " + retn);
+		// DebugWindow.println(pnt.toString() + " " + retn);
 
 		return retn;
 
@@ -228,18 +228,22 @@ public class SolverController
 					if (pt.getY() == 'b')
 					{
 						if ((indivBoard.getNode(pt.getX(), 'a').getOccupied() == Player.YOU))
-							return new HexPoint(pt.getX() + 1, 'a');
+							if ((indivBoard.getNode(pt.getX() + 1, 'a').getOccupied() == Player.EMPTY))
+								return new HexPoint(pt.getX() + 1, 'a');
 
 						if ((indivBoard.getNode(pt.getX() + 1, 'a').getOccupied() == Player.YOU))
-							return new HexPoint(pt.getX(), 'a');
+							if ((indivBoard.getNode(pt.getX(), 'a').getOccupied() == Player.EMPTY))
+								return new HexPoint(pt.getX(), 'a');
 					}
 					else
 					{
 						if ((indivBoard.getNode(pt.getX(), 'k').getOccupied() == Player.YOU))
-							return new HexPoint(pt.getX() - 1, 'k');
+							if ((indivBoard.getNode(pt.getX() - 1, 'k').getOccupied() == Player.EMPTY))
+								return new HexPoint(pt.getX() - 1, 'k');
 
 						if ((indivBoard.getNode(pt.getX() - 1, 'k').getOccupied() == Player.YOU))
-							return new HexPoint(pt.getX(), 'k');
+							if ((indivBoard.getNode(pt.getX(), 'k').getOccupied() == Player.EMPTY))
+								return new HexPoint(pt.getX(), 'k');
 					}
 				}
 				else if (curr.getConnectRoute() == CurrentGame.CONNECT_NUMBERS && (pt.getX() == 2 || pt.getX() == 10))
@@ -247,18 +251,22 @@ public class SolverController
 					if (pt.getX() == 2)
 					{
 						if ((indivBoard.getNode(1, pt.getY()).getOccupied() == Player.YOU))
-							return new HexPoint(1, (char) (pt.getY() + 1));
+							if ((indivBoard.getNode(1, (char) (pt.getY() + 1)).getOccupied() == Player.EMPTY))
+								return new HexPoint(1, (char) (pt.getY() + 1));
 
 						if ((indivBoard.getNode(1, (char) (pt.getY() + 1)).getOccupied() == Player.YOU))
-							return new HexPoint(1, pt.getY());
+							if ((indivBoard.getNode(1, pt.getY()).getOccupied() == Player.EMPTY))
+								return new HexPoint(1, pt.getY());
 					}
 					else
 					{
 						if ((indivBoard.getNode(11, pt.getY()).getOccupied() == Player.YOU))
-							return new HexPoint(11, (char) (pt.getY() - 1));
+							if ((indivBoard.getNode(1, (char) (pt.getY() - 1)).getOccupied() == Player.EMPTY))
+								return new HexPoint(11, (char) (pt.getY() - 1));
 
 						if ((indivBoard.getNode(11, (char) (pt.getY() - 1)).getOccupied() == Player.YOU))
-							return new HexPoint(11, pt.getY());
+							if ((indivBoard.getNode(1, pt.getY()).getOccupied() == Player.EMPTY))
+								return new HexPoint(11, pt.getY());
 					}
 				}
 			}
