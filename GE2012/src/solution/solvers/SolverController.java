@@ -44,7 +44,7 @@ public class SolverController
 		if (broken != null)
 			return broken;
 
-		DebugWindow.println(across()+"");
+		DebugWindow.println(across(true)+" "+across(false));
 		
 		// follow chain down board
 		return followChain();
@@ -60,9 +60,9 @@ public class SolverController
 	 * True if we have 2 chains all the way across
 	 * @return
 	 */
-	private boolean across()
+	private boolean across(boolean left)
 	{
-		// if we have one in a B row on both sides then basically we do
+		// if we have one in a B row on both sides then basically we do (TODO: check the 
 		
 		boolean a = false;
 		boolean b = false;
@@ -80,14 +80,14 @@ public class SolverController
 				}
 				
 				if ((curr.getConnectRoute() == CurrentGame.CONNECT_LETTERS && (node.getY() == 'j' || node.getY() == 'k' )) ||
-						(curr.getConnectRoute() == CurrentGame.CONNECT_NUMBERS && (node.getX() == 10 || node.getX() == 10 )))
+						(curr.getConnectRoute() == CurrentGame.CONNECT_NUMBERS && (node.getX() == 10 || node.getX() == 11 )))
 				{
 					b = true;
 				}
 			}
 		}
 		
-		return (a && b);
+		return (left ? a : b);
 		
 		
 	}
@@ -111,6 +111,7 @@ public class SolverController
 			}
 		}
 
+		DebugWindow.println(possible.toString());
 		Iterator<HexPoint> itr = possible.iterator();
 
 		int left = Integer.MAX_VALUE;
@@ -146,7 +147,7 @@ public class SolverController
 			}
 			else
 			{
-				if (h.getX() < 5)
+				if (h.getX() < 6)
 				{
 					int dist = calculateDistance(h);
 					if (dist < left)
@@ -168,6 +169,11 @@ public class SolverController
 
 		} while (itr.hasNext());
 		
+		if (across(true))
+			return bestRight;
+		else if (across(false))
+			return bestLeft;
+		
 		if (left > right && bestLeft != null)
 			return bestLeft;
 		else
@@ -179,6 +185,7 @@ public class SolverController
 
 	private int calculateDistance(HexPoint pnt)
 	{
+		int retn;
 		if (curr.getConnectRoute() == CurrentGame.CONNECT_LETTERS)
 		{
 			
@@ -187,16 +194,44 @@ public class SolverController
 			
 			DebugWindow.println(i+" "+j);
 
-			return Math.min(i, j);
+			retn = Math.min(i, j);
 		}
 		else
 		{
 			int i = pnt.getX() - 1;
 			int j = 11 - pnt.getX();
 
-			return Math.min(i, j);
+			retn = Math.min(i, j);
 		}
+		
+		DebugWindow.println(pnt.toString()+" "+retn);
+		
+		return retn;
 
+	}
+	
+	/**
+	 * Checks if two-chains to the walls are broken
+	 * @return
+	 */
+	private HexPoint baseTwoChainsBroken()
+	{
+		for (IndivNode node : indivBoard.getPoints())
+		{
+			if (node.getOccupied() == Player.ME)
+			{
+				HexPoint pt = node.getPoints().get(0);
+				
+				if (curr.getConnectRoute() == CurrentGame.CONNECT_LETTERS && (pt.getY() == 'b' || pt.getY() == 'j'))
+				{
+					
+				}
+				else if (curr.getConnectRoute() == CurrentGame.CONNECT_NUMBERS && (pt.getX() == 2 || pt.getX() == 10))
+				{
+					
+				}
+			}
+		}
 	}
 
 	/**
