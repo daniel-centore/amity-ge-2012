@@ -1,6 +1,7 @@
 package solution.solvers;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
@@ -66,13 +67,12 @@ public class SolverController
 	}
 
 	/**
+	 * TODO: should we account for the fact that we sometimes use random points here?
 	 * Checks to see if there are two-chains all the way across the board
 	 * @return true if there is a two-chain path across the board, false if not
 	 */
 	private boolean across(boolean left)
 	{
-		// if we have one in a B row on both sides then basically we do (TODO: CHECK THE WALL FOR BROKEN CONNECTIONS)
-
 		boolean a = false;
 		boolean b = false;
 
@@ -80,21 +80,59 @@ public class SolverController
 		{
 			if (node.getOccupied() == Player.ME)
 			{
-				// || node.getY() == 'j')
-				// || node.getX() == 10)
-				if ((curr.getConnectRoute() == CurrentGame.CONNECT_LETTERS && (node.getY() == 'b' || node.getY() == 'a')) ||
-						(curr.getConnectRoute() == CurrentGame.CONNECT_NUMBERS && (node.getX() == 2 || node.getX() == 1)))
+				if (curr.getConnectRoute() == CurrentGame.CONNECT_LETTERS)
 				{
-					a = true;		// TODO: put back to true. its just false for testing reasons.
-				}
+					if (node.getY() == 'a')
+						a = true;
+					else if (node.getY() == 'b')
+					{
+						// check the connection to the wall
+						HexPoint[] k = { new HexPoint(node.getX(), 'a'), new HexPoint(node.getX() + 1, 'a') };
 
-				if ((curr.getConnectRoute() == CurrentGame.CONNECT_LETTERS && (node.getY() == 'j' || node.getY() == 'k')) ||
-						(curr.getConnectRoute() == CurrentGame.CONNECT_NUMBERS && (node.getX() == 10 || node.getX() == 11)))
+						if (IndivNode.empty(Arrays.asList(k), indivBoard)) // only if both connections are good
+							a = true;
+					}
+
+					if (node.getY() == 'k')
+						b = true;
+					else if (node.getY() == 'j')
+					{
+						// check the connection to the wall
+						HexPoint[] k = { new HexPoint(node.getX(), 'k'), new HexPoint(node.getX() - 1, 'k') };
+
+						if (IndivNode.empty(Arrays.asList(k), indivBoard)) // only if both connections are good
+							b = true;
+					}
+				}
+				else
 				{
-					b = true;
+					if (node.getX() == 1)
+						a = true;
+					else if (node.getX() == 2)
+					{
+						// check the connection to the wall
+						HexPoint[] k = { new HexPoint(1, node.getY()), new HexPoint(1, (char) (node.getY() + 1)) };
+
+						if (IndivNode.empty(Arrays.asList(k), indivBoard)) // only if both connections are good
+							a = true;
+					}
+
+					if (node.getX() == 11)
+						b = true;
+					else if (node.getX() == 10)
+					{
+						// check the connection to the wall
+						HexPoint[] k = { new HexPoint(11, node.getY()), new HexPoint(11, (char) (node.getY() - 1)) };
+
+						if (IndivNode.empty(Arrays.asList(k), indivBoard)) // only if both connections are good
+							b = true;
+					}
 				}
 			}
 		}
+
+		System.out.println("Left" + a);
+		System.out.println("right" + b);
 
 		return (left ? a : b);
 
@@ -132,7 +170,7 @@ public class SolverController
 
 		int right = Integer.MAX_VALUE;
 		HexPoint bestRight = null;
-		
+
 		if (!itr.hasNext())
 			return null;
 
@@ -190,6 +228,11 @@ public class SolverController
 		else if (across(false))
 			return bestLeft;
 
+//		if (bestLeft != null)
+//			left /= countPaths(bestLeft);
+//		if (bestRight != null)
+//			right /= countPaths(bestRight);
+
 		if (left > right && bestLeft != null)
 			return bestLeft;
 		else
@@ -205,7 +248,7 @@ public class SolverController
 	private int calculateDistance(HexPoint pnt)
 	{
 		// TODO: dijkstra to figure out the distance!
-		
+
 		int retn;
 		if (curr.getConnectRoute() == CurrentGame.CONNECT_LETTERS)
 		{
@@ -225,20 +268,33 @@ public class SolverController
 
 		// DebugWindow.println(pnt.toString() + " " + countPaths(pnt));
 
-		// magic numbers which makes it focus more on the side being raped
-		int count = countPaths(pnt);
-		// count /= 10;
-
-		retn *= 100;
-		if (count > 5)
-			count = 5;
-		if (count <= 0)
-			count = 1;
-
-		retn /= count;
+		// // magic numbers which makes it focus more on the side being raped
+		 int count = countPaths(pnt);
+		 // count /= 10;
+		
+		 retn *= 100;
+		 if (count > 5)
+		 count = 5;
+		 if (count <= 0)
+		 count = 1;
+		
+		 retn /= count;
 
 		return retn;
 
+	}
+
+	/**
+	 * Checks if the path ehre is broken
+	 * @param a
+	 * @param b
+	 * @return
+	 */
+	private boolean broken(HexPoint a, HexPoint b)
+	{
+		List<HexPoint> conns = a.connections(b);
+
+		return !IndivNode.empty(conns, indivBoard);
 	}
 
 	/**
@@ -257,6 +313,9 @@ public class SolverController
 
 			for (HexPoint p : bridges)
 			{
+				if (indivBoard.getNode(p).getOccupied() == Player.YOU || broken(p, pt)) // don't count it if isn't ours
+					continue;
+
 				if (pt.getY() < 'e')
 				{
 					if (p.getY() < pt.getY()) // only count down
@@ -275,6 +334,9 @@ public class SolverController
 
 			for (HexPoint p : bridges)
 			{
+				if (indivBoard.getNode(p).getOccupied() == Player.YOU || broken(p, pt)) // don't count it if isn't ours
+					continue;
+
 				if (pt.getX() < 5)
 				{
 					if (p.getX() < pt.getX()) // only count down
@@ -404,7 +466,7 @@ public class SolverController
 	{
 		return initial;
 	}
-	
+
 	/**
 	 * sets the centerpiece for our algorithm
 	 * @param initial our centerpiece/starting move
