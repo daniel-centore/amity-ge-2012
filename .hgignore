@@ -1,0 +1,8 @@
+\.chg\..*$
+\.class$
+\.conflict\~$
+\.orig$
+\.orig\..*$
+\.rej$
+^Dumps/
+^bin/
