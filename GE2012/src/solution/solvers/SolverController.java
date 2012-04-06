@@ -1,6 +1,7 @@
 package solution.solvers;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
@@ -66,6 +67,7 @@ public class SolverController
 	}
 
 	/**
+	 * TODO: should we account for the fact that we sometimes use random points here?
 	 * Checks to see if there are two-chains all the way across the board
 	 * @return true if there is a two-chain path across the board, false if not
 	 */
@@ -80,21 +82,70 @@ public class SolverController
 		{
 			if (node.getOccupied() == Player.ME)
 			{
-				// || node.getY() == 'j')
-				// || node.getX() == 10)
-				if ((curr.getConnectRoute() == CurrentGame.CONNECT_LETTERS && (node.getY() == 'b' || node.getY() == 'a')) ||
-						(curr.getConnectRoute() == CurrentGame.CONNECT_NUMBERS && (node.getX() == 2 || node.getX() == 1)))
+				if (curr.getConnectRoute() == CurrentGame.CONNECT_LETTERS)
 				{
-					a = true;		// TODO: put back to true. its just false for testing reasons.
+					if (node.getY() == 'a')
+						a = true;
+					else if (node.getY() == 'b')
+					{
+						// check the connection to the wall
+						HexPoint[] k = { new HexPoint(node.getX(), 'a'), new HexPoint(node.getX() + 1, 'a') };
+						
+						if (IndivNode.empty(Arrays.asList(k), indivBoard))	// only if both connections are good
+							a = true;
+					}
+					
+					if (node.getY() == 'k')
+						b = true;
+					else if (node.getY() == 'j')
+					{
+						// check the connection to the wall
+						HexPoint[] k = { new HexPoint(node.getX(), 'k'), new HexPoint(node.getX() - 1, 'k') };
+						
+						if (IndivNode.empty(Arrays.asList(k), indivBoard))	// only if both connections are good
+							b = true;
+					}
 				}
-
-				if ((curr.getConnectRoute() == CurrentGame.CONNECT_LETTERS && (node.getY() == 'j' || node.getY() == 'k')) ||
-						(curr.getConnectRoute() == CurrentGame.CONNECT_NUMBERS && (node.getX() == 10 || node.getX() == 11)))
+				else
 				{
-					b = true;
+					if (node.getX() == 1)
+						a = true;
+					else if (node.getX() == 2)
+					{
+						// check the connection to the wall
+						HexPoint[] k = { new HexPoint(1, node.getY()), new HexPoint(1, (char) (node.getY() + 1)) };
+						
+						if (IndivNode.empty(Arrays.asList(k), indivBoard))	// only if both connections are good
+							a = true;
+					}
+					
+					if (node.getX() == 11)
+						b = true;
+					else if (node.getX() == 10)
+					{
+						// check the connection to the wall
+						HexPoint[] k = { new HexPoint(11, node.getY()), new HexPoint(11, (char) (node.getY() - 1)) };
+						
+						if (IndivNode.empty(Arrays.asList(k), indivBoard))	// only if both connections are good
+							b = true;
+					}
 				}
+				// if ((curr.getConnectRoute() == CurrentGame.CONNECT_LETTERS && (node.getY() == 'b' || node.getY() == 'a')) ||
+				// (curr.getConnectRoute() == CurrentGame.CONNECT_NUMBERS && (node.getX() == 2 || node.getX() == 1)))
+				// {
+				// a = true; // TODO: put back to true. its just false for testing reasons.
+				// }
+				//
+				// if ((curr.getConnectRoute() == CurrentGame.CONNECT_LETTERS && (node.getY() == 'j' || node.getY() == 'k')) ||
+				// (curr.getConnectRoute() == CurrentGame.CONNECT_NUMBERS && (node.getX() == 10 || node.getX() == 11)))
+				// {
+				// b = true;
+				// }
 			}
 		}
+		
+		System.out.println("Left"+ a);
+		System.out.println("right"+b);
 
 		return (left ? a : b);
 
@@ -132,7 +183,7 @@ public class SolverController
 
 		int right = Integer.MAX_VALUE;
 		HexPoint bestRight = null;
-		
+
 		if (!itr.hasNext())
 			return null;
 
@@ -205,7 +256,7 @@ public class SolverController
 	private int calculateDistance(HexPoint pnt)
 	{
 		// TODO: dijkstra to figure out the distance!
-		
+
 		int retn;
 		if (curr.getConnectRoute() == CurrentGame.CONNECT_LETTERS)
 		{
@@ -404,7 +455,7 @@ public class SolverController
 	{
 		return initial;
 	}
-	
+
 	/**
 	 * sets the centerpiece for our algorithm
 	 * @param initial our centerpiece/starting move
