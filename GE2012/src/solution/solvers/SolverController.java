@@ -65,7 +65,7 @@ public class SolverController
 	 */
 	private boolean across(boolean left)
 	{
-		// if we have one in a B row on both sides then basically we do (TODO: check the wall for broken connections)
+		// if we have one in a B row on both sides then basically we do (TODO: CHECK THE WALL FOR BROKEN CONNECTIONS)
 
 		boolean a = false;
 		boolean b = false;
@@ -79,7 +79,7 @@ public class SolverController
 				if ((curr.getConnectRoute() == CurrentGame.CONNECT_LETTERS && (node.getY() == 'b' || node.getY() == 'a')) ||
 						(curr.getConnectRoute() == CurrentGame.CONNECT_NUMBERS && (node.getX() == 2 || node.getX() == 1)))
 				{
-					a = true;
+					a = false;		// TODO: put back to true. its just false for testing reasons.
 				}
 
 				if ((curr.getConnectRoute() == CurrentGame.CONNECT_LETTERS && (node.getY() == 'j' || node.getY() == 'k')) ||
@@ -212,7 +212,7 @@ public class SolverController
 
 		// DebugWindow.println(pnt.toString() + " " + countPaths(pnt));
 
-		// magic numbers which make it foc
+		// magic numbers which makes it focus more on the side being raped
 		int count = countPaths(pnt);
 		// count /= 10;
 
@@ -244,12 +244,12 @@ public class SolverController
 
 			for (HexPoint p : bridges)
 			{
-				if (pt.getY() < 'f')
+				if (pt.getY() < 'e')
 				{
 					if (p.getY() < pt.getY()) // only count down
 						k += countPaths(p);
 				}
-				else
+				else if (pt.getY() > 'g')
 				{
 					if (p.getY() > pt.getY()) // only count up
 						k += countPaths(p);
@@ -262,12 +262,12 @@ public class SolverController
 
 			for (HexPoint p : bridges)
 			{
-				if (pt.getX() < 6)
+				if (pt.getX() < 5)
 				{
 					if (p.getX() < pt.getX()) // only count down
 						k += countPaths(p);
 				}
-				else
+				else if (pt.getX() > 7)
 				{
 					if (p.getX() > pt.getX()) // only count up
 						k += countPaths(p);
@@ -291,7 +291,7 @@ public class SolverController
 			{
 				HexPoint pt = node.getPoints().get(0);
 
-				// TODO: skip corner cases (B11, J1, k2, and A10)
+				// TODO: skip over the orner cases (B11, J1, k2, and A10) (o/w we crash!)
 				if (curr.getConnectRoute() == CurrentGame.CONNECT_LETTERS && (pt.getY() == 'b' || pt.getY() == 'j'))
 				{
 					if (pt.getY() == 'b')
