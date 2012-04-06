@@ -88,8 +88,14 @@ public class SolverController
 					{
 						// check the connection to the wall
 						HexPoint[] k = { new HexPoint(node.getX(), 'a'), new HexPoint(node.getX() + 1, 'a') };
-
-						if (IndivNode.empty(Arrays.asList(k), indivBoard)) // only if both connections are good
+						List<HexPoint> good = new ArrayList<HexPoint>();
+						for (HexPoint j : k)
+						{
+							if (j.isGood())
+								good.add(j);
+						}
+						
+						if (IndivNode.empty(good, indivBoard)) // only if both connections are good
 							a = true;
 					}
 
@@ -100,9 +106,14 @@ public class SolverController
 						// check the connection to the wall
 						HexPoint[] k = { new HexPoint(node.getX(), 'k'), new HexPoint(node.getX() - 1, 'k') };
 
-						DebugWindow.println(Arrays.asList(k) + " " + IndivNode.empty(Arrays.asList(k), indivBoard));
-
-						if (IndivNode.empty(Arrays.asList(k), indivBoard)) // only if both connections are good
+						List<HexPoint> good = new ArrayList<HexPoint>();
+						for (HexPoint j : k)
+						{
+							if (j.isGood())
+								good.add(j);
+						}
+						
+						if (IndivNode.empty(good, indivBoard)) // only if both connections are good
 							b = true;
 					}
 				}
@@ -115,7 +126,14 @@ public class SolverController
 						// check the connection to the wall
 						HexPoint[] k = { new HexPoint(1, node.getY()), new HexPoint(1, (char) (node.getY() + 1)) };
 
-						if (IndivNode.empty(Arrays.asList(k), indivBoard)) // only if both connections are good
+						List<HexPoint> good = new ArrayList<HexPoint>();
+						for (HexPoint j : k)
+						{
+							if (j.isGood())
+								good.add(j);
+						}
+						
+						if (IndivNode.empty(good, indivBoard)) // only if both connections are good
 							a = true;
 					}
 
@@ -126,7 +144,14 @@ public class SolverController
 						// check the connection to the wall
 						HexPoint[] k = { new HexPoint(11, node.getY()), new HexPoint(11, (char) (node.getY() - 1)) };
 
-						if (IndivNode.empty(Arrays.asList(k), indivBoard)) // only if both connections are good
+						List<HexPoint> good = new ArrayList<HexPoint>();
+						for (HexPoint j : k)
+						{
+							if (j.isGood())
+								good.add(j);
+						}
+						
+						if (IndivNode.empty(good, indivBoard)) // only if both connections are good
 							b = true;
 					}
 				}
@@ -406,10 +431,12 @@ public class SolverController
 	 * Counts the number of 2-bridge paths that lead from this point to the wall
 	 * @param pt the starting {@link HexPoint}
 	 * @return number of two bridges between pt and the wall
+	 * 
+	 * @deprecated Doesn't take white ones in the way into consideration (see helo.png on desktop)
+	 * TODO: DIJKSTRA!
 	 */
 	private int countPaths(HexPoint pt)
 	{
-
 		int k = 1; // 1 for myself
 
 		if (curr.getConnectRoute() == CurrentGame.CONNECT_LETTERS)
