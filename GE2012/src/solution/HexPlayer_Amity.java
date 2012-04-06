@@ -98,6 +98,7 @@ public class HexPlayer_Amity extends GamePlayer
 	{
 		DebugWindow.resetMoveTime();
 		GameMove result = currentGame.getMove(state, lastMove);
+		
 		DebugWindow.resetMoveTime();
 		
 		return result;
