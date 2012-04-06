@@ -45,18 +45,18 @@ public class SolverController
 		if (initial == null)
 			throw new RuntimeException("Should have been set already...");
 
+		// Fix chains between a point and the wall if necessary
+		HexPoint broken = baseTwoChainsBroken();
+		if (broken != null)
+			return broken;
+
 		// grab immediate fixes
-		HexPoint broken = immediatePoint();
+		broken = immediatePoint();
 		if (broken != null)
 			return broken;
 
 		// Fix chains between points if necessary
 		broken = twoChainsBroken();
-		if (broken != null)
-			return broken;
-
-		// Fix chains between a point and the wall if necessary
-		broken = baseTwoChainsBroken();
 		if (broken != null)
 			return broken;
 
@@ -94,7 +94,7 @@ public class SolverController
 							if (j.isGood())
 								good.add(j);
 						}
-						
+
 						if (IndivNode.empty(good, indivBoard)) // only if both connections are good
 							a = true;
 					}
@@ -112,7 +112,7 @@ public class SolverController
 							if (j.isGood())
 								good.add(j);
 						}
-						
+
 						if (IndivNode.empty(good, indivBoard)) // only if both connections are good
 							b = true;
 					}
@@ -132,7 +132,7 @@ public class SolverController
 							if (j.isGood())
 								good.add(j);
 						}
-						
+
 						if (IndivNode.empty(good, indivBoard)) // only if both connections are good
 							a = true;
 					}
@@ -150,7 +150,7 @@ public class SolverController
 							if (j.isGood())
 								good.add(j);
 						}
-						
+
 						if (IndivNode.empty(good, indivBoard)) // only if both connections are good
 							b = true;
 					}
@@ -182,7 +182,7 @@ public class SolverController
 					if (j.isGood())
 						good.add(j);
 				}
-				
+
 				if (IndivNode.empty(good, indivBoard)) // only if both connections are good
 					return true;
 			}
@@ -200,7 +200,7 @@ public class SolverController
 					if (j.isGood())
 						good.add(j);
 				}
-				
+
 				if (IndivNode.empty(good, indivBoard)) // only if both connections are good
 					return true;
 			}
@@ -213,7 +213,7 @@ public class SolverController
 			{
 				// check the connection to the wall
 				HexPoint[] k = { new HexPoint(1, node.getY()), new HexPoint(1, (char) (node.getY() + 1)) };
-				
+
 				List<HexPoint> good = new ArrayList<HexPoint>();
 				for (HexPoint j : k)
 				{
@@ -238,7 +238,7 @@ public class SolverController
 					if (j.isGood())
 						good.add(j);
 				}
-				
+
 				if (IndivNode.empty(good, indivBoard)) // only if both connections are good
 					return true;
 			}
@@ -254,6 +254,8 @@ public class SolverController
 		{
 			if (node.getOccupied() == Player.ME)
 			{
+				DebugWindow.println(node.toString() + " " + node.getPoints().get(0).touching().toString());
+
 				for (HexPoint around : node.getPoints().get(0).touching())
 				{
 					if (connectedToWall(around) && indivBoard.getNode(around).getOccupied() == Player.EMPTY)
@@ -358,9 +360,9 @@ public class SolverController
 
 		} while (itr.hasNext());
 
-		if (across(true))
+		if (across(true) && bestRight != null)
 			return bestRight;
-		else if (across(false))
+		else if (across(false) && bestLeft != null)
 			return bestLeft;
 
 		if (left > right && bestLeft != null)
@@ -492,7 +494,7 @@ public class SolverController
 	 */
 	private HexPoint baseTwoChainsBroken()
 	{
-		for (IndivNode node : indivBoard.getPoints())
+		niceloop: for (IndivNode node : indivBoard.getPoints())
 		{
 			if (node.getOccupied() == Player.ME)
 			{
@@ -504,7 +506,7 @@ public class SolverController
 				for (HexPoint b : bad)
 				{
 					if (node.equals(b))
-						continue;
+						continue niceloop;
 				}
 
 				if (curr.getConnectRoute() == CurrentGame.CONNECT_LETTERS && (pt.getY() == 'b' || pt.getY() == 'j'))
