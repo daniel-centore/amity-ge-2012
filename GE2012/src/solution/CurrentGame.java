@@ -63,6 +63,7 @@ public class CurrentGame
 
 			solverController.setInitial(me);
 
+
 			connectRoute = CONNECT_NUMBERS;
 		}
 		else

@@ -444,6 +444,9 @@ public class SolverController
 
 						HexPoint a = connections.get(0);
 						HexPoint b = connections.get(1);
+						
+						if (checkConnected(node.getPoints().get(0), pnt))		// skip if we are connected anyway in a triangle (TODO: check for any path)
+							continue;
 
 						// if either connector is broken, then cling onto the other
 						if (indivBoard.getNode(a).getOccupied() == Player.YOU && indivBoard.getNode(b).getOccupied() == Player.EMPTY)
@@ -456,6 +459,24 @@ public class SolverController
 		}
 
 		return null; // nothing broken
+	}
+	
+	// check if these 2 are connected by 2 chains in a triangle fashion
+	// assumes a and b afres ame color
+	private boolean checkConnected(HexPoint a, HexPoint b)
+	{
+		for (HexPoint p : indivBoard.getNode(a).getTwoChains())
+		{
+			for (HexPoint k : indivBoard.getNode(b).getTwoChains())
+			{
+				if (k.equals(p) && !broken(k, a) && !broken(k, b) && !k.equals(a) && !k.equals(b) && indivBoard.getNode(k).getOccupied() == indivBoard.getNode(a).getOccupied())
+				{
+					return true;
+				}
+			}
+		}
+		
+		return false;
 	}
 
 	/**
