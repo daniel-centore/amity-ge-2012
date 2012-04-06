@@ -44,12 +44,52 @@ public class SolverController
 		if (broken != null)
 			return broken;
 
+		DebugWindow.println(across()+"");
+		
 		// follow chain down board
 		return followChain();
 
 		// TODO: if we have chains across, start to fill them in
 
 		// return new HexPoint(6, 'g');
+		
+		
+	}
+	
+	/**
+	 * True if we have 2 chains all the way across
+	 * @return
+	 */
+	private boolean across()
+	{
+		// if we have one in a B row on both sides then basically we do
+		
+		boolean a = false;
+		boolean b = false;
+		
+		for (IndivNode node : indivBoard.getPoints())
+		{
+			if (node.getOccupied() == Player.ME)
+			{
+				//|| node.getY() == 'j')
+				//|| node.getX() == 10)
+				if ((curr.getConnectRoute() == CurrentGame.CONNECT_LETTERS && (node.getY() == 'b' || node.getY() == 'a' )) ||
+						(curr.getConnectRoute() == CurrentGame.CONNECT_NUMBERS && (node.getX() == 2 || node.getX() == 1 )))
+				{
+					a = true;
+				}
+				
+				if ((curr.getConnectRoute() == CurrentGame.CONNECT_LETTERS && (node.getY() == 'j' || node.getY() == 'k' )) ||
+						(curr.getConnectRoute() == CurrentGame.CONNECT_NUMBERS && (node.getX() == 10 || node.getX() == 10 )))
+				{
+					b = true;
+				}
+			}
+		}
+		
+		return (a && b);
+		
+		
 	}
 
 	private HexPoint followChain()
@@ -83,13 +123,6 @@ public class SolverController
 		{
 			HexPoint h = itr.next();
 			
-			if (curr.getConnectRoute() == CurrentGame.CONNECT_LETTERS)
-			{
-				System.out.println("letters");
-			}
-			else
-				System.out.println("nums");
-
 			if (curr.getConnectRoute() == CurrentGame.CONNECT_LETTERS)
 			{
 				if (h.getY() < 'f')
