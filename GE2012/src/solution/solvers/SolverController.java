@@ -79,7 +79,7 @@ public class SolverController
 				if ((curr.getConnectRoute() == CurrentGame.CONNECT_LETTERS && (node.getY() == 'b' || node.getY() == 'a')) ||
 						(curr.getConnectRoute() == CurrentGame.CONNECT_NUMBERS && (node.getX() == 2 || node.getX() == 1)))
 				{
-					a = false;		// TODO: put back to true. its just false for testing reasons.
+					a = true;		// TODO: put back to true. its just false for testing reasons.
 				}
 
 				if ((curr.getConnectRoute() == CurrentGame.CONNECT_LETTERS && (node.getY() == 'j' || node.getY() == 'k')) ||
