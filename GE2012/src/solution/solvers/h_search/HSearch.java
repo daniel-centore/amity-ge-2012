@@ -35,6 +35,17 @@ public class HSearch implements AmitySolver
 		HSearch hey = new HSearch(board);
 		hey.hSearch();
 
+		hey.printMe();
+	}
+
+	private final BoardInterface board;
+	private final List<Connection>[][][][] C, SC;
+	private final int N;
+	private boolean newVC;
+
+	private void printMe()
+	{
+		HSearch hey = this;
 		for (List<Connection>[][][] start : hey.SC)
 		{
 			for (List<Connection>[][] start2 : start)
@@ -45,7 +56,7 @@ public class HSearch implements AmitySolver
 					{
 						for (Connection Connection : val)
 						{
-							System.out.print(Connection.carriers + " ");
+							System.out.println(Connection.carriers + " ");
 						}
 						System.out.println();
 					}
@@ -56,12 +67,7 @@ public class HSearch implements AmitySolver
 
 		}
 	}
-
-	private final BoardInterface board;
-	private final List<Connection>[][][][] C, SC;
-	private final int N;
-	private boolean newVC;
-
+	
 	public HSearch(BoardInterface board)
 	{
 		this.board = board;
@@ -106,14 +112,13 @@ public class HSearch implements AmitySolver
 
 		while (newVC)
 		{
-			
+			printMe();
 			newVC = false;
 			step++;
-			System.out.println(step);
+			System.out.println("Step: " + step);
 
 			for (int pos = 0; pos < N * N; pos++)
 			{
-
 				int x = pos % N, y = pos / N;
 				HexPoint g = new HexPoint(1 + x, (char) ('a' + y));
 				boolean gIsMe = board.getNode(g.getX(), g.getY()).getOccupied().equals(Player.ME);
@@ -143,7 +148,6 @@ public class HSearch implements AmitySolver
 
 					for (int pos2 = 0; pos2 < N * N; pos2++)
 					{
-
 						int x2 = pos2 % N, y2 = pos2 / N;
 						HexPoint g2 = new HexPoint(1 + x2, (char) ('a' + y2));
 
@@ -212,14 +216,14 @@ public class HSearch implements AmitySolver
 
 								if (board.getNode(g.getX(), g.getY()).getOccupied().equals(Player.ME))
 								{
-									ArrayList<HexPoint> carriers = new ArrayList<>();
+									ArrayList<HexPoint> carriers = new ArrayList<HexPoint>();
 									carriers.addAll(vc1.carriers);
 									carriers.addAll(vc2.carriers);
 									addConnection(C[x1][y1][x2][y2], new Connection(carriers, step));
 								}
 								else
 								{
-									ArrayList<HexPoint> carriers = new ArrayList<>();
+									ArrayList<HexPoint> carriers = new ArrayList<HexPoint>();
 									carriers.addAll(vc1.carriers);
 									carriers.addAll(vc2.carriers);
 									carriers.add(g);
@@ -260,12 +264,12 @@ public class HSearch implements AmitySolver
 
 		for (Connection sc1 : SC)
 		{
-			ArrayList<HexPoint> carriers = new ArrayList<>();
+			ArrayList<HexPoint> carriers = new ArrayList<HexPoint>();
 			carriers.addAll(u.carriers);
 			carriers.addAll(sc1.carriers);
 			Connection u1 = new Connection(carriers, step);
 
-			carriers = new ArrayList<>();
+			carriers = new ArrayList<HexPoint>();
 			for (HexPoint hp : i.carriers)
 			{
 				if (sc1.carriers.contains(hp))
@@ -281,7 +285,7 @@ public class HSearch implements AmitySolver
 			}
 			else
 			{
-				List<Connection> SC2 = new ArrayList<>(SC);
+				List<Connection> SC2 = new ArrayList<Connection>(SC);
 				SC2.remove(sc1);
 				applyOrDeductionRuleAndUpdate(C, SC2, u1, i1, step);
 			}
