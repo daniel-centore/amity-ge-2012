@@ -198,12 +198,14 @@ public class SolverController
 	}
 
 	/**
-	 * Figures out distance to wall
+	 * Figures out how hard it would be to get to the closest wall
 	 * @param pnt the starting {@link HexPoint}
-	 * @return the number of spaces away from the wall
+	 * @return The difficulty (arbitrary scale)
 	 */
 	private int calculateDistance(HexPoint pnt)
 	{
+		// TODO: dijkstra to figure out the distance!
+		
 		int retn;
 		if (curr.getConnectRoute() == CurrentGame.CONNECT_LETTERS)
 		{
@@ -292,7 +294,7 @@ public class SolverController
 
 	/**
 	 * Checks if two-chains to the walls are broken
-	 * @return the {@link HexPoint} needed to fix a broken two-chain between a point and the wall
+	 * @return the {@link HexPoint} needed to fix a broken two-chain between a point and the wall (or null if none are broken)
 	 */
 	private HexPoint baseTwoChainsBroken()
 	{
@@ -360,7 +362,7 @@ public class SolverController
 
 	/**
 	 * Checks if a two chain has been broken. 
-	 * @return the {@link HexPoint} needed to fix a broken two-chain
+	 * @return the {@link HexPoint} needed to fix a broken two-chain (or null if none are broken)
 	 */
 	private HexPoint twoChainsBroken()
 	{
