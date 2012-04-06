@@ -13,15 +13,20 @@ import solution.debug.DebugWindow;
 
 /**
  * This controls all our solvers and generates the master weight table
+ * Vocabulary: 
+ * two-chain: This occurs when there are two empty points between two spaces
+ *			  or between a point and the wall. When there is a two-chain,
+ *			  we can guarantee a connection between the two points or a 
+ *			  connection to the wall.
  * 
  * @author Daniel Centore
- * @author Mike
+ * @author Mike DiBuduo
  *
  */
 public class SolverController
 {
 	private CurrentGame curr; // Current game
-	private HexPoint initial = null; // our centerpiece
+	private HexPoint initial = null; // our centerpiece/starting move
 	private IndivBoard indivBoard;
 
 	public SolverController(CurrentGame curr)
@@ -32,18 +37,19 @@ public class SolverController
 
 	/**
 	 * Chooses our next move
-	 * @return
+	 * @return the next {@link HexPoint} to occupy
 	 */
 	public HexPoint getMove()
 	{
 		if (initial == null)
 			throw new RuntimeException("Should have been set already...");
 
-		// Fix chain if necessary
+		// Fix chains between points if necessary
 		HexPoint broken = twoChainsBroken();
 		if (broken != null)
 			return broken;
 
+		// Fix chains between a point and the wall if necessary
 		broken = baseTwoChainsBroken();
 		if (broken != null)
 			return broken;
@@ -60,8 +66,8 @@ public class SolverController
 	}
 
 	/**
-	 * True if we have 2 chains all the way across
-	 * @return
+	 * Checks to see if there are two-chains all the way across the board
+	 * @return true if there is a two-chain path across the board, false if not
 	 */
 	private boolean across(boolean left)
 	{
@@ -94,6 +100,11 @@ public class SolverController
 
 	}
 
+	/**
+	 * gets the next {@link HexPoint} in order to follow a two-chain across the board
+	 * used when there is a complete two-chain connection from one side to the other
+	 * @return the next {@link HexPoint} to complete the chain
+	 */
 	private HexPoint followChain()
 	{
 		List<HexPoint> possible = new ArrayList<HexPoint>();
@@ -188,8 +199,8 @@ public class SolverController
 
 	/**
 	 * Figures out distance to wall
-	 * @param pnt
-	 * @return
+	 * @param pnt the starting {@link HexPoint}
+	 * @return the number of spaces away from the wall
 	 */
 	private int calculateDistance(HexPoint pnt)
 	{
@@ -230,8 +241,8 @@ public class SolverController
 
 	/**
 	 * Counts the number of 2-bridge paths that lead from this point to the wall
-	 * @param pt
-	 * @return
+	 * @param pt the starting {@link HexPoint}
+	 * @return number of two bridges between pt and the wall
 	 */
 	private int countPaths(HexPoint pt)
 	{
@@ -281,7 +292,7 @@ public class SolverController
 
 	/**
 	 * Checks if two-chains to the walls are broken
-	 * @return
+	 * @return the {@link HexPoint} needed to fix a broken two-chain between a point and the wall
 	 */
 	private HexPoint baseTwoChainsBroken()
 	{
@@ -348,8 +359,8 @@ public class SolverController
 	}
 
 	/**
-	 * Checks if a two chain has been broken. If so, fixes it.
-	 * @return
+	 * Checks if a two chain has been broken. 
+	 * @return the {@link HexPoint} needed to fix a broken two-chain
 	 */
 	private HexPoint twoChainsBroken()
 	{
@@ -383,11 +394,19 @@ public class SolverController
 		return null; // nothing broken
 	}
 
+	/**
+	 * returns the centerpiece for our algorithm
+	 * @return initial
+	 */
 	public HexPoint getInitial()
 	{
 		return initial;
 	}
-
+	
+	/**
+	 * sets the centerpiece for our algorithm
+	 * @param initial our centerpiece/starting move
+	 */
 	public void setInitial(HexPoint initial)
 	{
 		this.initial = initial;

@@ -10,7 +10,7 @@ import solution.board.implementations.indivBoard.IndivBoard;
  * This accepts moves and applies them to all our boards
  * 
  * @author Daniel Centore
- * @author Mike
+ * @author Mike DiBuduo
  *
  */
 public class BoardController
@@ -60,6 +60,10 @@ public class BoardController
 		return indivBoard;
 	}
 
+	/**
+	 * Gets the instance of {@link BlobBoard} for this game
+	 * @return blobBoard
+	 */
 	public BlobBoard getBlobBoard()
 	{
 		return blobBoard;

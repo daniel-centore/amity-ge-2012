@@ -10,6 +10,7 @@ import solution.CurrentGame;
  * Represents a single point on the hex grid
  * 
  * @author Daniel Centore
+ * @author Mike DiBuduo
  *
  */
 public class HexPoint
@@ -30,8 +31,8 @@ public class HexPoint
 	}
 
 	/**
-	 * Returns true if its a valid point
-	 * @return
+	 * Returns true if its a valid point on a board
+	 * @return true if the point is in the 11x11 grid, false if not
 	 */
 	public boolean isGood()
 	{
@@ -42,12 +43,12 @@ public class HexPoint
 	/**
 	 * Finds the 2 connections to a 2-bridge
 	 * @param bridge Must create a 2-bridge with this
-	 * @return
+	 * @return the 2 {@link HexPoint}s that can complete the two-chain
 	 */
 	public List<HexPoint> connections(HexPoint bridge)
 	{
-		List<HexPoint> mine = touching();
-		List<HexPoint> your = bridge.touching();
+		List<HexPoint> mine = touching(); //all the points touching me
+		List<HexPoint> your = bridge.touching(); //all the points touching the other {@link HexPoint}
 
 		List<HexPoint> result = new ArrayList<HexPoint>();
 
@@ -69,8 +70,8 @@ public class HexPoint
 	// System.out.println(new HexPoint(7, 'e').connections(new HexPoint(5, 'f')));
 	// }
 	/**
-	 * GENERATES an array of touching hex points
-	 * @return
+	 * GENERATES an array of {@link HexPoint}s next to this {@link HexPoint}
+	 * @return an array of all the {@link HexPoint}s touching this {@link HexPoint}
 	 */
 	public List<HexPoint> touching()
 	{

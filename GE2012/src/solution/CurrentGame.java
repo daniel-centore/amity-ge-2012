@@ -19,6 +19,7 @@ import solution.solvers.SolverController;
  * A wrapper for our current game so we don't get locked into playing 1-game games in our code
  * 
  * @author Daniel Centore
+ * @author Mike DiBuduo
  *
  */
 public class CurrentGame
@@ -30,7 +31,7 @@ public class CurrentGame
 
 	public static final int CONNECT_NUMBERS = 0; // connect from 1-11 wins (white)
 	public static final int CONNECT_LETTERS = 1; // connect from A-K wins (black)
-	private int connectRoute = -1;
+	private int connectRoute = -1; //the connection direction we need to solve for to win
 
 	public CurrentGame()
 	{
@@ -170,13 +171,17 @@ public class CurrentGame
 
 	/**
 	 * Gets the {@link SolverController} we are using in this game
-	 * @return
+	 * @return the current {@link SolverController}
 	 */
 	public SolverController getSolverController()
 	{
 		return solverController;
 	}
 
+	/**
+	 * gets the connection route we need to take in order to win
+	 * @return the current connection direction
+	 */
 	public int getConnectRoute()
 	{
 		return connectRoute;
