@@ -121,6 +121,9 @@ public class SolverController
 
 		int right = Integer.MAX_VALUE;
 		HexPoint bestRight = null;
+		
+		if (!itr.hasNext())
+			return null;
 
 		do
 		{
@@ -207,12 +210,12 @@ public class SolverController
 			retn = Math.min(i, j);
 		}
 
-		DebugWindow.println(pnt.toString() + " " + countPaths(pnt));
+		// DebugWindow.println(pnt.toString() + " " + countPaths(pnt));
 
-		//magic numbers which make it foc
+		// magic numbers which make it foc
 		int count = countPaths(pnt);
-//		count /= 10;
-		
+		// count /= 10;
+
 		retn *= 100;
 		if (count > 5)
 			count = 5;
@@ -307,6 +310,8 @@ public class SolverController
 							if ((indivBoard.getNode(pt.getX() - 1, 'k').getOccupied() == Player.EMPTY))
 								return new HexPoint(pt.getX() - 1, 'k');
 
+						DebugWindow.println("AGHHH: " + pt.toString());
+
 						if ((indivBoard.getNode(pt.getX() - 1, 'k').getOccupied() == Player.YOU))
 							if ((indivBoard.getNode(pt.getX(), 'k').getOccupied() == Player.EMPTY))
 								return new HexPoint(pt.getX(), 'k');
@@ -330,6 +335,7 @@ public class SolverController
 							if ((indivBoard.getNode(11, (char) (pt.getY() - 1)).getOccupied() == Player.EMPTY))
 								return new HexPoint(11, (char) (pt.getY() - 1));
 
+						DebugWindow.println("AGHHH: " + pt.toString());
 						if ((indivBoard.getNode(11, (char) (pt.getY() - 1)).getOccupied() == Player.YOU))
 							if ((indivBoard.getNode(11, pt.getY()).getOccupied() == Player.EMPTY))
 								return new HexPoint(11, pt.getY());
