@@ -197,8 +197,6 @@ public class SolverController
 			int i = pnt.getY() - 'a';
 			int j = 'k' - pnt.getY();
 
-			DebugWindow.println(i + " " + j);
-
 			retn = Math.min(i, j);
 		}
 		else
@@ -209,15 +207,72 @@ public class SolverController
 			retn = Math.min(i, j);
 		}
 
-		// DebugWindow.println(pnt.toString() + " " + retn);
+		DebugWindow.println(pnt.toString() + " " + countPaths(pnt));
+
+		//magic numbers which make it foc
+		int count = countPaths(pnt);
+//		count /= 10;
 		
-		// TODO:
-		// Find the number of 2-bridges there are that lead from this HexPoint to the wall we're going to
-		// Then, DIVIDE retn by that (so the more there are the smaller the distance appears)
-		
-		
+		retn *= 100;
+		if (count > 5)
+			count = 5;
+		if (count <= 0)
+			count = 1;
+
+		retn /= count;
 
 		return retn;
+
+	}
+
+	/**
+	 * Counts the number of 2-bridge paths that lead from this point to the wall
+	 * @param pt
+	 * @return
+	 */
+	private int countPaths(HexPoint pt)
+	{
+
+		int k = 1; // 1 for myself
+
+		if (curr.getConnectRoute() == CurrentGame.CONNECT_LETTERS)
+		{
+			List<HexPoint> bridges = indivBoard.getNode(pt).getTwoChains();
+
+			for (HexPoint p : bridges)
+			{
+				if (pt.getY() < 'f')
+				{
+					if (p.getY() < pt.getY()) // only count down
+						k += countPaths(p);
+				}
+				else
+				{
+					if (p.getY() > pt.getY()) // only count up
+						k += countPaths(p);
+				}
+			}
+		}
+		else
+		{
+			List<HexPoint> bridges = indivBoard.getNode(pt).getTwoChains();
+
+			for (HexPoint p : bridges)
+			{
+				if (pt.getX() < 6)
+				{
+					if (p.getX() < pt.getX()) // only count down
+						k += countPaths(p);
+				}
+				else
+				{
+					if (p.getX() > pt.getX()) // only count up
+						k += countPaths(p);
+				}
+			}
+		}
+
+		return k;
 
 	}
 
@@ -272,11 +327,11 @@ public class SolverController
 					else
 					{
 						if ((indivBoard.getNode(11, pt.getY()).getOccupied() == Player.YOU))
-							if ((indivBoard.getNode(1, (char) (pt.getY() - 1)).getOccupied() == Player.EMPTY))
+							if ((indivBoard.getNode(11, (char) (pt.getY() - 1)).getOccupied() == Player.EMPTY))
 								return new HexPoint(11, (char) (pt.getY() - 1));
 
 						if ((indivBoard.getNode(11, (char) (pt.getY() - 1)).getOccupied() == Player.YOU))
-							if ((indivBoard.getNode(1, pt.getY()).getOccupied() == Player.EMPTY))
+							if ((indivBoard.getNode(11, pt.getY()).getOccupied() == Player.EMPTY))
 								return new HexPoint(11, pt.getY());
 					}
 				}
