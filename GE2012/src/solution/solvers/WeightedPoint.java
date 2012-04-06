@@ -8,6 +8,7 @@ import solution.board.HexPoint;
  *
  * @author Daniel Centore
  * @author Mike DiBuduo
+ * @deprecated
  */
 public class WeightedPoint extends HexPoint
 {

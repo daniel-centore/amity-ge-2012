@@ -18,6 +18,7 @@ import solution.solvers.SolverController;
  */
 public class CurrentGame
 {
+	public static final int CHARACTER_SUBTRACT = 96;
 	private BoardController boardController;
 	private SolverController solverController;
 
@@ -56,7 +57,7 @@ public class CurrentGame
 
 			// calculate our next move
 			
-			HexPoint move = solverController.getMove().toHexPoint();
+			HexPoint move = solverController.getMove();//.toHexPoint();
 			result = toHexMove(move);
 
 			// random here
@@ -102,7 +103,7 @@ public class CurrentGame
 	public HexMove toHexMove(HexPoint point)
 	{
 		int x = point.getX() - 1;
-		int y = point.getY() - 97;
+		int y = point.getY() - CHARACTER_SUBTRACT - 1;
 		
 		return new HexMove(x, y);
 	}
@@ -119,7 +120,7 @@ public class CurrentGame
 			return null;
 
 		int x = Integer.parseInt(k[0]) + 1;
-		char y = (char) (Integer.parseInt(k[1]) + 97);
+		char y = (char) (Integer.parseInt(k[1]) + CHARACTER_SUBTRACT + 1);
 
 		return new HexPoint(x, y);
 	}

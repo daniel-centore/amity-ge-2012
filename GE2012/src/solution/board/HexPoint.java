@@ -2,6 +2,8 @@ package solution.board;
 
 import java.awt.Point;
 
+import solution.CurrentGame;
+
 /**
  * Represents a single point on the hex grid
  * 
@@ -81,8 +83,18 @@ public class HexPoint
 		{
 			return false;
 		}
-		
+
 		return true;
+	}
+
+	/**
+	 * Returns true if its a valid point
+	 * @return
+	 */
+	public boolean isGood()
+	{
+		int j = y - CurrentGame.CHARACTER_SUBTRACT;
+		return (x >= 1 && x <= 11 && j >= 1 && j <= 11);
 	}
 
 	/**

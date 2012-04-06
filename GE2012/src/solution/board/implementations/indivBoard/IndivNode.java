@@ -15,11 +15,12 @@ import solution.board.Player;
  */
 public class IndivNode implements NodeInterface
 {
-	private int x;	// our 'x' location
-	private char y;	// our 'y' location
-	private Player occupied;	// who currently owns the space
-	private List<HexPoint> points;
-	
+	private int x; // our 'x' location
+	private char y; // our 'y' location
+	private Player occupied; // who currently owns the space
+	private List<HexPoint> points; // only has one
+	private List<HexPoint> twoChains = new ArrayList<HexPoint>();
+
 	/**
 	 * Creates an individual spot which is unowned
 	 * @param x The x location
@@ -29,7 +30,7 @@ public class IndivNode implements NodeInterface
 	{
 		this(x, y, Player.EMPTY);
 	}
-	
+
 	/**
 	 * Creates an individual spot
 	 * @param x The x location
@@ -41,11 +42,38 @@ public class IndivNode implements NodeInterface
 		this.x = x;
 		this.y = y;
 		this.occupied = occupied;
-		
+
 		points = new ArrayList<HexPoint>();
 		points.add(new HexPoint(x, y));
 	}
+
+	private void generateTwoChains()
+	{
+		HexPoint[] chains = new HexPoint[6];
+
+		chains[0] = new HexPoint(x + 1, (char) (y - 2));
+		chains[1] = new HexPoint(x + 2, (char) (y - 1));
+		chains[2] = new HexPoint(x + 1, (char) (y + 1));
+		chains[3] = new HexPoint(x - 2, (char) (y + 2));
+		chains[4] = new HexPoint(x - 1, (char) (y + 1));
+		chains[5] = new HexPoint(x - 1, (char) (y - 1));
+		
+		for (HexPoint h : chains)
+		{
+			if (h.isGood())
+				twoChains.add(h);
+		}
+		
+		
+	}
 	
+	public static void main(String args[])
+	{
+		IndivNode n = new IndivNode(3, 'c');
+		n.generateTwoChains();
+		System.out.println(n.twoChains);
+	}
+
 	@Override
 	public List<HexPoint> getPoints()
 	{
@@ -89,7 +117,7 @@ public class IndivNode implements NodeInterface
 	{
 		if (occupied == Player.EMPTY)
 			throw new RuntimeException("We can\'t change to empty once the game has started...");
-		
+
 		this.occupied = occupied;
 	}
 
