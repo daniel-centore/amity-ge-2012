@@ -183,6 +183,11 @@ public class SolverController
 
 	}
 
+	/**
+	 * Figures out distance to wall
+	 * @param pnt
+	 * @return
+	 */
 	private int calculateDistance(HexPoint pnt)
 	{
 		int retn;
@@ -205,6 +210,12 @@ public class SolverController
 		}
 
 		// DebugWindow.println(pnt.toString() + " " + retn);
+		
+		// TODO:
+		// Find the number of 2-bridges there are that lead from this HexPoint to the wall we're going to
+		// Then, DIVIDE retn by that (so the more there are the smaller the distance appears)
+		
+		
 
 		return retn;
 
@@ -222,7 +233,7 @@ public class SolverController
 			{
 				HexPoint pt = node.getPoints().get(0);
 
-				// TODO: corner cases (ie B1, J1)
+				// TODO: skip corner cases (B11, J1, k2, and A10)
 				if (curr.getConnectRoute() == CurrentGame.CONNECT_LETTERS && (pt.getY() == 'b' || pt.getY() == 'j'))
 				{
 					if (pt.getY() == 'b')
