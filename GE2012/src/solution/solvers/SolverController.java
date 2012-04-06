@@ -55,19 +55,14 @@ public class SolverController
 		if (broken != null)
 			return broken;
 
-		// DebugWindow.println(across(true) + " " + across(false));
-
 		// follow chain down board
 		return followChain();
 
-		// TODO: if we have chains across, start to fill them in
-
-		// return new HexPoint(6, 'g');
-
+		// TODO: if we have chains all the way across, start to fill them in
+		// Use a new method which actually checks all 2 chains and makes sure they're connected
 	}
 
 	/**
-	 * TODO: should we account for the fact that we sometimes use random points here?
 	 * Checks to see if there are two-chains all the way across the board
 	 * @return true if there is a two-chain path across the board, false if not
 	 */
@@ -228,11 +223,6 @@ public class SolverController
 		else if (across(false))
 			return bestLeft;
 
-//		if (bestLeft != null)
-//			left /= countPaths(bestLeft);
-//		if (bestRight != null)
-//			right /= countPaths(bestRight);
-
 		if (left > right && bestLeft != null)
 			return bestLeft;
 		else
@@ -385,8 +375,6 @@ public class SolverController
 							if ((indivBoard.getNode(pt.getX() - 1, 'k').getOccupied() == Player.EMPTY))
 								return new HexPoint(pt.getX() - 1, 'k');
 
-						DebugWindow.println("AGHHH: " + pt.toString());
-
 						if ((indivBoard.getNode(pt.getX() - 1, 'k').getOccupied() == Player.YOU))
 							if ((indivBoard.getNode(pt.getX(), 'k').getOccupied() == Player.EMPTY))
 								return new HexPoint(pt.getX(), 'k');
@@ -410,7 +398,6 @@ public class SolverController
 							if ((indivBoard.getNode(11, (char) (pt.getY() - 1)).getOccupied() == Player.EMPTY))
 								return new HexPoint(11, (char) (pt.getY() - 1));
 
-						DebugWindow.println("AGHHH: " + pt.toString());
 						if ((indivBoard.getNode(11, (char) (pt.getY() - 1)).getOccupied() == Player.YOU))
 							if ((indivBoard.getNode(11, pt.getY()).getOccupied() == Player.EMPTY))
 								return new HexPoint(11, pt.getY());
@@ -445,7 +432,7 @@ public class SolverController
 						HexPoint a = connections.get(0);
 						HexPoint b = connections.get(1);
 						
-						if (checkConnected(node.getPoints().get(0), pnt))		// skip if we are connected anyway in a triangle (TODO: check for any path)
+						if (checkConnected(node.getPoints().get(0), pnt))		// skip if we are connected anyway in a triangle
 							continue;
 
 						// if either connector is broken, then cling onto the other
@@ -462,7 +449,7 @@ public class SolverController
 	}
 	
 	// check if these 2 are connected by 2 chains in a triangle fashion
-	// assumes a and b afres ame color
+	// assumes a and b are same color
 	private boolean checkConnected(HexPoint a, HexPoint b)
 	{
 		for (HexPoint p : indivBoard.getNode(a).getTwoChains())
