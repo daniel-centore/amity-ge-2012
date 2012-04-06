@@ -146,4 +146,9 @@ public class CurrentGame
 	{
 		return solverController;
 	}
+
+	public int getConnectRoute()
+	{
+		return connectRoute;
+	}
 }

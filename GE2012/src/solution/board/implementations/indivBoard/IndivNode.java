@@ -56,7 +56,7 @@ public class IndivNode implements NodeInterface
 		chains[0] = new HexPoint(x + 1, (char) (y - 2));
 		chains[1] = new HexPoint(x + 2, (char) (y - 1));
 		chains[2] = new HexPoint(x + 1, (char) (y + 1));
-		chains[3] = new HexPoint(x - 2, (char) (y + 2));
+		chains[3] = new HexPoint(x - 1, (char) (y + 2));
 		chains[4] = new HexPoint(x - 2, (char) (y + 1));
 		chains[5] = new HexPoint(x - 1, (char) (y - 1));
 		

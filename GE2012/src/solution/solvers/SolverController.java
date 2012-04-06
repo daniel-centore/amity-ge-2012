@@ -1,5 +1,7 @@
 package solution.solvers;
 
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import solution.CurrentGame;
@@ -41,7 +43,29 @@ public class SolverController
 		if (broken != null)
 			return broken;
 
-		return new HexPoint(6, 'g');
+		// follow chain down board
+		return followChain();
+
+		// return new HexPoint(6, 'g');
+	}
+
+	private HexPoint followChain()
+	{
+		for (IndivNode node : indivBoard.getPoints())
+		{
+			if (node.getOccupied() == Player.ME)
+			{
+				List<HexPoint> chains = node.getTwoChains();
+				for (HexPoint pnt : chains)
+				{
+					if (indivBoard.getNode(pnt).getOccupied() == Player.EMPTY)
+					{
+						return pnt;
+					}
+				}
+			}
+		}
+		return null;
 	}
 
 	/**
@@ -59,15 +83,18 @@ public class SolverController
 				{
 					if (indivBoard.getNode(pnt).getOccupied() == Player.ME)
 					{
-						System.out.println(node.getPoints().get(0) + " " + pnt);
 						List<HexPoint> connections = pnt.connections(node.getPoints().get(0));
+
+						if (connections.size() < 2)
+							throw new RuntimeException("Size less than 2!");
+
 						HexPoint a = connections.get(0);
 						HexPoint b = connections.get(1);
 
 						// if either connector is broken, then cling onto the other
-						if (indivBoard.getNode(a).getOccupied() == Player.YOU)
+						if (indivBoard.getNode(a).getOccupied() == Player.YOU && indivBoard.getNode(b).getOccupied() == Player.EMPTY)
 							return b;
-						else if (indivBoard.getNode(b).getOccupied() == Player.YOU)
+						else if (indivBoard.getNode(b).getOccupied() == Player.YOU && indivBoard.getNode(a).getOccupied() == Player.EMPTY)
 							return a;
 					}
 				}
