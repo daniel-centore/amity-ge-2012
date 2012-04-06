@@ -44,52 +44,54 @@ public class SolverController
 		if (broken != null)
 			return broken;
 
-		DebugWindow.println(across(true)+" "+across(false));
-		
+		broken = baseTwoChainsBroken();
+		if (broken != null)
+			return broken;
+
+		//DebugWindow.println(across(true) + " " + across(false));
+
 		// follow chain down board
 		return followChain();
 
 		// TODO: if we have chains across, start to fill them in
 
 		// return new HexPoint(6, 'g');
-		
-		
+
 	}
-	
+
 	/**
 	 * True if we have 2 chains all the way across
 	 * @return
 	 */
 	private boolean across(boolean left)
 	{
-		// if we have one in a B row on both sides then basically we do (TODO: check the 
-		
+		// if we have one in a B row on both sides then basically we do (TODO: check the
+
 		boolean a = false;
 		boolean b = false;
-		
+
 		for (IndivNode node : indivBoard.getPoints())
 		{
 			if (node.getOccupied() == Player.ME)
 			{
-				//|| node.getY() == 'j')
-				//|| node.getX() == 10)
-				if ((curr.getConnectRoute() == CurrentGame.CONNECT_LETTERS && (node.getY() == 'b' || node.getY() == 'a' )) ||
-						(curr.getConnectRoute() == CurrentGame.CONNECT_NUMBERS && (node.getX() == 2 || node.getX() == 1 )))
+				// || node.getY() == 'j')
+				// || node.getX() == 10)
+				if ((curr.getConnectRoute() == CurrentGame.CONNECT_LETTERS && (node.getY() == 'b' || node.getY() == 'a')) ||
+						(curr.getConnectRoute() == CurrentGame.CONNECT_NUMBERS && (node.getX() == 2 || node.getX() == 1)))
 				{
 					a = true;
 				}
-				
-				if ((curr.getConnectRoute() == CurrentGame.CONNECT_LETTERS && (node.getY() == 'j' || node.getY() == 'k' )) ||
-						(curr.getConnectRoute() == CurrentGame.CONNECT_NUMBERS && (node.getX() == 10 || node.getX() == 11 )))
+
+				if ((curr.getConnectRoute() == CurrentGame.CONNECT_LETTERS && (node.getY() == 'j' || node.getY() == 'k')) ||
+						(curr.getConnectRoute() == CurrentGame.CONNECT_NUMBERS && (node.getX() == 10 || node.getX() == 11)))
 				{
 					b = true;
 				}
 			}
 		}
-		
+
 		return (left ? a : b);
-		
-		
+
 	}
 
 	private HexPoint followChain()
@@ -111,7 +113,7 @@ public class SolverController
 			}
 		}
 
-		DebugWindow.println(possible.toString());
+		//DebugWindow.println(possible.toString());
 		Iterator<HexPoint> itr = possible.iterator();
 
 		int left = Integer.MAX_VALUE;
@@ -123,7 +125,7 @@ public class SolverController
 		do
 		{
 			HexPoint h = itr.next();
-			
+
 			if (curr.getConnectRoute() == CurrentGame.CONNECT_LETTERS)
 			{
 				if (h.getY() < 'f')
@@ -168,31 +170,29 @@ public class SolverController
 			}
 
 		} while (itr.hasNext());
-		
+
 		if (across(true))
 			return bestRight;
 		else if (across(false))
 			return bestLeft;
-		
+
 		if (left > right && bestLeft != null)
 			return bestLeft;
 		else
 			return bestRight;
 
 	}
-	
-	
 
 	private int calculateDistance(HexPoint pnt)
 	{
 		int retn;
 		if (curr.getConnectRoute() == CurrentGame.CONNECT_LETTERS)
 		{
-			
+
 			int i = pnt.getY() - 'a';
 			int j = 'k' - pnt.getY();
-			
-			DebugWindow.println(i+" "+j);
+
+			DebugWindow.println(i + " " + j);
 
 			retn = Math.min(i, j);
 		}
@@ -203,13 +203,13 @@ public class SolverController
 
 			retn = Math.min(i, j);
 		}
-		
-		DebugWindow.println(pnt.toString()+" "+retn);
-		
+
+		//DebugWindow.println(pnt.toString() + " " + retn);
+
 		return retn;
 
 	}
-	
+
 	/**
 	 * Checks if two-chains to the walls are broken
 	 * @return
@@ -221,17 +221,50 @@ public class SolverController
 			if (node.getOccupied() == Player.ME)
 			{
 				HexPoint pt = node.getPoints().get(0);
-				
+
+				// TODO: corner cases (ie B1, J1)
 				if (curr.getConnectRoute() == CurrentGame.CONNECT_LETTERS && (pt.getY() == 'b' || pt.getY() == 'j'))
 				{
-					
+					if (pt.getY() == 'b')
+					{
+						if ((indivBoard.getNode(pt.getX(), 'a').getOccupied() == Player.YOU))
+							return new HexPoint(pt.getX() + 1, 'a');
+
+						if ((indivBoard.getNode(pt.getX() + 1, 'a').getOccupied() == Player.YOU))
+							return new HexPoint(pt.getX(), 'a');
+					}
+					else
+					{
+						if ((indivBoard.getNode(pt.getX(), 'k').getOccupied() == Player.YOU))
+							return new HexPoint(pt.getX() - 1, 'k');
+
+						if ((indivBoard.getNode(pt.getX() - 1, 'k').getOccupied() == Player.YOU))
+							return new HexPoint(pt.getX(), 'k');
+					}
 				}
 				else if (curr.getConnectRoute() == CurrentGame.CONNECT_NUMBERS && (pt.getX() == 2 || pt.getX() == 10))
 				{
-					
+					if (pt.getX() == 2)
+					{
+						if ((indivBoard.getNode(1, pt.getY()).getOccupied() == Player.YOU))
+							return new HexPoint(1, (char) (pt.getY() + 1));
+
+						if ((indivBoard.getNode(1, (char) (pt.getY() + 1)).getOccupied() == Player.YOU))
+							return new HexPoint(1, pt.getY());
+					}
+					else
+					{
+						if ((indivBoard.getNode(11, pt.getY()).getOccupied() == Player.YOU))
+							return new HexPoint(11, (char) (pt.getY() - 1));
+
+						if ((indivBoard.getNode(11, (char) (pt.getY() - 1)).getOccupied() == Player.YOU))
+							return new HexPoint(11, pt.getY());
+					}
 				}
 			}
 		}
+
+		return null;
 	}
 
 	/**
