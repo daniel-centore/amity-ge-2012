@@ -95,23 +95,7 @@ public class CurrentGame
 				if (move == null)
 				{
 					DebugWindow.println("WARNING: Resorting to random due to failed move");
-					HexState board = (HexState) state;
-					ArrayList<HexMove> list = new ArrayList<HexMove>();
-					HexMove mv = new HexMove();
-					for (int r = 0; r < HexState.N; r++)
-					{
-						for (int c = 0; c < HexState.N; c++)
-						{
-							mv.row = r;
-							mv.col = c;
-							if (board.moveOK(mv))
-							{
-								list.add((HexMove) mv.clone());
-							}
-						}
-					}
-					int which = Util.randInt(0, list.size() - 1);
-					result = list.get(which);
+					result = chooseRandomPoint(state);
 				}
 				else
 					result = toHexMove(move);
@@ -129,6 +113,32 @@ public class CurrentGame
 
 		return result;
 	}
+	
+	/**
+	 * selects a random {@link HexMove}
+	 * @param state the current {@link GameState}
+	 * @return a random {@link HexMove}
+	 */
+	public HexMove chooseRandomPoint(GameState state)
+	{
+		HexState board = (HexState) state;
+		ArrayList<HexMove> list = new ArrayList<HexMove>();
+		HexMove mv = new HexMove();
+		for (int r = 0; r < HexState.N; r++)
+		{
+			for (int c = 0; c < HexState.N; c++)
+			{
+				mv.row = r;
+				mv.col = c;
+				if (board.moveOK(mv))
+				{
+					list.add((HexMove) mv.clone());
+				}
+			}
+		}
+		int which = Util.randInt(0, list.size() - 1);
+		return list.get(which);
+}
 
 	/**
 	 * Converts one of our {@link HexPoint}s in to one of their {@link HexMove}s
