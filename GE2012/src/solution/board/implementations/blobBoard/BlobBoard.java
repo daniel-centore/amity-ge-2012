@@ -17,8 +17,6 @@ import solution.board.PointUtilities;
  */
 public class BlobBoard implements BoardInterface
 {
-	// TODO: Make it so all nodes of the same color at the APPROPRIATE edge of the board get linked together
-	// we need to figure out which edge we're working for...
 	
 	// All the blobs of a color
 	private List<BlobNode> nodes = new ArrayList<BlobNode>();
