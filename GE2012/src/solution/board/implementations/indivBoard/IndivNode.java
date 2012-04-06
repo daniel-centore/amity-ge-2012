@@ -8,9 +8,10 @@ import solution.board.NodeInterface;
 import solution.board.Player;
 
 /**
- * Represents an individual spot on the grid
+ * Represents an individual spot on an {@link IndivBoard}
  * 
  * @author Daniel Centore
+ * @author Mike DiBuduo
  *
  */
 public class IndivNode implements NodeInterface
@@ -31,7 +32,7 @@ public class IndivNode implements NodeInterface
 	}
 
 	/**
-	 * Creates an individual spot
+	 * Creates an individual spot which is occupied by a {@link Player}
 	 * @param x The x location
 	 * @param y The y location
 	 * @param occupied Who owns the space
@@ -95,6 +96,10 @@ public class IndivNode implements NodeInterface
 		this.occupied = occupied;
 	}
 
+	/**
+	 * finds all possible locations that a two-chain can be made from this {@link IndivNode}
+	 * @return a list of possible two-chain locations
+	 */
 	public List<HexPoint> getTwoChains()//IndivBoard board)
 	{
 		List<HexPoint> twoChains = new ArrayList<HexPoint>();
@@ -117,6 +122,12 @@ public class IndivNode implements NodeInterface
 		return twoChains;
 	}
 
+	/**
+	 * checks to see if all of the points in an {@link List<E>} are unoccupied
+	 * @param connections the {@link List<E>} to check
+	 * @param board the current {@link IndivBoard}
+	 * @return true if all are unoccupied, false if any one {@link HexPoint} is occupied
+	 */
 	public static boolean empty(List<HexPoint> connections, IndivBoard board)
 	{
 		for (HexPoint p : connections)
