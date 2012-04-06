@@ -1,6 +1,8 @@
 package solution.board;
 
 import java.awt.Point;
+import java.util.ArrayList;
+import java.util.List;
 
 import solution.CurrentGame;
 
@@ -25,6 +27,70 @@ public class HexPoint
 	{
 		this.x = x;
 		this.y = y;
+	}
+
+	/**
+	 * Returns true if its a valid point
+	 * @return
+	 */
+	public boolean isGood()
+	{
+		int j = y - CurrentGame.CHARACTER_SUBTRACT;
+		return (x >= 1 && x <= 11 && j >= 1 && j <= 11);
+	}
+
+	/**
+	 * Finds the 2 connections to a 2-bridge
+	 * @param bridge Must create a 2-bridge with this
+	 * @return
+	 */
+	public List<HexPoint> connections(HexPoint bridge)
+	{
+		List<HexPoint> mine = touching();
+		List<HexPoint> your = bridge.touching();
+
+		List<HexPoint> result = new ArrayList<HexPoint>();
+
+		// find spots in common
+		for (HexPoint h : mine)
+		{
+			for (HexPoint k : your)
+			{
+				if (k.equals(h))
+					result.add(k);
+			}
+		}
+
+		return result;
+	}
+
+	// public static void main(String args[])
+	// {
+	// System.out.println(new HexPoint(7, 'e').connections(new HexPoint(5, 'f')));
+	// }
+	/**
+	 * GENERATES an array of touching hex points
+	 * @return
+	 */
+	public List<HexPoint> touching()
+	{
+		HexPoint[] hps = new HexPoint[6];
+
+		hps[0] = new HexPoint(x, (char) (y - 1));
+		hps[1] = new HexPoint(x + 1, (char) (y - 1));
+		hps[2] = new HexPoint(x + 1, y);
+		hps[3] = new HexPoint(x, (char) (y + 1));
+		hps[4] = new HexPoint(x - 1, (char) (y + 1));
+		hps[5] = new HexPoint(x - 1, y);
+
+		List<HexPoint> result = new ArrayList<HexPoint>();
+		for (HexPoint h : hps)
+		{
+			if (h.isGood())
+				result.add(h);
+		}
+
+		return result;
 	}
 
 	/**
@@ -85,16 +151,6 @@ public class HexPoint
 		}
 
 		return true;
-	}
-
-	/**
-	 * Returns true if its a valid point
-	 * @return
-	 */
-	public boolean isGood()
-	{
-		int j = y - CurrentGame.CHARACTER_SUBTRACT;
-		return (x >= 1 && x <= 11 && j >= 1 && j <= 11);
 	}
 
 	/**

@@ -19,13 +19,18 @@ import solution.solvers.SolverController;
 public class CurrentGame
 {
 	public static final int CHARACTER_SUBTRACT = 96;
+
 	private BoardController boardController;
 	private SolverController solverController;
+
+	public static final int CONNECT_NUMBERS = 0; // connect from 1-11 wins (white)
+	public static final int CONNECT_LETTERS = 1; // connect from A-K wins (black)
+	private int connectRoute = -1;
 
 	public CurrentGame()
 	{
 	}
-	
+
 	public void init()
 	{
 		boardController = new BoardController();
@@ -46,7 +51,13 @@ public class CurrentGame
 		if (point == null)
 		{
 			// we're going first - do a nice default move
-			result = new HexMove(5, 6);
+			HexPoint me = new HexPoint(5, 'f');
+
+			result = toHexMove(me);
+
+			solverController.setInitial(me);
+
+			connectRoute = CONNECT_NUMBERS;
 		}
 		else
 		{
@@ -56,45 +67,38 @@ public class CurrentGame
 			boardController.applyMove(point.getX(), point.getY(), Player.YOU);
 
 			// calculate our next move
-			
-			HexPoint move = solverController.getMove();//.toHexPoint();
-			result = toHexMove(move);
+			if (connectRoute < 0) // our first move (they just went first)
+			{
+				// TODO: smarter first point choice. get far enough away from enemy.
+				HexPoint initial;
+				if (boardController.getIndivBoard().getNode(5, 'f').getOccupied() == Player.YOU)
+					initial = new HexPoint(7, 'f');
+				else
+					initial = new HexPoint(5, 'f');
+				
+				solverController.setInitial(initial);
 
-			// random here
-			// HexState board = (HexState) state;
-			// ArrayList<HexMove> list = new ArrayList<HexMove>();
-			// HexMove mv = new HexMove();
-			// for (int r = 0; r < HexState.N; r++)
-			// {
-			// for (int c = 0; c < HexState.N; c++)
-			// {
-			// mv.row = r;
-			// mv.col = c;
-			// if (board.moveOK(mv))
-			// {
-			// list.add((HexMove) mv.clone());
-			// }
-			// }
-			// }
-			// int which = Util.randInt(0, list.size() - 1);
-			// result = list.get(which);
+				connectRoute = CONNECT_LETTERS;
+				
+				result = toHexMove(initial);
+			}
+			else
+			{
+				HexPoint move = solverController.getMove();// .toHexPoint();
+				result = toHexMove(move);
+			}
+
 		}
 
-		// \/ ==                                                            == \/
-		// TODO: maybe make this run in a new thread so we can save some time?
-		// On the start of the next move we would need to make sure this has 
-		// completed though!
-		
-		
 		// apply our move to the board
 		point = parseTheirString(result.toString());
-		
+
 		boardController.applyMove(point.getX(), point.getY(), Player.ME);
-		// /\ ==                                                            == /\
+		// /\ == == /\
 
 		return result;
 	}
-	
+
 	/**
 	 * Converts one of our {@link HexPoint}s in to one of their {@link HexMove}s
 	 * @param point The {@link HexPoint} to convert
@@ -104,7 +108,7 @@ public class CurrentGame
 	{
 		int x = point.getX() - 1;
 		int y = point.getY() - CHARACTER_SUBTRACT - 1;
-		
+
 		return new HexMove(x, y);
 	}
 

@@ -1,6 +1,8 @@
 package solution.board.implementations.indivBoard;
 
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 
 import solution.board.BoardInterface;
 import solution.board.HexPoint;
@@ -27,6 +29,16 @@ public class IndivBoard implements BoardInterface
 			for (char c = 'a'; c <= 'k'; c++)
 				map.put(new HexPoint(i, c), new IndivNode(i, c));
 		}
+	}
+	
+	public IndivNode getNode(HexPoint point)
+	{
+		return (IndivNode) getNode(point.getX(), point.getY());
+	}
+	
+	public Collection<IndivNode> getPoints()
+	{
+		return map.values();
 	}
 
 	@Override
