@@ -91,11 +91,20 @@ public class CurrentGame
 			}
 			else
 			{
-				HexPoint move = solverController.getMove();// .toHexPoint();
+				HexPoint move = null;
+				
+				try
+				{
+					move = solverController.getMove();// .toHexPoint();
+				} catch (Exception e)
+				{
+					DebugWindow.println("ERROR: CHECK THE STACK TRACE!!!!");
+					e.printStackTrace();
+				}
 
 				if (move == null)
 				{
-					DebugWindow.println("WARNING: Resorting to random due to failed move");
+					DebugWindow.println("WARNING: Resorting to random because we couldn't find a usable path");
 					result = chooseRandomPoint(state);
 				}
 				else
