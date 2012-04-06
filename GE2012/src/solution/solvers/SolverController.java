@@ -45,8 +45,13 @@ public class SolverController
 		if (initial == null)
 			throw new RuntimeException("Should have been set already...");
 
+		// grab immediate fixes
+		HexPoint broken = immediatePoint();
+		if (broken != null)
+			return broken;
+
 		// Fix chains between points if necessary
-		HexPoint broken = twoChainsBroken();
+		broken = twoChainsBroken();
 		if (broken != null)
 			return broken;
 
@@ -95,6 +100,8 @@ public class SolverController
 						// check the connection to the wall
 						HexPoint[] k = { new HexPoint(node.getX(), 'k'), new HexPoint(node.getX() - 1, 'k') };
 
+						DebugWindow.println(Arrays.asList(k) + " " + IndivNode.empty(Arrays.asList(k), indivBoard));
+
 						if (IndivNode.empty(Arrays.asList(k), indivBoard)) // only if both connections are good
 							b = true;
 					}
@@ -131,6 +138,114 @@ public class SolverController
 
 		return (left ? a : b);
 
+	}
+
+	private boolean connectedToWall(HexPoint node)
+	{
+		if (curr.getConnectRoute() == CurrentGame.CONNECT_LETTERS)
+		{
+			if (node.getY() == 'a')
+				return true;
+			else if (node.getY() == 'b')
+			{
+				// check the connection to the wall
+				HexPoint[] k = { new HexPoint(node.getX(), 'a'), new HexPoint(node.getX() + 1, 'a') };
+
+				List<HexPoint> good = new ArrayList<HexPoint>();
+				for (HexPoint j : k)
+				{
+					if (j.isGood())
+						good.add(j);
+				}
+				
+				if (IndivNode.empty(good, indivBoard)) // only if both connections are good
+					return true;
+			}
+
+			if (node.getY() == 'k')
+				return true;
+			else if (node.getY() == 'j')
+			{
+				// check the connection to the wall
+				HexPoint[] k = { new HexPoint(node.getX(), 'k'), new HexPoint(node.getX() - 1, 'k') };
+
+				List<HexPoint> good = new ArrayList<HexPoint>();
+				for (HexPoint j : k)
+				{
+					if (j.isGood())
+						good.add(j);
+				}
+				
+				if (IndivNode.empty(good, indivBoard)) // only if both connections are good
+					return true;
+			}
+		}
+		else
+		{
+			if (node.getX() == 1)
+				return true;
+			else if (node.getX() == 2)
+			{
+				// check the connection to the wall
+				HexPoint[] k = { new HexPoint(1, node.getY()), new HexPoint(1, (char) (node.getY() + 1)) };
+				
+				List<HexPoint> good = new ArrayList<HexPoint>();
+				for (HexPoint j : k)
+				{
+					if (j.isGood())
+						good.add(j);
+				}
+
+				if (IndivNode.empty(good, indivBoard)) // only if both connections are good
+					return true;
+			}
+
+			if (node.getX() == 11)
+				return true;
+			else if (node.getX() == 10)
+			{
+				// check the connection to the wall
+				HexPoint[] k = { new HexPoint(11, node.getY()), new HexPoint(11, (char) (node.getY() - 1)) };
+
+				List<HexPoint> good = new ArrayList<HexPoint>();
+				for (HexPoint j : k)
+				{
+					if (j.isGood())
+						good.add(j);
+				}
+				
+				if (IndivNode.empty(good, indivBoard)) // only if both connections are good
+					return true;
+			}
+		}
+
+		return false;
+	}
+
+	// tries to find a point right around a hex which will connect to a side
+	private HexPoint immediatePoint()
+	{
+		for (IndivNode node : indivBoard.getPoints())
+		{
+			if (node.getOccupied() == Player.ME)
+			{
+				for (HexPoint around : node.getPoints().get(0).touching())
+				{
+					if (connectedToWall(around) && indivBoard.getNode(around).getOccupied() == Player.EMPTY)
+					{
+						boolean left = false;
+						if ((curr.getConnectRoute() == CurrentGame.CONNECT_LETTERS && around.getY() < 'f') ||
+								(curr.getConnectRoute() == CurrentGame.CONNECT_NUMBERS && around.getX() < 6))
+							left = true;
+
+						if (!across(left))
+							return around;
+					}
+				}
+			}
+		}
+
+		return null;
 	}
 
 	/**
@@ -259,16 +374,16 @@ public class SolverController
 		// DebugWindow.println(pnt.toString() + " " + countPaths(pnt));
 
 		// // magic numbers which makes it focus more on the side being raped
-		 int count = countPaths(pnt);
-		 // count /= 10;
-		
-		 retn *= 100;
-		 if (count > 5)
-		 count = 5;
-		 if (count <= 0)
-		 count = 1;
-		
-		 retn /= count;
+		int count = countPaths(pnt);
+		// count /= 10;
+
+		retn *= 100;
+		if (count > 5)
+			count = 5;
+		if (count <= 0)
+			count = 1;
+
+		retn /= count;
 
 		return retn;
 
@@ -356,7 +471,15 @@ public class SolverController
 			{
 				HexPoint pt = node.getPoints().get(0);
 
-				// TODO: skip over the orner cases (B11, J1, k2, and A10) (o/w we crash!)
+				HexPoint[] bad = { new HexPoint(11, 'b'), new HexPoint(1, 'j'), new HexPoint(2, 'k'), new HexPoint(10, 'a') };
+
+				// skip the corners - these aren't two chains anyway
+				for (HexPoint b : bad)
+				{
+					if (node.equals(b))
+						continue;
+				}
+
 				if (curr.getConnectRoute() == CurrentGame.CONNECT_LETTERS && (pt.getY() == 'b' || pt.getY() == 'j'))
 				{
 					if (pt.getY() == 'b')
@@ -431,8 +554,8 @@ public class SolverController
 
 						HexPoint a = connections.get(0);
 						HexPoint b = connections.get(1);
-						
-						if (checkConnected(node.getPoints().get(0), pnt))		// skip if we are connected anyway in a triangle
+
+						if (checkConnected(node.getPoints().get(0), pnt)) // skip if we are connected anyway in a triangle
 							continue;
 
 						// if either connector is broken, then cling onto the other
@@ -447,7 +570,7 @@ public class SolverController
 
 		return null; // nothing broken
 	}
-	
+
 	// check if these 2 are connected by 2 chains in a triangle fashion
 	// assumes a and b are same color
 	private boolean checkConnected(HexPoint a, HexPoint b)
@@ -462,7 +585,7 @@ public class SolverController
 				}
 			}
 		}
-		
+
 		return false;
 	}
 
