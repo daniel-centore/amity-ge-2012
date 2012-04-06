@@ -1,11 +1,7 @@
 package solution.solvers.h_search;
 
-import hex.HexState;
-
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
 
 import solution.board.BoardInterface;
 import solution.board.HexPoint;
@@ -24,6 +20,11 @@ import solution.solvers.WeightedPoint;
  */
 public class HSearch implements AmitySolver
 {
+	/**
+	 * Limit on the number of different minimal virtual
+	 * connections with the same ends built by HSearch
+	 */
+	private static final int M = 1;
 
 	public static void main(String[] args)
 	{
@@ -34,15 +35,19 @@ public class HSearch implements AmitySolver
 		HSearch hey = new HSearch(board);
 		hey.hSearch();
 
-		for (List<SpecialHexPoint>[][][] start : hey.SC)
+		for (List<Connection>[][][] start : hey.SC)
 		{
-			for (List<SpecialHexPoint>[][] start2 : start)
+			for (List<Connection>[][] start2 : start)
 			{
-				for (List<SpecialHexPoint>[] start3 : start2)
+				for (List<Connection>[] start3 : start2)
 				{
-					for (List<SpecialHexPoint> val : start3)
+					for (List<Connection> val : start3)
 					{
-						System.out.println(val);
+						for (Connection Connection : val)
+						{
+							System.out.print(Connection.carriers + " ");
+						}
+						System.out.println();
 					}
 
 				}
@@ -53,8 +58,9 @@ public class HSearch implements AmitySolver
 	}
 
 	private final BoardInterface board;
-	private final List<SpecialHexPoint>[][][][] C, SC;
+	private final List<Connection>[][][][] C, SC;
 	private final int N;
+	private boolean newVC;
 
 	public HSearch(BoardInterface board)
 	{
@@ -65,167 +71,177 @@ public class HSearch implements AmitySolver
 		SC = new List[N][N][N][N];
 	}
 
+	private void addConnection(List<Connection> list, Connection connection)
+	{
+		if (list.size() < M)
+		{
+			list.add(connection);
+			newVC = true;
+		}
+	}
+
 	private void hSearch()
 	{
 		// int N = HexState.N;
 		int step = 0;
 
-		for (int x1 = 0; x1 < N; x1++)
+		for (int pos1 = 0; pos1 < N * N; pos1++)
 		{
-			for (int y1 = 0; y1 < N; y1++)
+			for (int pos2 = 0; pos2 < N * N; pos2++)
 			{
-				for (int x2 = 0; x2 < N; x2++)
+
+				int x1 = pos1 % N, y1 = pos1 / N;
+				int x2 = pos2 % N, y2 = pos2 / N;
+
+				C[x1][y1][x2][y2] = new ArrayList<Connection>();
+				SC[x1][y1][x2][y2] = new ArrayList<Connection>();
+
+				if (PointUtilities.areNeighbors(new HexPoint(1 + x1, (char) ('a' + y1)),
+						new HexPoint(1 + x2, (char) ('a' + y2))))
 				{
-					for (int y2 = 0; y2 < N; y2++)
-					{
-						C[x1][y1][x2][y2] = new ArrayList<SpecialHexPoint>();
-						SC[x1][y1][x2][y2] = new ArrayList<SpecialHexPoint>();
-
-						if (PointUtilities.areNeighbors(new HexPoint(1 + x1, (char) ('a' + y1)),
-								new HexPoint(1 + x2, (char) ('a' + y2))))
-						{
-							C[x1][y1][x2][y2].add(new SpecialHexPoint(null, step));
-						}
-					}
+					addConnection(C[x1][y1][x2][y2], new Connection(new ArrayList<HexPoint>(), step));
 				}
-
 			}
 		}
 
-		boolean newVC;
-		do
+		while (newVC)
 		{
+			
 			newVC = false;
 			step++;
+			System.out.println(step);
 
-			for (int x = 0; x < N; x++)
+			for (int pos = 0; pos < N * N; pos++)
 			{
-				for (int y = 0; y < N; y++)
+
+				int x = pos % N, y = pos / N;
+				HexPoint g = new HexPoint(1 + x, (char) ('a' + y));
+				boolean gIsMe = board.getNode(g.getX(), g.getY()).getOccupied().equals(Player.ME);
+
+				for (int pos1 = 0; pos1 < N * N; pos1++)
 				{
 
-					HexPoint g = new HexPoint(1 + x, (char) ('a' + y));
+					int x1 = pos1 % N, y1 = pos1 / N;
+					HexPoint g1 = new HexPoint(1 + x1, (char) ('a' + y1));
 
-					for (int x1 = 0; x1 < N; x1++)
+					// If g has my color, g1 must be empty
+					if (gIsMe && !board.getNode(g1.getX(), g1.getY()).getOccupied().equals(Player.EMPTY))
 					{
-						for (int y1 = 0; y1 < N; y1++)
+						continue;
+					}
+
+					// C(g1, g) or C(g2, g) must contain at least one new connection
+					boolean containsConnection1 = false;
+					for (Connection vc1 : C[x1][y1][x][y])
+					{
+						if (step - vc1.creationStep <= 1)
+						{
+							containsConnection1 = true;
+							break;
+						}
+					}
+
+					for (int pos2 = 0; pos2 < N * N; pos2++)
+					{
+
+						int x2 = pos2 % N, y2 = pos2 / N;
+						HexPoint g2 = new HexPoint(1 + x2, (char) ('a' + y2));
+
+						// g1 must not equal g2
+						if (g1.equals(g2))
+						{
+							continue;
+						}
+
+						// If g has my color, g2 must be empty
+						if (gIsMe && !board.getNode(g2.getX(), g2.getY()).getOccupied().equals(Player.EMPTY))
+						{
+							continue;
+						}
+
+						// C(g1, g) or C(g2, g) must contain at least one new connection
+						if (!containsConnection1)
+						{
+							boolean containsConnection2 = false;
+							for (Connection vc2 : C[x2][y2][x][y])
+							{
+								if (step - vc2.creationStep <= 1)
+								{
+									containsConnection2 = true;
+									break;
+								}
+							}
+							if (!containsConnection2)
+							{
+								continue;
+							}
+						}
+
+						for (Connection vc1 : C[x1][y1][x][y])
 						{
 
-							HexPoint g1 = new HexPoint(1 + x1, (char) ('a' + y1));
-
-							for (int x2 = 0; x2 < N; x2++)
+							// g2 must not be in c1
+							if (vc1.carriers.contains(g2))
 							{
-								for (int y2 = 0; y2 < N; y2++)
+								continue;
+							}
+
+							for (Connection vc2 : C[x2][y2][x][y])
+							{
+
+								// g1 must not be in c2
+								if (vc2.carriers.contains(g1))
 								{
+									continue;
+								}
 
-									HexPoint g2 = new HexPoint(1 + x2, (char) ('a' + y2));
+								// At least one of the connections c1 or c2 must be new
+								if (step - vc1.creationStep > 1 && step - vc2.creationStep > 1)
+								{
+									continue;
+								}
 
-									// g1 must not equal g2
-									if (g1.equals(g2))
+								// c1 and c2 must not share any points
+								for (HexPoint hp : vc1.carriers)
+								{
+									if (vc2.carriers.contains(hp))
 									{
 										continue;
 									}
+								}
 
-									// C(g1, g) or C(g2, g) must contain at least one new carrier
-									boolean containsNewCarrier = false;
-									for (SpecialHexPoint c1 : (List<SpecialHexPoint>) C[x1][y1][x][y])
+								if (board.getNode(g.getX(), g.getY()).getOccupied().equals(Player.ME))
+								{
+									ArrayList<HexPoint> carriers = new ArrayList<>();
+									carriers.addAll(vc1.carriers);
+									carriers.addAll(vc2.carriers);
+									addConnection(C[x1][y1][x2][y2], new Connection(carriers, step));
+								}
+								else
+								{
+									ArrayList<HexPoint> carriers = new ArrayList<>();
+									carriers.addAll(vc1.carriers);
+									carriers.addAll(vc2.carriers);
+									carriers.add(g);
+									Connection vsc = new Connection(carriers, step);
+
+									// If the last update is successful??? (idk what they mean by that)
+									// maybe if SC(g1, g2) doesn't already contain vsc, continue???
+									if (!SC[x1][y1][x2][y2].contains(vsc))
 									{
-										if (step - c1.creationStep <= 1)
-										{
-											containsNewCarrier = true;
-										}
-									}
-									for (SpecialHexPoint c2 : (List<SpecialHexPoint>) C[x2][y2][x][y])
-									{
-										if (step - c2.creationStep <= 1)
-										{
-											containsNewCarrier = true;
-										}
-									}
-									if (!containsNewCarrier)
-									{
-										continue;
-									}
-
-									// If g has your color, g1 and g2 must both be empty
-									if (board.getNode(g.getX(), g.getY()).getOccupied().equals(Player.ME))
-									{
-										if (!board.getNode(g1.getX(), g1.getY()).getOccupied().equals(Player.EMPTY))
-										{
-											continue;
-										}
-										if (!board.getNode(g2.getX(), g2.getY()).getOccupied().equals(Player.EMPTY))
-										{
-											continue;
-										}
-									}
-
-									for (SpecialHexPoint c1 : (List<SpecialHexPoint>) C[x1][y1][x][y])
-									{
-
-										for (SpecialHexPoint c2 : (List<SpecialHexPoint>) C[x2][y2][x][y])
-										{
-
-											// At least one of the carriers c1 or c2 must be new
-											if (step - c1.creationStep > 1 && step - c2.creationStep > 1)
-											{
-												continue;
-											}
-
-											// c1 and c2 must not be equal (my interpretation might not be correct here)
-											if (Objects.equals(c1.hexPoint, c2.hexPoint))
-											{
-												continue;
-											}
-
-											// g1 must not equal c2
-											if (g1.equals(c2.hexPoint))
-											{
-												continue;
-											}
-
-											// g2 must not equal c1
-											if (g2.equals(c1.hexPoint))
-											{
-												continue;
-											}
-
-											if (board.getNode(g.getX(), g.getY()).getOccupied().equals(Player.ME))
-											{
-												C[x1][y1][x2][y2].add(new SpecialHexPoint(c1.hexPoint, step));
-												C[x1][y1][x2][y2].add(new SpecialHexPoint(c2.hexPoint, step));
-												newVC = true;
-											}
-											else
-											{
-												List<SpecialHexPoint> sc = new ArrayList<SpecialHexPoint>();
-												sc.add(new SpecialHexPoint(g, step));
-												sc.add(new SpecialHexPoint(c1.hexPoint, step));
-												sc.add(new SpecialHexPoint(c2.hexPoint, step));
-
-												SC[x1][y1][x2][y2].addAll(sc);
-
-												// If the last update is successful??? (idk what they mean by that)
-												// maybe if SC(g1, g2) doesn't already contain sc, continue???
-
-												List<SpecialHexPoint> scSet = new ArrayList<SpecialHexPoint>(SC[x1][y2][x2][y2]);
-												scSet.removeAll(sc);
-												if (applyOrDeductionRuleAndUpdate(C[x1][y1][x2][y2], scSet, sc, sc))
-												{
-													newVC = true;
-												}
-											}
-
-										}
-
+										applyOrDeductionRuleAndUpdate(C[x1][y1][x2][y2], SC[x1][y2][x2][y2], vsc, vsc, step);
+										SC[x1][y1][x2][y2].add(vsc);
 									}
 
 								}
+
 							}
+
 						}
 					}
 				}
 			}
-		} while (newVC);
+		}
 
 	}
 
@@ -238,52 +254,61 @@ public class HSearch implements AmitySolver
 	 * @param i same as u
 	 * @return Whether a new virtual connection was created
 	 */
-	private boolean applyOrDeductionRuleAndUpdate(List<SpecialHexPoint> C, List<SpecialHexPoint> SC,
-			List<SpecialHexPoint> u, List<SpecialHexPoint> i)
+	private void applyOrDeductionRuleAndUpdate(List<Connection> C, List<Connection> SC,
+			Connection u, Connection i, int step)
 	{
 
-		boolean newVC = false;
-
-		for (SpecialHexPoint sc1 : SC)
+		for (Connection sc1 : SC)
 		{
-			List<SpecialHexPoint> u1 = new ArrayList<SpecialHexPoint>(u); // union
-			u1.add(sc1);
+			ArrayList<HexPoint> carriers = new ArrayList<>();
+			carriers.addAll(u.carriers);
+			carriers.addAll(sc1.carriers);
+			Connection u1 = new Connection(carriers, step);
 
-			List<SpecialHexPoint> i1 = new ArrayList<SpecialHexPoint>();
-			if (i.contains(sc1))
+			carriers = new ArrayList<>();
+			for (HexPoint hp : i.carriers)
 			{
-				i1.add(sc1);
-				List<SpecialHexPoint> newSC = new ArrayList<SpecialHexPoint>(SC);
-				newSC.remove(sc1);
-				if (applyOrDeductionRuleAndUpdate(C, newSC, u1, i1))
+				if (sc1.carriers.contains(hp))
 				{
-					newVC = true;
+					carriers.add(hp);
 				}
+			}
+			Connection i1 = new Connection(carriers, step);
+
+			if (i1.carriers.isEmpty())
+			{
+				addConnection(C, u1);
 			}
 			else
 			{
-				C.addAll(u1);
-				newVC = true;
+				List<Connection> SC2 = new ArrayList<>(SC);
+				SC2.remove(sc1);
+				applyOrDeductionRuleAndUpdate(C, SC2, u1, i1, step);
 			}
 
 		}
 
-		return newVC;
-
 	}
 
-	private class SpecialHexPoint
+	private class Connection
 	{
-
 		private final int creationStep;
-		private final HexPoint hexPoint;
+		private final List<HexPoint> carriers;
 
-		public SpecialHexPoint(HexPoint point, int step)
+		public Connection(List<HexPoint> points, int step)
 		{
 			creationStep = step;
-			hexPoint = point;
+			carriers = points;
 		}
 
+		public boolean equals(Object other)
+		{
+			if (other instanceof Connection)
+			{
+				return carriers.equals(((Connection) other).carriers);
+			}
+			return false;
+		}
 	}
 
 	@Override
