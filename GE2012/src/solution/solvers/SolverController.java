@@ -291,6 +291,19 @@ public class SolverController
 		return retn;
 
 	}
+	
+	/**
+	 * Checks if the path ehre is broken
+	 * @param a
+	 * @param b
+	 * @return
+	 */
+	private boolean broken(HexPoint a, HexPoint b)
+	{
+		List<HexPoint> conns = a.connections(b);
+		
+		return !IndivNode.empty(conns, indivBoard);
+	}
 
 	/**
 	 * Counts the number of 2-bridge paths that lead from this point to the wall
@@ -308,6 +321,9 @@ public class SolverController
 
 			for (HexPoint p : bridges)
 			{
+				if (indivBoard.getNode(p).getOccupied() == Player.YOU || broken(p, pt))	// don't count it if isn't ours
+					continue;
+				
 				if (pt.getY() < 'e')
 				{
 					if (p.getY() < pt.getY()) // only count down
@@ -326,6 +342,9 @@ public class SolverController
 
 			for (HexPoint p : bridges)
 			{
+				if (indivBoard.getNode(p).getOccupied() == Player.EMPTY || broken(p, pt))	// don't count it if isn't ours
+					continue;
+				
 				if (pt.getX() < 5)
 				{
 					if (p.getX() < pt.getX()) // only count down
