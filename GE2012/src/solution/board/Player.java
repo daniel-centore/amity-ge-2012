@@ -21,5 +21,11 @@ public enum Player
 	/**
 	 * Represents an empty hex
 	 */
-	EMPTY
+	EMPTY,
+	
+	/**
+	 * ONLY FOR USE IN DIJKSTRAS SOLVER.
+	 * BASICALLY A KLUDGE
+	 */
+	YOU_BRIDGE
 }
