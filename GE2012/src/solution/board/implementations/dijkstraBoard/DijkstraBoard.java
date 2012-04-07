@@ -12,7 +12,6 @@ import solution.debug.DebugWindow;
 public class DijkstraBoard
 {
 	private IndivBoard indivBoard;
-	private Player player;		// the player the board is for
 	private List<DijkstraNode> nodes = new ArrayList<DijkstraNode>();
 	
 	// the four walls
@@ -21,15 +20,15 @@ public class DijkstraBoard
 	private DijkstraNode wallOne = new DijkstraNode(-1, '!');
 	private DijkstraNode wallEle = new DijkstraNode(-1, '!');
 	
-	public DijkstraBoard(HexPoint test, IndivBoard indivBoard, CurrentGame curr)
+	public DijkstraBoard(IndivBoard indivBoard, CurrentGame curr)
 	{
 		List<HexPoint> bridges = new ArrayList<HexPoint>();
 		
 		this.indivBoard = indivBoard;
 		
-		player = indivBoard.getNode(test).getOccupied();
-		
 		DebugWindow.println("Initializing map");
+		
+		HexPoint test = new HexPoint(1, 'a');
 		
 		DijkstraNode initial = new DijkstraNode(test.getX(), test.getY());
 		nodes.add(initial);
@@ -54,6 +53,22 @@ public class DijkstraBoard
 		}
 		
 		DebugWindow.println("Done map");
+	}
+	
+	public synchronized int findDistance(HexPoint a, HexPoint b)
+	{
+		resetNodes();	// puts them in a clean state for a new test
+		
+		
+		
+		return -1;
+	}
+	
+	
+	private void resetNodes()
+	{
+		for (DijkstraNode n : nodes)
+			n.resetNode();
 	}
 	
 	public void makeNeighbors(DijkstraNode a, DijkstraNode b)
