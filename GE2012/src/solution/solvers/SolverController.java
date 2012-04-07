@@ -33,6 +33,7 @@ public class SolverController
 	private DijkstraBoard dijkstraBoard = null;
 	private ClassicBlock classicBlock;
 	private HexPoint lastMove;
+	private double difficulty = -1;
 
 	public SolverController(CurrentGame curr)
 	{
@@ -51,30 +52,39 @@ public class SolverController
 
 		HexPoint broken = null;
 
-		// Fix chains between points if necessary
-		broken = twoChainsBroken();
-		if (broken != null)
-			return broken;
-
-		try
-		{
-			// Fix chains between a point and the wall if necessary
-			broken = baseTwoChainsBroken();
-			if (broken != null)
-				return broken;
-		} catch (Exception e)
-		{
-			// Fails on some corner cases. just ignore this.
-		}
-
 		try
 		{
 			if (classicBlock.shouldBlock())
 			{
+				// Fix chains between points if necessary
+				broken = twoChainsBroken();
+				if (broken != null)
+				{
+					DebugWindow.println("Came from A");
+					return broken;
+				}
+
+				try
+				{
+					// Fix chains between a point and the wall if necessary
+					broken = baseTwoChainsBroken();
+					if (broken != null)
+					{
+						DebugWindow.println("Came from B");
+						return broken;
+					}
+				} catch (Exception e)
+				{
+					// Fails on some corner cases. just ignore this.
+				}
+
 				broken = classicBlock.block(lastMove);
 
 				if (broken != null)
+				{
+					DebugWindow.println("Came from C");
 					return broken;
+				}
 			}
 		} catch (Exception e1)
 		{
@@ -83,14 +93,42 @@ public class SolverController
 		}
 
 		dijkstraBoard = new DijkstraBoard(indivBoard, curr);
+		
+		HexPoint follow = followChain(); // we do this early so we can use the weight from it
+		
+		// Fix chains between points if necessary
+		broken = twoChainsBroken();
+		if (broken != null)
+		{
+			DebugWindow.println("Came from D");
+			return broken;
+		}
+
+		try
+		{
+			// Fix chains between a point and the wall if necessary
+			broken = baseTwoChainsBroken();
+			if (broken != null)
+			{
+				DebugWindow.println("Came from E");
+				return broken;
+			}
+		} catch (Exception e)
+		{
+			// Fails on some corner cases. just ignore this.
+		}
 
 		// grab immediate fixes
 		broken = immediatePoint();
 		if (broken != null)
+		{
+			DebugWindow.println("Came from F");
 			return broken;
+		}
 
+		DebugWindow.println("Came from G");
 		// follow chain down board
-		return followChain();
+		return follow;
 
 		// TODO: Use a new method which actually checks all 2 chains and makes sure they're connected
 	}
@@ -147,7 +185,7 @@ public class SolverController
 				}
 				else
 				{
-					if (node.getX() == 1)
+					if (node.getX() == 1 && node.getY() > 'a')		// TODO: second part is a kludge. actually check if we're connected.
 						a = true;
 					else if (node.getX() == 2)
 					{
@@ -286,7 +324,7 @@ public class SolverController
 
 				for (HexPoint around : node.getPoints().get(0).touching())
 				{
-					if (connectedToWall(around) && indivBoard.getNode(around).getOccupied() == Player.EMPTY)
+					if (connectedToWall(around) && indivBoard.getNode(around).getOccupied() == Player.EMPTY && !connectedToWall(node.getPoints().get(0)))
 					{
 						boolean left = false;
 						if ((curr.getConnectRoute() == CurrentGame.CONNECT_LETTERS && around.getY() < 'f') ||
@@ -399,6 +437,7 @@ public class SolverController
 		HexPoint worse;
 		if (left > right && bestLeft != null)
 		{
+			difficulty = left;
 			worse = bestLeft;
 
 			// Slip through if it'll be beneficial
@@ -408,6 +447,7 @@ public class SolverController
 		}
 		else
 		{
+			difficulty = right;
 			worse = bestRight;
 
 			// Slip through if it'll be beneficial
@@ -571,8 +611,8 @@ public class SolverController
 						HexPoint a = connections.get(0);
 						HexPoint b = connections.get(1);
 
-						// if (checkConnected(node.getPoints().get(0), pnt)) // skip if we are connected anyway in a triangle
-						// continue;
+						if (difficulty > 8 && checkConnected(node.getPoints().get(0), pnt)) // skip if we are connected anyway in a triangle and need to fix our connection
+							continue;
 
 						// if either connector is broken, then cling onto the other
 						if (indivBoard.getNode(a).getOccupied() == Player.YOU && indivBoard.getNode(b).getOccupied() == Player.EMPTY)

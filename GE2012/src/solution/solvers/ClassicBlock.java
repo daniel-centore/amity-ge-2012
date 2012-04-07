@@ -72,7 +72,7 @@ public class ClassicBlock
 		{
 			for (int i = 1; i < blockPoints.length; i++)
 			{
-				if (blockPoints[i] != null && blockPoints[i].isGood() && blockPoints[i].touching().contains(lastMove))
+				if (blockPoints[i] != null && blockPoints[i].isGood() && blockPoints[i].touching().contains(lastMove) && indivBoard.getNode(blockPoints[i]).getOccupied() == Player.ME)
 				{
 					boolean good = true;
 					for (HexPoint p : indivBoard.getNode(blockPoints[i]).getTwoChains())
