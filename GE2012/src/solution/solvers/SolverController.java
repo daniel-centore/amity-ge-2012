@@ -54,12 +54,19 @@ public class SolverController
 		if (broken != null)
 			return broken;
 
-		if (classicBlock.shouldBlock())
+		try
 		{
-			broken = classicBlock.block(lastMove);
+			if (classicBlock.shouldBlock())
+			{
+				broken = classicBlock.block(lastMove);
 
-			if (broken != null)
-				return broken;
+				if (broken != null)
+					return broken;
+			}
+		} catch (Exception e1)
+		{
+			DebugWindow.println("ERROR: ClassicBlock crashed. Take a look at the trace. Using Default solver.");
+			e1.printStackTrace();
 		}
 
 		if (initial == null)
