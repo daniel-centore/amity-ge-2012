@@ -23,6 +23,8 @@ public class DijkstraBoard
 
 	private static final double ME_WEIGHT = 0;
 	private static final double EMPTY_WEIGHT = 1;
+	private static final double YOU_BRIDGE_WEIGHT = 15;		// don't attempt to go through an enemy's two-bridge unless things look pretty horrific 
+	private static final double YOU_WEIGHT = 200;
 
 	// private static final double YOU_WEIGHT = Double.POSITIVE_INFINITY;
 
@@ -151,7 +153,9 @@ public class DijkstraBoard
 					else if (n.getPlayer() == Player.EMPTY)
 						edgeWeight = EMPTY_WEIGHT;
 					else if (n.getPlayer() == Player.YOU)	// just means we got to a wall. ignore it.
-						edgeWeight = 200;	// wont overflow but will never be lowest
+						edgeWeight = YOU_WEIGHT;	// wont overflow but will never be lowest
+					else if (n.getPlayer() == Player.YOU_BRIDGE)
+						edgeWeight = YOU_BRIDGE_WEIGHT;
 					
 					n.setNode(smallestNode, smallestNode.getWeight() + edgeWeight);
 				}
@@ -192,6 +196,45 @@ public class DijkstraBoard
 		{
 			DijkstraNode newNode = new DijkstraNode(newPoint.getX(), newPoint.getY(), newPoint.getOccupied());
 			nodes.add(newNode);
+		}
+		
+		// recognize the enemy's two-bridges and mark the spaces in-between them as basically
+		// no crossable
+		for (DijkstraNode node : nodes)
+		{
+			if (node.getPlayer() == Player.YOU)
+			{
+				List<HexPoint> bridges = ((IndivNode) indivBoard.getNode(node.getX(), node.getY())).getTwoChains();
+				
+				for (HexPoint k : bridges)
+				{
+					if (indivBoard.getNode(k).getOccupied() == Player.YOU)
+					{
+						// check to see that the spaces between them pose a hazard
+						List<HexPoint> conns = k.connections(new HexPoint(node.getX(), node.getY()));
+						
+						int yours = 0;
+						int mine = 0;
+						int empty = 0;
+						
+						for (HexPoint p : conns)
+						{
+							if (indivBoard.getNode(p).getOccupied() == Player.YOU)
+								yours++;
+							if (indivBoard.getNode(p).getOccupied() == Player.EMPTY || indivBoard.getNode(p).getOccupied() == Player.YOU_BRIDGE)
+								empty++;
+							if (indivBoard.getNode(p).getOccupied() == Player.ME)
+								mine++;
+						}
+						
+						if (empty >= 2)		// if they're all empty
+						{
+							getNode(conns.get(0)).setPlayer(Player.YOU_BRIDGE);
+							getNode(conns.get(1)).setPlayer(Player.YOU_BRIDGE);
+						}
+					}
+				}
+			}
 		}
 		
 		for (DijkstraNode node : nodes)
