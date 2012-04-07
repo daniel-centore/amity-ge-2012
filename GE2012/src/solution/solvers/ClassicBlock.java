@@ -72,7 +72,7 @@ public class ClassicBlock
 		{
 			for (int i = 1; i < blockPoints.length; i++)
 			{
-				if (blockPoints[i] != null && blockPoints[i].isGood() && blockPoints[i].touching().contains(lastMove) && indivBoard.getNode(blockPoints[i]).getOccupied() == Player.ME)
+				if (blockPoints[i] != null && blockPoints[i].isGood() && blockPoints[i].touching().contains(lastMove))
 				{
 					boolean good = true;
 					for (HexPoint p : indivBoard.getNode(blockPoints[i]).getTwoChains())
@@ -105,19 +105,16 @@ public class ClassicBlock
 				pt = blockPoints[part - 1];
 		}
 
-		while (pt == null || !pt.isGood() || indivBoard.getNode(pt).getOccupied() != Player.EMPTY)
+		if (pt == null || !pt.isGood() || indivBoard.getNode(pt).getOccupied() != Player.EMPTY)
 		{
-			part = 50;
+			part++;
 
-			return null;
-			// part++;
-
-			// if (part > 4)
-			// return null;
-			// else
-			// {
-			// pt = blockPoints[part - 1];
-			// }
+			if (part > 4)
+				return null;
+			else
+			{
+				pt = blockPoints[part - 1];
+			}
 		}
 
 		// == cleanup
@@ -130,7 +127,9 @@ public class ClassicBlock
 				blockPoints[i] = null;
 		}
 
-		part = 2;
+		if (part == 1)
+			solverController.setInitial(pt);
+		part++;
 
 		return pt;
 	}

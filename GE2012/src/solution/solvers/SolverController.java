@@ -29,11 +29,10 @@ import solution.debug.DebugWindow;
 public class SolverController
 {
 	private CurrentGame curr; // Current game
+	private HexPoint initial = null; // our centerpiece/starting move
 	private IndivBoard indivBoard;
 	private DijkstraBoard dijkstraBoard = null;
 	private ClassicBlock classicBlock;
-	private HexPoint lastMove;
-	private double difficulty = -1;
 
 	public SolverController(CurrentGame curr)
 	{
@@ -48,43 +47,32 @@ public class SolverController
 	 */
 	public HexPoint getMove(HexPoint lastMove)
 	{
-		this.lastMove = lastMove;
-
 		HexPoint broken = null;
+
+		// Fix chains between points if necessary
+		broken = twoChainsBroken();
+		if (broken != null)
+			return broken;
+		
+		try
+		{
+			// Fix chains between a point and the wall if necessary
+			broken = baseTwoChainsBroken();
+			if (broken != null)
+				return broken;
+		} catch (Exception e)
+		{
+			// Fails on some corner cases. just ignore this.
+		}
 
 		try
 		{
 			if (classicBlock.shouldBlock())
 			{
-				// Fix chains between points if necessary
-				broken = twoChainsBroken();
-				if (broken != null)
-				{
-					DebugWindow.println("Came from A");
-					return broken;
-				}
-
-				try
-				{
-					// Fix chains between a point and the wall if necessary
-					broken = baseTwoChainsBroken();
-					if (broken != null)
-					{
-						DebugWindow.println("Came from B");
-						return broken;
-					}
-				} catch (Exception e)
-				{
-					// Fails on some corner cases. just ignore this.
-				}
-
 				broken = classicBlock.block(lastMove);
 
 				if (broken != null)
-				{
-					DebugWindow.println("Came from C");
 					return broken;
-				}
 			}
 		} catch (Exception e1)
 		{
@@ -92,43 +80,20 @@ public class SolverController
 			e1.printStackTrace();
 		}
 
-		dijkstraBoard = new DijkstraBoard(indivBoard, curr);
-		
-		HexPoint follow = followChain(); // we do this early so we can use the weight from it
-		
-		// Fix chains between points if necessary
-		broken = twoChainsBroken();
-		if (broken != null)
-		{
-			DebugWindow.println("Came from D");
-			return broken;
-		}
+		if (initial == null)
+			throw new RuntimeException("Should have been set already...");
 
-		try
-		{
-			// Fix chains between a point and the wall if necessary
-			broken = baseTwoChainsBroken();
-			if (broken != null)
-			{
-				DebugWindow.println("Came from E");
-				return broken;
-			}
-		} catch (Exception e)
-		{
-			// Fails on some corner cases. just ignore this.
-		}
+		dijkstraBoard = new DijkstraBoard(indivBoard, curr);
+
+		
 
 		// grab immediate fixes
 		broken = immediatePoint();
 		if (broken != null)
-		{
-			DebugWindow.println("Came from F");
 			return broken;
-		}
 
-		DebugWindow.println("Came from G");
 		// follow chain down board
-		return follow;
+		return followChain();
 
 		// TODO: Use a new method which actually checks all 2 chains and makes sure they're connected
 	}
@@ -185,7 +150,7 @@ public class SolverController
 				}
 				else
 				{
-					if (node.getX() == 1 && node.getY() > 'a')		// TODO: second part is a kludge. actually check if we're connected.
+					if (node.getX() == 1)
 						a = true;
 					else if (node.getX() == 2)
 					{
@@ -324,7 +289,7 @@ public class SolverController
 
 				for (HexPoint around : node.getPoints().get(0).touching())
 				{
-					if (connectedToWall(around) && indivBoard.getNode(around).getOccupied() == Player.EMPTY && !connectedToWall(node.getPoints().get(0)))
+					if (connectedToWall(around) && indivBoard.getNode(around).getOccupied() == Player.EMPTY)
 					{
 						boolean left = false;
 						if ((curr.getConnectRoute() == CurrentGame.CONNECT_LETTERS && around.getY() < 'f') ||
@@ -333,36 +298,6 @@ public class SolverController
 
 						if (!across(left))
 							return around;
-					}
-				}
-			}
-		}
-
-		return null;
-	}
-
-	// slips through an opening of two of the other player's pieces
-	private HexPoint slipThrough()
-	{
-		for (IndivNode node : indivBoard.getPoints())
-		{
-			if (node.getOccupied() == Player.YOU)
-			{
-				for (HexPoint bridge : node.getTwoChains())
-				{
-					if (indivBoard.getNode(bridge).getOccupied() == Player.YOU)
-					{
-						List<HexPoint> conns = bridge.connections(node.getPoints().get(0));
-
-						if (indivBoard.getNode(conns.get(0)).getOccupied() == Player.ME && indivBoard.getNode(conns.get(1)).getOccupied() == Player.EMPTY)
-						{
-							// DebugWindow.println(node.toString() + " " + node.getTwoChains());
-							return conns.get(1);
-						}
-						else if (indivBoard.getNode(conns.get(1)).getOccupied() == Player.ME && indivBoard.getNode(conns.get(0)).getOccupied() == Player.EMPTY)
-						{
-							return conns.get(0);
-						}
 					}
 				}
 			}
@@ -411,16 +346,16 @@ public class SolverController
 		do
 		{
 			HexPoint h = itr.next();
-
+			
 			double leftDist = calculateDistance(h, true);
 			double rightDist = calculateDistance(h, false);
-
+			
 			if (leftDist < left)
 			{
 				bestLeft = h;
 				left = leftDist;
 			}
-
+			
 			if (rightDist < right)
 			{
 				bestRight = h;
@@ -434,29 +369,11 @@ public class SolverController
 		else if (across(false) && bestLeft != null)
 			return bestLeft;
 
-		HexPoint worse;
 		if (left > right && bestLeft != null)
-		{
-			difficulty = left;
-			worse = bestLeft;
-
-			// Slip through if it'll be beneficial
-			HexPoint broken = slipThrough();
-			if (broken != null && (curr.getConnectRoute() == CurrentGame.CONNECT_LETTERS ? broken.getY() < 'f' : broken.getX() < 6) && left > 4)
-				worse = broken;
-		}
+			return bestLeft;
 		else
-		{
-			difficulty = right;
-			worse = bestRight;
+			return bestRight;
 
-			// Slip through if it'll be beneficial
-			HexPoint broken = slipThrough();
-			if (broken != null && (curr.getConnectRoute() == CurrentGame.CONNECT_LETTERS ? broken.getY() < 'f' : broken.getX() < 6) && left > 4)
-				worse = broken;
-		}
-
-		return worse;
 	}
 
 	/**
@@ -484,18 +401,7 @@ public class SolverController
 				wall = dijkstraBoard.getWallEle();
 		}
 
-		double dist = dijkstraBoard.findDistance(pnt, wall);
-
-		if (curr.getConnectRoute() == CurrentGame.CONNECT_LETTERS)
-		{
-			dist *= (left == (pnt.getY() < 'f') ? 1 : 1.5);
-		}
-		else
-		{
-			dist *= (left == (pnt.getX() < 6) ? 1 : 1.5);
-		}
-
-		return dist;
+		return dijkstraBoard.findDistance(pnt, wall);
 
 	}
 
@@ -611,7 +517,7 @@ public class SolverController
 						HexPoint a = connections.get(0);
 						HexPoint b = connections.get(1);
 
-						if (difficulty > 8 && checkConnected(node.getPoints().get(0), pnt)) // skip if we are connected anyway in a triangle and need to fix our connection
+						if (checkConnected(node.getPoints().get(0), pnt)) // skip if we are connected anyway in a triangle
 							continue;
 
 						// if either connector is broken, then cling onto the other
@@ -643,6 +549,24 @@ public class SolverController
 		}
 
 		return false;
+	}
+
+	/**
+	 * returns the centerpiece for our algorithm
+	 * @return initial
+	 */
+	public HexPoint getInitial()
+	{
+		return initial;
+	}
+
+	/**
+	 * sets the centerpiece for our algorithm
+	 * @param initial our centerpiece/starting move
+	 */
+	public void setInitial(HexPoint initial)
+	{
+		this.initial = initial;
 	}
 
 }
