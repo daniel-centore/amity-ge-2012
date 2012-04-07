@@ -105,16 +105,19 @@ public class ClassicBlock
 				pt = blockPoints[part - 1];
 		}
 
-		if (pt == null || !pt.isGood() || indivBoard.getNode(pt).getOccupied() != Player.EMPTY)
+		while (pt == null || !pt.isGood() || indivBoard.getNode(pt).getOccupied() != Player.EMPTY)
 		{
-			part++;
+			part = 50;
 
-			if (part > 4)
-				return null;
-			else
-			{
-				pt = blockPoints[part - 1];
-			}
+			return null;
+			// part++;
+
+			// if (part > 4)
+			// return null;
+			// else
+			// {
+			// pt = blockPoints[part - 1];
+			// }
 		}
 
 		// == cleanup
@@ -127,9 +130,7 @@ public class ClassicBlock
 				blockPoints[i] = null;
 		}
 
-		if (part == 1)
-			solverController.setInitial(pt);
-		part++;
+		part = 2;
 
 		return pt;
 	}
