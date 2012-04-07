@@ -5,6 +5,8 @@ import game.GameState;
 import game.Params;
 import game.Util;
 
+import java.io.File;
+
 public class HexState extends GameState
 {
 	public static final Params gameParams = new Params("config/hex.txt");

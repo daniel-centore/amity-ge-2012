@@ -32,11 +32,13 @@ public class SolverController
 	private HexPoint initial = null; // our centerpiece/starting move
 	private IndivBoard indivBoard;
 	private DijkstraBoard dijkstraBoard = null;
+	private ClassicBlock classicBlock;
 
 	public SolverController(CurrentGame curr)
 	{
 		this.curr = curr;
 		indivBoard = curr.getBoardController().getIndivBoard();
+		classicBlock = new ClassicBlock(indivBoard, curr);
 	}
 
 	/**
@@ -47,6 +49,11 @@ public class SolverController
 	{
 		if (initial == null)
 			throw new RuntimeException("Should have been set already...");
+		
+		if (classicBlock.shouldBlock())
+		{
+			return classicBlock.block();
+		}
 
 		dijkstraBoard = new DijkstraBoard(indivBoard, curr);
 
@@ -76,9 +83,9 @@ public class SolverController
 		// follow chain down board
 		return followChain();
 
-		// TODO: if we have chains all the way across, start to fill them in
-		// Use a new method which actually checks all 2 chains and makes sure they're connected
+		// TODO: Use a new method which actually checks all 2 chains and makes sure they're connected
 	}
+
 
 	/**
 	 * Checks to see if there are two-chains all the way across the board
@@ -393,40 +400,6 @@ public class SolverController
 	 */
 	private double calculateDistance(HexPoint pnt)
 	{
-		// TODO: dijkstra to figure out the distance!
-
-//		 int retn;
-//		 if (curr.getConnectRoute() == CurrentGame.CONNECT_LETTERS)
-//		 {
-//		
-//		 int i = pnt.getY() - 'a';
-//		 int j = 'k' - pnt.getY();
-//		
-//		 retn = Math.min(i, j);
-//		 }
-//		 else
-//		 {
-//		 int i = pnt.getX() - 1;
-//		 int j = 11 - pnt.getX();
-//		
-//		 retn = Math.min(i, j);
-//		 }
-//		
-//		 // DebugWindow.println(pnt.toString() + " " + countPaths(pnt));
-//		
-//		 // // magic numbers which makes it focus more on the side being raped
-//		 int count = countPaths(pnt);
-//		 // count /= 10;
-//		
-//		 retn *= 100;
-//		 if (count > 5)
-//		 count = 5;
-//		 if (count <= 0)
-//		 count = 1;
-//		
-//		 retn /= count;
-//		
-//		return retn;
 
 		DijkstraNode wall;
 
@@ -462,64 +435,6 @@ public class SolverController
 		return !IndivNode.empty(conns, indivBoard);
 	}
 
-	/**
-	 * Counts the number of 2-bridge paths that lead from this point to the wall
-	 * @param pt the starting {@link HexPoint}
-	 * @return number of two bridges between pt and the wall
-	 * 
-	 * @deprecated Doesn't take white ones in the way into consideration (see helo.png on desktop)
-	 * TODO: DIJKSTRA!
-	 */
-	private int countPaths(HexPoint pt)
-	{
-		int k = 1; // 1 for myself
-
-		if (curr.getConnectRoute() == CurrentGame.CONNECT_LETTERS)
-		{
-			List<HexPoint> bridges = indivBoard.getNode(pt).getTwoChains();
-
-			for (HexPoint p : bridges)
-			{
-				if (indivBoard.getNode(p).getOccupied() == Player.YOU || broken(p, pt)) // don't count it if isn't ours
-					continue;
-
-				if (pt.getY() < 'e')
-				{
-					if (p.getY() < pt.getY()) // only count down
-						k += countPaths(p);
-				}
-				else if (pt.getY() > 'g')
-				{
-					if (p.getY() > pt.getY()) // only count up
-						k += countPaths(p);
-				}
-			}
-		}
-		else
-		{
-			List<HexPoint> bridges = indivBoard.getNode(pt).getTwoChains();
-
-			for (HexPoint p : bridges)
-			{
-				if (indivBoard.getNode(p).getOccupied() == Player.YOU || broken(p, pt)) // don't count it if isn't ours
-					continue;
-
-				if (pt.getX() < 5)
-				{
-					if (p.getX() < pt.getX()) // only count down
-						k += countPaths(p);
-				}
-				else if (pt.getX() > 7)
-				{
-					if (p.getX() > pt.getX()) // only count up
-						k += countPaths(p);
-				}
-			}
-		}
-
-		return k;
-
-	}
 
 	/**
 	 * Checks if two-chains to the walls are broken
