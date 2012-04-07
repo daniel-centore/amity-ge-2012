@@ -1,5 +1,6 @@
 package hex;
 
+import solution.debug.DebugWindow;
 import game.GameMove;
 import game.GamePlayer;
 import game.GameState;
@@ -45,6 +46,7 @@ public class RoteHexPlayer extends GamePlayer
 				}
 			}
 		}
+		
 		return null;
 	}
 

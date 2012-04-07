@@ -32,7 +32,6 @@ public class SolverController
 	// TODO: We need to make another section which finds all the clumps of two-chains and then if there's more than one do everything possible to merge
 	// them *IF NECESSARY* (dont merge with one little one in the corner if we are already touching that side somewhere else)
 	private CurrentGame curr; // Current game
-	private HexPoint initial = null; // our centerpiece/starting move
 	private IndivBoard indivBoard;
 	private DijkstraBoard dijkstraBoard = null;
 	private ClassicBlock classicBlock;
@@ -82,9 +81,6 @@ public class SolverController
 			DebugWindow.println("ERROR: ClassicBlock crashed. Take a look at the trace. Using Default solver.");
 			e1.printStackTrace();
 		}
-
-		if (initial == null)
-			throw new RuntimeException("Should have been set already...");
 
 		dijkstraBoard = new DijkstraBoard(indivBoard, curr);
 
@@ -552,24 +548,6 @@ public class SolverController
 		}
 
 		return false;
-	}
-
-	/**
-	 * returns the centerpiece for our algorithm
-	 * @return initial
-	 */
-	public HexPoint getInitial()
-	{
-		return initial;
-	}
-
-	/**
-	 * sets the centerpiece for our algorithm
-	 * @param initial our centerpiece/starting move
-	 */
-	public void setInitial(HexPoint initial)
-	{
-		this.initial = initial;
 	}
 
 }
