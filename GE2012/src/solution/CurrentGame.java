@@ -93,6 +93,7 @@ public class CurrentGame
 				try
 				{
 					move = solverController.getMove();// .toHexPoint();
+					new DijkstraBoard(move, boardController.getIndivBoard(), this);
 					
 				} catch (Exception e)
 				{

@@ -45,6 +45,8 @@ public class DijkstraBoard
 				newNode.addBridge(node);
 				
 				bridges.add(b);
+				
+				createMap(b, bridges, newNode);
 			}
 		}
 	}
