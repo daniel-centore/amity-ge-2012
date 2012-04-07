@@ -163,14 +163,14 @@ public class DijkstraBoard
 		DijkstraNode node = dB;
 
 		// Print path
-		DebugWindow.println(node.toString());
-		do
-		{
-			DebugWindow.println(node.getFrom().toString());
-			node = node.getFrom();
-		} while (node.getFrom() != null);
-
-		DebugWindow.println("\n");
+		// DebugWindow.println(node.toString());
+		// do
+		// {
+		// DebugWindow.println(node.getFrom().toString());
+		// node = node.getFrom();
+		// } while (node.getFrom() != null);
+		//
+		// DebugWindow.println("\n");
 
 		return dB.getWeight();
 	}

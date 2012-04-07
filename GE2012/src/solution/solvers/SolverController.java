@@ -38,26 +38,34 @@ public class SolverController
 	{
 		this.curr = curr;
 		indivBoard = curr.getBoardController().getIndivBoard();
-		classicBlock = new ClassicBlock(indivBoard, curr);
+		classicBlock = new ClassicBlock(indivBoard, curr, this);
 	}
 
 	/**
 	 * Chooses our next move
 	 * @return the next {@link HexPoint} to occupy
 	 */
-	public HexPoint getMove()
+	public HexPoint getMove(HexPoint lastMove)
 	{
-		if (initial == null)
-			throw new RuntimeException("Should have been set already...");
-		
+		HexPoint broken = null;
+
+		// Fix chains between points if necessary
+		broken = twoChainsBroken();
+		if (broken != null)
+			return broken;
+
 		if (classicBlock.shouldBlock())
 		{
-			return classicBlock.block();
+			broken = classicBlock.block(lastMove);
+
+			if (broken != null)
+				return broken;
 		}
 
-		dijkstraBoard = new DijkstraBoard(indivBoard, curr);
+		if (initial == null)
+			throw new RuntimeException("Should have been set already...");
 
-		HexPoint broken = null;
+		dijkstraBoard = new DijkstraBoard(indivBoard, curr);
 
 		try
 		{
@@ -75,17 +83,11 @@ public class SolverController
 		if (broken != null)
 			return broken;
 
-		// Fix chains between points if necessary
-		broken = twoChainsBroken();
-		if (broken != null)
-			return broken;
-
 		// follow chain down board
 		return followChain();
 
 		// TODO: Use a new method which actually checks all 2 chains and makes sure they're connected
 	}
-
 
 	/**
 	 * Checks to see if there are two-chains all the way across the board
@@ -115,7 +117,7 @@ public class SolverController
 								good.add(j);
 						}
 
-						if (IndivNode.empty(good, indivBoard)) // only if both connections are good
+						if (IndivNode.empty(good, indivBoard) && good.size() == 2) // only if both connections are good
 							a = true;
 					}
 
@@ -133,7 +135,7 @@ public class SolverController
 								good.add(j);
 						}
 
-						if (IndivNode.empty(good, indivBoard)) // only if both connections are good
+						if (IndivNode.empty(good, indivBoard) && good.size() == 2) // only if both connections are good
 							b = true;
 					}
 				}
@@ -434,7 +436,6 @@ public class SolverController
 
 		return !IndivNode.empty(conns, indivBoard);
 	}
-
 
 	/**
 	 * Checks if two-chains to the walls are broken

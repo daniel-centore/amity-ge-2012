@@ -54,7 +54,7 @@ public class CurrentGame
 		if (point == null)
 		{
 			// we're going first - do a nice default move
-			HexPoint me = new HexPoint(5, 'f');
+			HexPoint me = new HexPoint(1, 'a');
 
 			result = toHexMove(me);
 
@@ -71,31 +71,34 @@ public class CurrentGame
 			boardController.applyMove(point.getX(), point.getY(), Player.YOU);
 
 			// calculate our next move
-			if (connectRoute < 0) // our first move (they just went first)
-			{
-				// TODO: smarter first point choice. get far enough away from enemy.
-				HexPoint initial;
-				if (boardController.getIndivBoard().getNode(5, 'f').getOccupied() == Player.YOU)
-					initial = new HexPoint(7, 'f');
-				else
-					initial = new HexPoint(5, 'f');
-
-				solverController.setInitial(initial);
-
-				connectRoute = CONNECT_LETTERS;
-
-				result = toHexMove(initial);
-			}
-			else
+			
+			//
+//			if (connectRoute < 0) // our first move (they just went first)
+//			{
+//				// TODO: smarter first point choice. get far enough away from enemy.
+			// XXX: Doing classblock now
+//				HexPoint initial;
+//				if (boardController.getIndivBoard().getNode(5, 'f').getOccupied() == Player.YOU)
+//					initial = new HexPoint(7, 'f');
+//				else
+//					initial = new HexPoint(5, 'f');
+//
+//				solverController.setInitial(initial);
+//
+//				connectRoute = CONNECT_LETTERS;
+//
+//				result = toHexMove(initial);
+//			}
+//			else
 			{
 				HexPoint move = null;
 				
 				try
 				{
-					move = solverController.getMove();// .toHexPoint();
+					move = solverController.getMove(point);// .toHexPoint();
 					
 					
-					DijkstraBoard board = new DijkstraBoard(boardController.getIndivBoard(), this);
+//					DijkstraBoard board = new DijkstraBoard(boardController.getIndivBoard(), this);
 					
 					
 //					DebugWindow.println("Weight: "+board.findDistance(new HexPoint(3, 'd'), board.getWallA()));
@@ -209,5 +212,10 @@ public class CurrentGame
 	public int getConnectRoute()
 	{
 		return connectRoute;
+	}
+
+	public void setConnectRoute(int connectRoute)
+	{
+		this.connectRoute = connectRoute;
 	}
 }
