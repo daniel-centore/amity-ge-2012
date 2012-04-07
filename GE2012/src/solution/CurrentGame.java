@@ -12,6 +12,7 @@ import hex.HexState;
 import solution.board.BoardController;
 import solution.board.HexPoint;
 import solution.board.Player;
+import solution.board.implementations.dijkstraBoard.DijkstraBoard;
 import solution.debug.DebugWindow;
 import solution.solvers.SolverController;
 
@@ -33,13 +34,9 @@ public class CurrentGame
 	public static final int CONNECT_LETTERS = 1; // connect from A-K wins (black)
 	private int connectRoute = -1; //the connection direction we need to solve for to win
 
-	public CurrentGame()
-	{
-	}
-
 	public void init()
 	{
-		boardController = new BoardController();
+		boardController = new BoardController(this);
 		solverController = new SolverController(this);
 	}
 
@@ -96,6 +93,7 @@ public class CurrentGame
 				try
 				{
 					move = solverController.getMove();// .toHexPoint();
+					
 				} catch (Exception e)
 				{
 					DebugWindow.println("ERROR: CHECK THE STACK TRACE!!!!");
@@ -116,7 +114,7 @@ public class CurrentGame
 		// apply our move to the board
 		point = parseTheirString(result.toString());
 
-		DebugWindow.println(point.toString());
+//		DebugWindow.println(point.toString());
 
 		boardController.applyMove(point.getX(), point.getY(), Player.ME);
 		// /\ == == /\

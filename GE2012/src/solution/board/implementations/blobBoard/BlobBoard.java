@@ -3,6 +3,7 @@ package solution.board.implementations.blobBoard;
 import java.util.ArrayList;
 import java.util.List;
 
+import solution.CurrentGame;
 import solution.board.BoardInterface;
 import solution.board.HexPoint;
 import solution.board.NodeInterface;
@@ -20,12 +21,33 @@ public class BlobBoard implements BoardInterface
 	
 	// All the blobs of a color
 	private List<BlobNode> nodes = new ArrayList<BlobNode>();
-
+	
+	// The walls
+	private BlobNode wallA;
+	private BlobNode wallK;
+	private BlobNode wallOne;
+	private BlobNode wallEle;
+	
 	/**
 	 * Generates the board
 	 */
-	public BlobBoard()
+	public BlobBoard(CurrentGame curr)
 	{
+		if(curr.getConnectRoute() == CurrentGame.CONNECT_LETTERS)
+		{
+			wallA = new BlobNode(Player.ME, null);
+			wallK = new BlobNode(Player.ME, null);
+			wallOne = new BlobNode(Player.YOU, null);
+			wallEle = new BlobNode(Player.YOU, null);
+		}
+		else
+		{
+			wallA = new BlobNode(Player.YOU, null);
+			wallK = new BlobNode(Player.YOU, null);
+			wallOne = new BlobNode(Player.ME, null);
+			wallEle = new BlobNode(Player.ME, null);
+		}
+		
 		for (int i = 1; i <= 11; i++)
 		{
 			for (char c = 'a'; c <= 'k'; c++)
@@ -85,6 +107,26 @@ public class BlobBoard implements BoardInterface
 		}
 
 		return null;
+	}
+
+	public BlobNode getWallA()
+	{
+		return wallA;
+	}
+
+	public BlobNode getWallK()
+	{
+		return wallK;
+	}
+
+	public BlobNode getWallOne()
+	{
+		return wallOne;
+	}
+
+	public BlobNode getWallEle()
+	{
+		return wallEle;
 	}
 
 }

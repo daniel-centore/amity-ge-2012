@@ -45,10 +45,18 @@ public class SolverController
 		if (initial == null)
 			throw new RuntimeException("Should have been set already...");
 
-		// Fix chains between a point and the wall if necessary
-		HexPoint broken = baseTwoChainsBroken();
-		if (broken != null)
-			return broken;
+		HexPoint broken = null;
+
+		try
+		{
+			// Fix chains between a point and the wall if necessary
+			broken = baseTwoChainsBroken();
+			if (broken != null)
+				return broken;
+		} catch (Exception e)
+		{
+			// Fails on some corner cases. just ignore this.
+		}
 
 		// grab immediate fixes
 		broken = immediatePoint();
@@ -254,7 +262,7 @@ public class SolverController
 		{
 			if (node.getOccupied() == Player.ME)
 			{
-				DebugWindow.println(node.toString() + " " + node.getPoints().get(0).touching().toString());
+				// DebugWindow.println(node.toString() + " " + node.getPoints().get(0).touching().toString());
 
 				for (HexPoint around : node.getPoints().get(0).touching())
 				{
@@ -505,9 +513,12 @@ public class SolverController
 				// skip the corners - these aren't two chains anyway
 				for (HexPoint b : bad)
 				{
+					// DebugWindow.println("Skipping over: "+b.toString());
 					if (node.equals(b))
 						continue niceloop;
 				}
+
+				// DebugWindow.println("Testing bridge: "+node.toString());
 
 				if (curr.getConnectRoute() == CurrentGame.CONNECT_LETTERS && (pt.getY() == 'b' || pt.getY() == 'j'))
 				{
