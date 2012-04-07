@@ -53,6 +53,17 @@ public class SolverController
 		broken = twoChainsBroken();
 		if (broken != null)
 			return broken;
+		
+		try
+		{
+			// Fix chains between a point and the wall if necessary
+			broken = baseTwoChainsBroken();
+			if (broken != null)
+				return broken;
+		} catch (Exception e)
+		{
+			// Fails on some corner cases. just ignore this.
+		}
 
 		try
 		{
@@ -74,16 +85,7 @@ public class SolverController
 
 		dijkstraBoard = new DijkstraBoard(indivBoard, curr);
 
-		try
-		{
-			// Fix chains between a point and the wall if necessary
-			broken = baseTwoChainsBroken();
-			if (broken != null)
-				return broken;
-		} catch (Exception e)
-		{
-			// Fails on some corner cases. just ignore this.
-		}
+		
 
 		// grab immediate fixes
 		broken = immediatePoint();
@@ -344,48 +346,20 @@ public class SolverController
 		do
 		{
 			HexPoint h = itr.next();
-
-			if (curr.getConnectRoute() == CurrentGame.CONNECT_LETTERS)
+			
+			double leftDist = calculateDistance(h, true);
+			double rightDist = calculateDistance(h, false);
+			
+			if (leftDist < left)
 			{
-				if (h.getY() < 'f')
-				{
-					double dist = calculateDistance(h);
-					if (dist < left)
-					{
-						bestLeft = h;
-						left = dist;
-					}
-				}
-				else
-				{
-					double dist = calculateDistance(h);
-					if (dist < right)
-					{
-						bestRight = h;
-						right = dist;
-					}
-				}
+				bestLeft = h;
+				left = leftDist;
 			}
-			else
+			
+			if (rightDist < right)
 			{
-				if (h.getX() < 6)
-				{
-					double dist = calculateDistance(h);
-					if (dist < left)
-					{
-						bestLeft = h;
-						left = dist;
-					}
-				}
-				else
-				{
-					double dist = calculateDistance(h);
-					if (dist < right)
-					{
-						bestRight = h;
-						right = dist;
-					}
-				}
+				bestRight = h;
+				right = rightDist;
 			}
 
 		} while (itr.hasNext());
@@ -407,21 +381,21 @@ public class SolverController
 	 * @param pnt the starting {@link HexPoint}
 	 * @return The difficulty (arbitrary scale)
 	 */
-	private double calculateDistance(HexPoint pnt)
+	private double calculateDistance(HexPoint pnt, boolean left)
 	{
 
 		DijkstraNode wall;
 
 		if (curr.getConnectRoute() == CurrentGame.CONNECT_LETTERS)
 		{
-			if (pnt.getY() < 'f')
+			if (left)
 				wall = dijkstraBoard.getWallA();
 			else
 				wall = dijkstraBoard.getWallK();
 		}
 		else
 		{
-			if (pnt.getX() < 6)
+			if (left)
 				wall = dijkstraBoard.getWallOne();
 			else
 				wall = dijkstraBoard.getWallEle();
