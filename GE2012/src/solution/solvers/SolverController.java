@@ -28,6 +28,9 @@ import solution.debug.DebugWindow;
  */
 public class SolverController
 {
+	
+	// TODO: We need to make another section which finds all the clumps of two-chains and then if there's more than one do everything possible to merge
+	// them *IF NECESSARY* (dont merge with one little one in the corner if we are already touching that side somewhere else)
 	private CurrentGame curr; // Current game
 	private HexPoint initial = null; // our centerpiece/starting move
 	private IndivBoard indivBoard;
