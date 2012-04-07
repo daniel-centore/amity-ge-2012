@@ -23,7 +23,7 @@ public class DijkstraBoard
 
 	private static final double ME_WEIGHT = 0;
 	private static final double EMPTY_WEIGHT = 1;
-	private static final double YOU_BRIDGE_WEIGHT = 15; // don't attempt to go through an enemy's two-bridge unless things look pretty horrific
+	private static final double YOU_BRIDGE_WEIGHT = 6; // don't attempt to go through an enemy's two-bridge unless things look pretty horrific (/2 because 2 spots)
 	private static final double YOU_WEIGHT = 200;
 
 	// private static final double YOU_WEIGHT = Double.POSITIVE_INFINITY;
@@ -162,7 +162,6 @@ public class DijkstraBoard
 
 		DijkstraNode node = dB;
 
-		
 		// Print path
 		DebugWindow.println(node.toString());
 		do
@@ -170,7 +169,7 @@ public class DijkstraBoard
 			DebugWindow.println(node.getFrom().toString());
 			node = node.getFrom();
 		} while (node.getFrom() != null);
-		
+
 		DebugWindow.println("\n");
 
 		return dB.getWeight();
@@ -196,7 +195,7 @@ public class DijkstraBoard
 			nodes.add(newNode);
 		}
 
-		// recognize the enemy's two-bridges and mark the spaces in-between them as basically
+		// recognize the enemy's regular two-bridges and mark the spaces in-between them as basically
 		// no crossable
 		for (DijkstraNode node : nodes)
 		{
@@ -215,8 +214,7 @@ public class DijkstraBoard
 
 						for (HexPoint p : conns)
 						{
-							if (indivBoard.getNode(p).getOccupied() == Player.EMPTY || indivBoard.getNode(p).getOccupied() == Player.YOU_BRIDGE ||
-									indivBoard.getNode(p).getOccupied() == Player.YOU_BRIDGE)
+							if (indivBoard.getNode(p).getOccupied() == Player.EMPTY)
 								empty++;
 						}
 
@@ -230,6 +228,21 @@ public class DijkstraBoard
 			}
 		}
 
+		// mark an enemy's corner as their territory
+		if (indivBoard.getNode(new HexPoint(10, 'b')).getOccupied() == Player.YOU)
+		{
+			getNode(new HexPoint(11, 'a')).setPlayer(Player.YOU_BRIDGE);
+			getNode(new HexPoint(10, 'a')).setPlayer(Player.YOU_BRIDGE);
+		}
+		
+		if (indivBoard.getNode(new HexPoint(2, 'j')).getOccupied() == Player.YOU)
+		{
+			getNode(new HexPoint(1, 'k')).setPlayer(Player.YOU_BRIDGE);
+			getNode(new HexPoint(1, 'j')).setPlayer(Player.YOU_BRIDGE);
+		}
+		
+		
+		// add neighbors
 		for (DijkstraNode node : nodes)
 		{
 			HexPoint point = new HexPoint(node.getX(), node.getY());

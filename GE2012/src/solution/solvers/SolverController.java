@@ -297,6 +297,7 @@ public class SolverController
 	{
 		List<HexPoint> possible = new ArrayList<HexPoint>();
 
+		// add all 2-chains as possible
 		for (IndivNode node : indivBoard.getPoints())
 		{
 			if (node.getOccupied() == Player.ME)
@@ -315,10 +316,10 @@ public class SolverController
 		// DebugWindow.println(possible.toString());
 		Iterator<HexPoint> itr = possible.iterator();
 
-		double left = Double.POSITIVE_INFINITY;
+		double left = Double.MAX_VALUE;
 		HexPoint bestLeft = null;
 
-		double right = Double.POSITIVE_INFINITY;
+		double right = Double.MAX_VALUE;
 		HexPoint bestRight = null;
 
 		if (!itr.hasNext())
