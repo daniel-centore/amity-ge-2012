@@ -40,13 +40,14 @@ public class Main
 		{
 			public void run()
 			{
-				new HexPlayer_Amity().compete(args, 0);
+				new HexPlayer_Amity("Amity Regional High School").compete(args, 0);
 			}
 		}.start();
 
 		GamePlayer competitor = new HumanHexPlayer("Human");
 		// GamePlayer competitor = new RoteHexPlayer("Rote");
 		// GamePlayer competitor = new RandomHexPlayer("Random");
+		// GamePlayer competitor = new HexPlayer_Amity("Other one");
 
 		/** Uncomment this if the competitor isn't a HumanHexPlayer */
 		// competitor.makeFrameVisible();
