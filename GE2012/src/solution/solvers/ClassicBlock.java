@@ -108,9 +108,18 @@ public class ClassicBlock
 		if (pt == null || !pt.isGood() || indivBoard.getNode(pt).getOccupied() != Player.EMPTY)
 		{
 			part++;
+			
+			if (part == 3 && blockPoints[1] != null)
+			{
+				part = 50;
+				return null;
+			}
 
 			if (part > 4)
+			{
+				part = 50;
 				return null;
+			}
 			else
 			{
 				pt = blockPoints[part - 1];
