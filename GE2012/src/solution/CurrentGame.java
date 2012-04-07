@@ -65,6 +65,7 @@ public class CurrentGame
 			// they just went - time to counter
 
 			// apply their move to our boards
+			DebugWindow.println("THEIR MOVE:" + point.toString());
 			boardController.applyMove(point.getX(), point.getY(), Player.YOU);
 
 			// calculate our next move
@@ -120,7 +121,7 @@ public class CurrentGame
 		// apply our move to the board
 		point = parseTheirString(result.toString());
 
-//		DebugWindow.println(point.toString());
+		DebugWindow.println("OUR MOVE:" + point.toString());
 
 		boardController.applyMove(point.getX(), point.getY(), Player.ME);
 		// /\ == == /\
