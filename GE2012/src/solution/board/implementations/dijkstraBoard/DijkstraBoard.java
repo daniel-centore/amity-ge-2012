@@ -23,7 +23,7 @@ public class DijkstraBoard
 
 	private static final double ME_WEIGHT = 0;
 	private static final double EMPTY_WEIGHT = 1;
-	private static final double YOU_BRIDGE_WEIGHT = 15;		// don't attempt to go through an enemy's two-bridge unless things look pretty horrific 
+	private static final double YOU_BRIDGE_WEIGHT = 15; // don't attempt to go through an enemy's two-bridge unless things look pretty horrific
 	private static final double YOU_WEIGHT = 200;
 
 	// private static final double YOU_WEIGHT = Double.POSITIVE_INFINITY;
@@ -40,9 +40,8 @@ public class DijkstraBoard
 
 		DijkstraNode initial = new DijkstraNode(test.getX(), test.getY(), indivBoard.getNode(test).getOccupied());
 		nodes.add(initial);
-		createMap();//test, bridges, initial);
-		
-		
+		createMap();// test, bridges, initial);
+
 		if (curr.getConnectRoute() == CurrentGame.CONNECT_LETTERS)
 		{
 			wallA = new DijkstraNode(-1, '!', Player.ME);
@@ -57,7 +56,7 @@ public class DijkstraBoard
 			wallOne = new DijkstraNode(-1, '!', Player.ME);
 			wallEle = new DijkstraNode(-1, '!', Player.ME);
 		}
-		
+
 		nodes.add(wallA);
 		nodes.add(wallK);
 		nodes.add(wallOne);
@@ -69,7 +68,7 @@ public class DijkstraBoard
 			// No elses because corners can be part of 2
 			if (n == wallA || n == wallK || n == wallOne || n == wallEle)
 				continue;
-			
+
 			if (n.getX() == 1)
 				makeNeighbors(wallOne, n);
 
@@ -96,22 +95,21 @@ public class DijkstraBoard
 
 		return null;
 	}
-	
+
 	public synchronized double findDistance(HexPoint a, HexPoint b)
 	{
 		DijkstraNode dA = getNode(a);
 		DijkstraNode dB = getNode(b);
-		
-		return findDistance(dA, dB);
-	}
-	
-	public synchronized double findDistance(HexPoint a, DijkstraNode dB)
-	{
-		DijkstraNode dA = getNode(a);
-		
+
 		return findDistance(dA, dB);
 	}
 
+	public synchronized double findDistance(HexPoint a, DijkstraNode dB)
+	{
+		DijkstraNode dA = getNode(a);
+
+		return findDistance(dA, dB);
+	}
 
 	public synchronized double findDistance(DijkstraNode dA, DijkstraNode dB)
 	{
@@ -123,10 +121,10 @@ public class DijkstraBoard
 		while (!dB.isCompleted())
 		{
 			// Choose the node with the least distance
-			
+
 			double smallestWeight = Double.MAX_VALUE;
 			DijkstraNode smallestNode = null;
-			
+
 			for (DijkstraNode n : nodes)
 			{
 				if (!n.isCompleted() && n.getWeight() <= smallestWeight)
@@ -135,11 +133,10 @@ public class DijkstraBoard
 					smallestNode = n;
 				}
 			}
-			
-			
+
 			// Remove it from the graph
 			smallestNode.setCompleted(true);
-			
+
 			// Calculate distances between it and neighbors that are still in the graph
 			// Update distances, choosing the lowest
 			for (DijkstraNode n : smallestNode.getNeighbors())
@@ -147,33 +144,34 @@ public class DijkstraBoard
 				if (!n.isCompleted())
 				{
 					double edgeWeight = 500;
-					
+
 					if (n.getPlayer() == Player.ME)
 						edgeWeight = ME_WEIGHT;
 					else if (n.getPlayer() == Player.EMPTY)
 						edgeWeight = EMPTY_WEIGHT;
-					else if (n.getPlayer() == Player.YOU)	// just means we got to a wall. ignore it.
-						edgeWeight = YOU_WEIGHT;	// wont overflow but will never be lowest
+					else if (n.getPlayer() == Player.YOU) // just means we got to a wall. ignore it.
+						edgeWeight = YOU_WEIGHT; // wont overflow but will never be lowest
 					else if (n.getPlayer() == Player.YOU_BRIDGE)
 						edgeWeight = YOU_BRIDGE_WEIGHT;
-					
+
 					n.setNode(smallestNode, smallestNode.getWeight() + edgeWeight);
 				}
 			}
-			
-			
+
 		}
-		
-		
-		
+
 		DijkstraNode node = dB;
+
 		
 		// Print path
+		DebugWindow.println(node.toString());
 		do
 		{
 			DebugWindow.println(node.getFrom().toString());
 			node = node.getFrom();
-		} while(node.getFrom() != null);
+		} while (node.getFrom() != null);
+		
+		DebugWindow.println("\n");
 
 		return dB.getWeight();
 	}
@@ -197,7 +195,7 @@ public class DijkstraBoard
 			DijkstraNode newNode = new DijkstraNode(newPoint.getX(), newPoint.getY(), newPoint.getOccupied());
 			nodes.add(newNode);
 		}
-		
+
 		// recognize the enemy's two-bridges and mark the spaces in-between them as basically
 		// no crossable
 		for (DijkstraNode node : nodes)
@@ -205,29 +203,24 @@ public class DijkstraBoard
 			if (node.getPlayer() == Player.YOU)
 			{
 				List<HexPoint> bridges = ((IndivNode) indivBoard.getNode(node.getX(), node.getY())).getTwoChains();
-				
+
 				for (HexPoint k : bridges)
 				{
 					if (indivBoard.getNode(k).getOccupied() == Player.YOU)
 					{
 						// check to see that the spaces between them pose a hazard
 						List<HexPoint> conns = k.connections(new HexPoint(node.getX(), node.getY()));
-						
-						int yours = 0;
-						int mine = 0;
+
 						int empty = 0;
-						
+
 						for (HexPoint p : conns)
 						{
-							if (indivBoard.getNode(p).getOccupied() == Player.YOU)
-								yours++;
-							if (indivBoard.getNode(p).getOccupied() == Player.EMPTY || indivBoard.getNode(p).getOccupied() == Player.YOU_BRIDGE)
+							if (indivBoard.getNode(p).getOccupied() == Player.EMPTY || indivBoard.getNode(p).getOccupied() == Player.YOU_BRIDGE ||
+									indivBoard.getNode(p).getOccupied() == Player.YOU_BRIDGE)
 								empty++;
-							if (indivBoard.getNode(p).getOccupied() == Player.ME)
-								mine++;
 						}
-						
-						if (empty >= 2)		// if they're all empty
+
+						if (empty >= 2) // if they're all empty
 						{
 							getNode(conns.get(0)).setPlayer(Player.YOU_BRIDGE);
 							getNode(conns.get(1)).setPlayer(Player.YOU_BRIDGE);
@@ -236,31 +229,31 @@ public class DijkstraBoard
 				}
 			}
 		}
-		
+
 		for (DijkstraNode node : nodes)
 		{
 			HexPoint point = new HexPoint(node.getX(), node.getY());
-			
+
 			for (HexPoint touch : point.touching())
 			{
 				node.addNeighbor(getNode(touch));
 			}
 		}
-//		for (HexPoint newPoint : pt.touching())
-//		{
-//			Player p = indivBoard.getNode(newPoint).getOccupied();
-//			if (!bridges.contains(newPoint))// && p != Player.YOU)
-//			{
-//				DijkstraNode newNode = new DijkstraNode(newPoint.getX(), newPoint.getY(), indivBoard.getNode(newPoint).getOccupied());
-//
-//				makeNeighbors(node, newNode);
-//
-//				bridges.add(newPoint);
-//				nodes.add(newNode);
-//
-//				createMap(newPoint, bridges, newNode);
-//			}
-//		}
+		// for (HexPoint newPoint : pt.touching())
+		// {
+		// Player p = indivBoard.getNode(newPoint).getOccupied();
+		// if (!bridges.contains(newPoint))// && p != Player.YOU)
+		// {
+		// DijkstraNode newNode = new DijkstraNode(newPoint.getX(), newPoint.getY(), indivBoard.getNode(newPoint).getOccupied());
+		//
+		// makeNeighbors(node, newNode);
+		//
+		// bridges.add(newPoint);
+		// nodes.add(newNode);
+		//
+		// createMap(newPoint, bridges, newNode);
+		// }
+		// }
 	}
 
 	@Override
