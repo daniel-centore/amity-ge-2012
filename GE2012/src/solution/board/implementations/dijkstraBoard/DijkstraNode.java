@@ -3,29 +3,32 @@ package solution.board.implementations.dijkstraBoard;
 import java.util.ArrayList;
 import java.util.List;
 
-import solution.board.HexPoint;
+import solution.board.Player;
 
 public class DijkstraNode
 {
 	private List<DijkstraNode> touching = new ArrayList<DijkstraNode>();
 	private int x;
 	private char y;
+	private Player player;
 	
 	// For dijkstra's algorithm
 	private DijkstraNode from = null;
-	private int weight = Integer.MAX_VALUE;
+	private double weight = Double.MAX_VALUE;	// so Double.INFINITY will still be larger than this
 	private boolean completed = false;
 	
-	public DijkstraNode(int x, char y)
+	public DijkstraNode(int x, char y, Player player)
 	{
 		this.x = x;
 		this.y = y;
+		
+		this.player = player;
 	}
 	
 	
 	// true if we actually took the new weight
 	// weight should be the total this would be
-	protected boolean setNode(DijkstraNode from, int weight)
+	protected boolean setNode(DijkstraNode from, double weight)
 	{
 		if (weight < this.weight)
 		{
@@ -50,7 +53,7 @@ public class DijkstraNode
 		touching.add(node);
 	}
 
-	public List<DijkstraNode> getBridges()
+	public List<DijkstraNode> getNeighbors()
 	{
 		return touching;
 	}
@@ -89,21 +92,20 @@ public class DijkstraNode
 		this.completed = completed;
 	}
 
-
-	public List<DijkstraNode> getTouching()
-	{
-		return touching;
-	}
-
-
 	public DijkstraNode getFrom()
 	{
 		return from;
 	}
 
 
-	public int getWeight()
+	public double getWeight()
 	{
 		return weight;
+	}
+
+
+	public Player getPlayer()
+	{
+		return player;
 	}
 }
