@@ -15,6 +15,12 @@ public class DijkstraBoard
 	private Player player;		// the player the board is for
 	private List<DijkstraNode> nodes = new ArrayList<DijkstraNode>();
 	
+	// the four walls
+	private DijkstraNode wallA = new DijkstraNode(-1, '!');
+	private DijkstraNode wallK = new DijkstraNode(-1, '!');
+	private DijkstraNode wallOne = new DijkstraNode(-1, '!');
+	private DijkstraNode wallEle = new DijkstraNode(-1, '!');
+	
 	public DijkstraBoard(HexPoint test, IndivBoard indivBoard, CurrentGame curr)
 	{
 		List<HexPoint> bridges = new ArrayList<HexPoint>();
@@ -29,20 +35,43 @@ public class DijkstraBoard
 		nodes.add(initial);
 		createMap(test, bridges, initial);
 		
+		// add the walls if we are touching
+		for (DijkstraNode n : nodes)
+		{
+			// No elses because corners can be part of 2
+			
+			if (n.getX() == 1)
+				makeNeighbors(wallOne, n);
+			
+			if (n.getX() == 11)
+				makeNeighbors(wallEle, n);
+			
+			if (n.getY() == 'a')
+				makeNeighbors(wallA, n);
+			
+			if (n.getY() == 'k')
+				makeNeighbors(wallK, n);
+		}
+		
 		DebugWindow.println("Done map");
+	}
+	
+	public void makeNeighbors(DijkstraNode a, DijkstraNode b)
+	{
+		a.addNeighbor(b);
+		b.addNeighbor(a);
 	}
 	
 	private void createMap(HexPoint pt, List<HexPoint> bridges, DijkstraNode node)
 	{
-		for (HexPoint b : indivBoard.getNode(pt).getTwoChains())
+		for (HexPoint b : pt.touching())
 		{
 			Player p = indivBoard.getNode(b).getOccupied();
-			if ((p == Player.EMPTY || p == player) && !bridges.contains(b))
+			if (!bridges.contains(b))
 			{
 				DijkstraNode newNode = new DijkstraNode(b.getX(), b.getY());
 				
-				node.addBridge(newNode);	// mark eachother as bridges to eachother
-				newNode.addBridge(node);
+				makeNeighbors(node, newNode);
 				
 				bridges.add(b);
 				
@@ -55,5 +84,25 @@ public class DijkstraBoard
 	public String toString()
 	{
 		return "DijkstraBoard [nodes=" + nodes + "]";
+	}
+
+	public DijkstraNode getWallA()
+	{
+		return wallA;
+	}
+
+	public DijkstraNode getWallK()
+	{
+		return wallK;
+	}
+
+	public DijkstraNode getWallOne()
+	{
+		return wallOne;
+	}
+
+	public DijkstraNode getWallEle()
+	{
+		return wallEle;
 	}
 }
