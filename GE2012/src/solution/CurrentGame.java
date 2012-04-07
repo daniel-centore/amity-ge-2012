@@ -93,7 +93,12 @@ public class CurrentGame
 				try
 				{
 					move = solverController.getMove();// .toHexPoint();
-					new DijkstraBoard(boardController.getIndivBoard(), this);
+					
+					
+					DijkstraBoard board = new DijkstraBoard(boardController.getIndivBoard(), this);
+					
+					
+					DebugWindow.println("Weight: "+board.findDistance(new HexPoint(3, 'd'), board.getWallA()));
 					
 				} catch (Exception e)
 				{

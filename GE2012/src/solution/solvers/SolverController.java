@@ -8,6 +8,8 @@ import java.util.List;
 import solution.CurrentGame;
 import solution.board.HexPoint;
 import solution.board.Player;
+import solution.board.implementations.dijkstraBoard.DijkstraBoard;
+import solution.board.implementations.dijkstraBoard.DijkstraNode;
 import solution.board.implementations.indivBoard.IndivBoard;
 import solution.board.implementations.indivBoard.IndivNode;
 import solution.debug.DebugWindow;
@@ -29,6 +31,7 @@ public class SolverController
 	private CurrentGame curr; // Current game
 	private HexPoint initial = null; // our centerpiece/starting move
 	private IndivBoard indivBoard;
+	private DijkstraBoard dijkstraBoard = null;
 
 	public SolverController(CurrentGame curr)
 	{
@@ -44,6 +47,8 @@ public class SolverController
 	{
 		if (initial == null)
 			throw new RuntimeException("Should have been set already...");
+
+		dijkstraBoard = new DijkstraBoard(indivBoard, curr);
 
 		HexPoint broken = null;
 
@@ -310,10 +315,10 @@ public class SolverController
 		// DebugWindow.println(possible.toString());
 		Iterator<HexPoint> itr = possible.iterator();
 
-		int left = Integer.MAX_VALUE;
+		double left = Double.POSITIVE_INFINITY;
 		HexPoint bestLeft = null;
 
-		int right = Integer.MAX_VALUE;
+		double right = Double.POSITIVE_INFINITY;
 		HexPoint bestRight = null;
 
 		if (!itr.hasNext())
@@ -327,7 +332,7 @@ public class SolverController
 			{
 				if (h.getY() < 'f')
 				{
-					int dist = calculateDistance(h);
+					double dist = calculateDistance(h);
 					if (dist < left)
 					{
 						bestLeft = h;
@@ -336,7 +341,7 @@ public class SolverController
 				}
 				else
 				{
-					int dist = calculateDistance(h);
+					double dist = calculateDistance(h);
 					if (dist < right)
 					{
 						bestRight = h;
@@ -348,7 +353,7 @@ public class SolverController
 			{
 				if (h.getX() < 6)
 				{
-					int dist = calculateDistance(h);
+					double dist = calculateDistance(h);
 					if (dist < left)
 					{
 						bestLeft = h;
@@ -357,7 +362,7 @@ public class SolverController
 				}
 				else
 				{
-					int dist = calculateDistance(h);
+					double dist = calculateDistance(h);
 					if (dist < right)
 					{
 						bestRight = h;
@@ -385,42 +390,61 @@ public class SolverController
 	 * @param pnt the starting {@link HexPoint}
 	 * @return The difficulty (arbitrary scale)
 	 */
-	private int calculateDistance(HexPoint pnt)
+	private double calculateDistance(HexPoint pnt)
 	{
 		// TODO: dijkstra to figure out the distance!
 
-		int retn;
+//		 int retn;
+//		 if (curr.getConnectRoute() == CurrentGame.CONNECT_LETTERS)
+//		 {
+//		
+//		 int i = pnt.getY() - 'a';
+//		 int j = 'k' - pnt.getY();
+//		
+//		 retn = Math.min(i, j);
+//		 }
+//		 else
+//		 {
+//		 int i = pnt.getX() - 1;
+//		 int j = 11 - pnt.getX();
+//		
+//		 retn = Math.min(i, j);
+//		 }
+//		
+//		 // DebugWindow.println(pnt.toString() + " " + countPaths(pnt));
+//		
+//		 // // magic numbers which makes it focus more on the side being raped
+//		 int count = countPaths(pnt);
+//		 // count /= 10;
+//		
+//		 retn *= 100;
+//		 if (count > 5)
+//		 count = 5;
+//		 if (count <= 0)
+//		 count = 1;
+//		
+//		 retn /= count;
+//		
+//		return retn;
+
+		DijkstraNode wall;
+
 		if (curr.getConnectRoute() == CurrentGame.CONNECT_LETTERS)
 		{
-
-			int i = pnt.getY() - 'a';
-			int j = 'k' - pnt.getY();
-
-			retn = Math.min(i, j);
+			if (pnt.getY() < 'f')
+				wall = dijkstraBoard.getWallA();
+			else
+				wall = dijkstraBoard.getWallK();
 		}
 		else
 		{
-			int i = pnt.getX() - 1;
-			int j = 11 - pnt.getX();
-
-			retn = Math.min(i, j);
+			if (pnt.getX() < 6)
+				wall = dijkstraBoard.getWallOne();
+			else
+				wall = dijkstraBoard.getWallEle();
 		}
 
-		// DebugWindow.println(pnt.toString() + " " + countPaths(pnt));
-
-		// // magic numbers which makes it focus more on the side being raped
-		int count = countPaths(pnt);
-		// count /= 10;
-
-		retn *= 100;
-		if (count > 5)
-			count = 5;
-		if (count <= 0)
-			count = 1;
-
-		retn /= count;
-
-		return retn;
+		return dijkstraBoard.findDistance(pnt, wall);
 
 	}
 
