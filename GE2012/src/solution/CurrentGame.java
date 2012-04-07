@@ -54,7 +54,7 @@ public class CurrentGame
 		if (point == null)
 		{
 			// we're going first - do a nice default move
-			HexPoint me = new HexPoint(1, 'a');
+			HexPoint me = new HexPoint(5, 'f');
 
 			result = toHexMove(me);
 

@@ -17,9 +17,9 @@ public class HexPlayer_Amity extends GamePlayer
 {
 	private CurrentGame currentGame;
 	
-	public HexPlayer_Amity()
+	public HexPlayer_Amity(String name)
 	{
-		super("Amity Regional High School", new HexState(), false);
+		super(name, new HexState(), false);
 	}
 
 	/**
@@ -98,6 +98,7 @@ public class HexPlayer_Amity extends GamePlayer
 	{
 		DebugWindow.resetMoveTime();
 		GameMove result = currentGame.getMove(state, lastMove);
+		
 		
 		DebugWindow.resetMoveTime();
 		
