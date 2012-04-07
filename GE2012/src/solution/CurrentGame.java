@@ -175,9 +175,9 @@ public class CurrentGame
 	public HexPoint parseTheirString(String move)
 	{
 		String[] k = move.split("-");
-		if (k.length < 2)
+		if (k.length != 2)
 			return null;
-
+		
 		int x = Integer.parseInt(k[0]) + 1;
 		char y = (char) (Integer.parseInt(k[1]) + CHARACTER_SUBTRACT + 1);
 

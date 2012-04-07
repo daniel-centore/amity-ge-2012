@@ -83,12 +83,14 @@ public class ClassicBlock
 							DebugWindow.println(conns.toString());
 							if (indivBoard.getNode(conns.get(0)).getOccupied() == Player.YOU)
 							{
+								DebugWindow.println("A");
 								blockPoints[i] = null;
 								pt = conns.get(1);
 								good = false;
 							}
 							else if (indivBoard.getNode(conns.get(1)).getOccupied() == Player.YOU)
 							{
+								DebugWindow.println("B");
 								blockPoints[i] = null;
 								pt = conns.get(0);
 								good = false;
@@ -97,34 +99,51 @@ public class ClassicBlock
 					}
 
 					if (good)
+					{
+						DebugWindow.println("C"+i);
 						pt = blockPoints[i];
+					}
 				}
 			}
 
 			if (pt == null)
+			{
+				DebugWindow.println("D");
 				pt = blockPoints[part - 1];
+			}
 		}
 
-		if (pt == null || !pt.isGood() || indivBoard.getNode(pt).getOccupied() != Player.EMPTY)
+		while (pt == null || !pt.isGood() || indivBoard.getNode(pt).getOccupied() != Player.EMPTY)
 		{
 			part++;
 			
 			if (part == 3 && blockPoints[1] != null)
 			{
+				DebugWindow.println("E");
 				part = 50;
 				return null;
 			}
 
 			if (part > 4)
 			{
+				DebugWindow.println("F");
 				part = 50;
 				return null;
 			}
 			else
 			{
+				DebugWindow.println("G");
 				pt = blockPoints[part - 1];
 			}
 		}
+		
+		if (pt == blockPoints[3] && blockPoints[1] != null)
+		{
+			DebugWindow.println("H");
+			part = 50;
+			return null;
+		}
+		DebugWindow.println("I");
 
 		// == cleanup
 
@@ -136,8 +155,6 @@ public class ClassicBlock
 				blockPoints[i] = null;
 		}
 
-		if (part == 1)
-			solverController.setInitial(pt);
 		part++;
 
 		return pt;
