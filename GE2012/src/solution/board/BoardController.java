@@ -3,6 +3,7 @@ package solution.board;
 import java.util.ArrayList;
 import java.util.List;
 
+import solution.CurrentGame;
 import solution.board.implementations.blobBoard.BlobBoard;
 import solution.board.implementations.indivBoard.IndivBoard;
 
@@ -21,11 +22,11 @@ public class BoardController
 	private IndivBoard indivBoard;
 	private BlobBoard blobBoard;
 
-	public BoardController()
+	public BoardController(CurrentGame curr)
 	{
 		// Add boards here
 		boards.add(indivBoard = new IndivBoard());
-		boards.add(blobBoard = new BlobBoard());
+		boards.add(blobBoard = new BlobBoard(curr));
 	}
 
 	/**

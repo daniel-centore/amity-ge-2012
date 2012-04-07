@@ -4,6 +4,8 @@ import game.GamePlayer;
 import game.Tournament;
 
 import hex.HumanHexPlayer;
+import hex.RandomHexPlayer;
+import hex.RoteHexPlayer;
 
 import solution.debug.DebugWindow;
 
@@ -42,7 +44,9 @@ public class Main
 			}
 		}.start();
 
-		GamePlayer competitor = new HumanHexPlayer("Random");
+		GamePlayer competitor = new HumanHexPlayer("Human");
+		// GamePlayer competitor = new RoteHexPlayer("Rote");
+		// GamePlayer competitor = new RandomHexPlayer("Random");
 
 		/** Uncomment this if the competitor isn't a HumanHexPlayer */
 		// competitor.makeFrameVisible();

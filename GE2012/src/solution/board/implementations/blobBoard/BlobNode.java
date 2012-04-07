@@ -18,6 +18,7 @@ public class BlobNode implements NodeInterface
 	private Player player;
 	private HexPoint primary;
 	private List<HexPoint> allPoints = new ArrayList<HexPoint>();	// All the points that this specific blob contains
+	private List<BlobNode> neighbors = new ArrayList<BlobNode>();	// surrounding nodes (including walls)
 
 	public BlobNode(Player player, HexPoint primary)
 	{
@@ -63,6 +64,11 @@ public class BlobNode implements NodeInterface
 	public String toString()
 	{
 		return "BlobNode [player=" + player + ", primary=" + primary + ", allPoints=" + allPoints + "]";
+	}
+
+	public List<BlobNode> getNeighbors()
+	{
+		return neighbors;
 	}
 
 }
