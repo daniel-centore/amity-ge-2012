@@ -58,9 +58,6 @@ public class CurrentGame
 
 			result = toHexMove(me);
 
-			solverController.setInitial(me);
-
-
 			connectRoute = CONNECT_NUMBERS;
 		}
 		else
