@@ -14,7 +14,7 @@ public class DijkstraNode
 	
 	// For dijkstra's algorithm
 	private DijkstraNode from = null;
-	private double weight = Double.MAX_VALUE;	// so Double.INFINITY will still be larger than this
+	private double weight = Double.MAX_VALUE;
 	private boolean completed = false;
 	
 	public DijkstraNode(int x, char y, Player player)
@@ -44,7 +44,7 @@ public class DijkstraNode
 	protected void resetNode()
 	{
 		from = null;
-		weight = Integer.MAX_VALUE;
+		weight = Double.MAX_VALUE;
 		completed = false;
 	}
 	
@@ -77,7 +77,7 @@ public class DijkstraNode
 	@Override
 	public String toString()
 	{
-		return "DijkstraNode [bridges=" + touching + ", x=" + x + ", y=" + y + "]";
+		return "DijkstraNode [x=" + x + ", y=" + y + "]";
 	}
 
 
