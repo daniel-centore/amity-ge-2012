@@ -10,25 +10,36 @@ import solution.board.implementations.indivBoard.IndivBoard;
 import solution.board.implementations.indivBoard.IndivNode;
 import solution.debug.DebugWindow;
 
+/**
+ * A board used for calculating distances using a modification of Dijkstra's algorithm 
+ * 
+ * @author Daniel Centore
+ *
+ */
 public class DijkstraBoard
 {
 	private IndivBoard indivBoard;
+
 	private List<DijkstraNode> nodes = new ArrayList<DijkstraNode>();
 
 	// the four walls
-	private DijkstraNode wallA;// = new DijkstraNode(-1, '!');
-	private DijkstraNode wallK;// = new DijkstraNode(-1, '!');
-	private DijkstraNode wallOne;// = new DijkstraNode(-1, '!');
-	private DijkstraNode wallEle;// = new DijkstraNode(-1, '!');
+	private DijkstraNode wallA;
+	private DijkstraNode wallK;
+	private DijkstraNode wallOne;
+	private DijkstraNode wallEle;
 
+	// Weight's
 	private static final double ME_WEIGHT = 0;
 	private static final double EMPTY_WEIGHT = 1;
 	private static final double YOU_BRIDGE_WEIGHT = 6; // don't attempt to go through an enemy's two-bridge unless things look pretty horrific (/2 because 2 spots)
-	private static final double YOU_WEIGHT = 200;
+	private static final double YOU_WEIGHT = 200; // won't overflow but will (almost?) never be the lowest node
 
-	// private static final double YOU_WEIGHT = Double.POSITIVE_INFINITY;
-
-	// NOTE: we need a new one generated whenever the board changes
+	/**
+	 * Creates a new {@link DijkstraBoard}.
+	 * NOTE: We need to generate a new one each time the {@link IndivBoard} changes
+	 * @param indivBoard The {@link IndivBoard} to base our {@link DijkstraNode}s on
+	 * @param curr The {@link CurrentGame}
+	 */
 	public DijkstraBoard(IndivBoard indivBoard, CurrentGame curr)
 	{
 
@@ -36,12 +47,14 @@ public class DijkstraBoard
 
 		DebugWindow.println("Initializing map");
 
+		// Initialize our map
 		HexPoint test = new HexPoint(1, 'a');
 
 		DijkstraNode initial = new DijkstraNode(test.getX(), test.getY(), indivBoard.getNode(test).getOccupied());
 		nodes.add(initial);
-		createMap();// test, bridges, initial);
+		createMap();
 
+		// Create the walls
 		if (curr.getConnectRoute() == CurrentGame.CONNECT_LETTERS)
 		{
 			wallA = new DijkstraNode(-1, '!', Player.ME);
@@ -62,13 +75,13 @@ public class DijkstraBoard
 		nodes.add(wallOne);
 		nodes.add(wallEle);
 
-		// add the walls if we are touching
+		// Add the walls if we are touching
 		for (DijkstraNode n : nodes)
 		{
-			// No elses because corners can be part of 2
 			if (n == wallA || n == wallK || n == wallOne || n == wallEle)
 				continue;
 
+			// No else statements because corners can be part of 2
 			if (n.getX() == 1)
 				makeNeighbors(wallOne, n);
 
@@ -85,6 +98,11 @@ public class DijkstraBoard
 		DebugWindow.println("Done map");
 	}
 
+	/**
+	 * Gets the {@link DijkstraNode} we want
+	 * @param pt The point ( {@link HexPoint} ) that it is located at
+	 * @return The {@link DijkstraNode}
+	 */
 	private DijkstraNode getNode(HexPoint pt)
 	{
 		for (DijkstraNode node : nodes)
@@ -96,6 +114,12 @@ public class DijkstraBoard
 		return null;
 	}
 
+	/**
+	 * Finds the distance between two nodes
+	 * @param a The first node
+	 * @param b The second node
+	 * @return The distance (arbitrary units)
+	 */
 	public synchronized double findDistance(HexPoint a, HexPoint b)
 	{
 		DijkstraNode dA = getNode(a);
@@ -104,6 +128,12 @@ public class DijkstraBoard
 		return findDistance(dA, dB);
 	}
 
+	/**
+	 * Finds the distance between two nodes
+	 * @param a The first node
+	 * @param dB The second node
+	 * @return The distance (arbitrary units)
+	 */
 	public synchronized double findDistance(HexPoint a, DijkstraNode dB)
 	{
 		DijkstraNode dA = getNode(a);
@@ -111,6 +141,12 @@ public class DijkstraBoard
 		return findDistance(dA, dB);
 	}
 
+	/**
+	 * Finds the distance between two nodes
+	 * @param dA The first node
+	 * @param dB The second node
+	 * @return The distance (arbitrary units)
+	 */
 	public synchronized double findDistance(DijkstraNode dA, DijkstraNode dB)
 	{
 		resetNodes(); // puts them in a clean state for a new test
@@ -149,8 +185,8 @@ public class DijkstraBoard
 						edgeWeight = ME_WEIGHT;
 					else if (n.getPlayer() == Player.EMPTY)
 						edgeWeight = EMPTY_WEIGHT;
-					else if (n.getPlayer() == Player.YOU) // just means we got to a wall. ignore it.
-						edgeWeight = YOU_WEIGHT; // wont overflow but will never be lowest
+					else if (n.getPlayer() == Player.YOU)
+						edgeWeight = YOU_WEIGHT;
 					else if (n.getPlayer() == Player.YOU_BRIDGE)
 						edgeWeight = YOU_BRIDGE_WEIGHT;
 
@@ -160,9 +196,8 @@ public class DijkstraBoard
 
 		}
 
-		DijkstraNode node = dB;
-
 		// Print path
+		// DijkstraNode node = dB;
 		// DebugWindow.println(node.toString());
 		// do
 		// {
@@ -175,28 +210,40 @@ public class DijkstraBoard
 		return dB.getWeight();
 	}
 
+	/**
+	 * Resets the node's distances so we can run a new algorithm round
+	 */
 	private void resetNodes()
 	{
 		for (DijkstraNode n : nodes)
 			n.resetNode();
 	}
 
+	/**
+	 * Marks to nodes as eachother's neighbors
+	 * @param a The first node
+	 * @param b The second node
+	 */
 	public void makeNeighbors(DijkstraNode a, DijkstraNode b)
 	{
 		a.addNeighbor(b);
 		b.addNeighbor(a);
 	}
 
+	/**
+	 * Creates the map of nodes based on our current board
+	 * Assigns appropriate weights to the nodes
+	 */
 	private void createMap()
 	{
+		// Adds all nodes to the board
 		for (IndivNode newPoint : indivBoard.getPoints())
 		{
 			DijkstraNode newNode = new DijkstraNode(newPoint.getX(), newPoint.getY(), newPoint.getOccupied());
 			nodes.add(newNode);
 		}
 
-		// recognize the enemy's regular two-bridges and mark the spaces in-between them as basically
-		// no crossable
+		// Recognize the enemy's two-bridges and mark the spaces in-between them as basically not crossable
 		for (DijkstraNode node : nodes)
 		{
 			if (node.getPlayer() == Player.YOU)
@@ -228,21 +275,20 @@ public class DijkstraBoard
 			}
 		}
 
-		// mark an enemy's corner as their territory
+		// Mark an enemy's corner as their territory
 		if (indivBoard.getNode(new HexPoint(10, 'b')).getOccupied() == Player.YOU)
 		{
 			getNode(new HexPoint(11, 'a')).setPlayer(Player.YOU_BRIDGE);
 			getNode(new HexPoint(10, 'a')).setPlayer(Player.YOU_BRIDGE);
 		}
-		
+
 		if (indivBoard.getNode(new HexPoint(2, 'j')).getOccupied() == Player.YOU)
 		{
 			getNode(new HexPoint(1, 'k')).setPlayer(Player.YOU_BRIDGE);
 			getNode(new HexPoint(1, 'j')).setPlayer(Player.YOU_BRIDGE);
 		}
-		
-		
-		// add neighbors
+
+		// Adds all of a node's neighbors to itself
 		for (DijkstraNode node : nodes)
 		{
 			HexPoint point = new HexPoint(node.getX(), node.getY());
@@ -252,21 +298,6 @@ public class DijkstraBoard
 				node.addNeighbor(getNode(touch));
 			}
 		}
-		// for (HexPoint newPoint : pt.touching())
-		// {
-		// Player p = indivBoard.getNode(newPoint).getOccupied();
-		// if (!bridges.contains(newPoint))// && p != Player.YOU)
-		// {
-		// DijkstraNode newNode = new DijkstraNode(newPoint.getX(), newPoint.getY(), indivBoard.getNode(newPoint).getOccupied());
-		//
-		// makeNeighbors(node, newNode);
-		//
-		// bridges.add(newPoint);
-		// nodes.add(newNode);
-		//
-		// createMap(newPoint, bridges, newNode);
-		// }
-		// }
 	}
 
 	@Override
@@ -275,21 +306,37 @@ public class DijkstraBoard
 		return "DijkstraBoard [nodes=" + nodes + "]";
 	}
 
+	/**
+	 * Gets the node representing a wall
+	 * @return The wall going along the A wall
+	 */
 	public DijkstraNode getWallA()
 	{
 		return wallA;
 	}
 
+	/**
+	 * Gets the node representing a wall
+	 * @return The wall going along the K wall
+	 */
 	public DijkstraNode getWallK()
 	{
 		return wallK;
 	}
 
+	/**
+	 * Gets the node representing a wall
+	 * @return The wall going along the 1 wall
+	 */
 	public DijkstraNode getWallOne()
 	{
 		return wallOne;
 	}
 
+	/**
+	 * Gets the node representing a wall
+	 * @return The wall going along the 11 wall
+	 */
 	public DijkstraNode getWallEle()
 	{
 		return wallEle;
