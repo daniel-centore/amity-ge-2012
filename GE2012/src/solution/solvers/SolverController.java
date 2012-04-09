@@ -1,7 +1,6 @@
 package solution.solvers;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
@@ -15,7 +14,7 @@ import solution.board.implementations.indivBoard.IndivNode;
 import solution.debug.DebugWindow;
 
 /**
- * This controls all our solvers and generates the master weight table
+ * This is the main solver class which links some other solver info
  * Vocabulary: 
  * two-chain: This occurs when there are two empty points between two spaces
  *			  or between a point and the wall. When there is a two-chain,
@@ -28,13 +27,11 @@ import solution.debug.DebugWindow;
  */
 public class SolverController
 {
-	
-	// TODO: We need to make another section which finds all the clumps of two-chains and then if there's more than one do everything possible to merge
-	// them *IF NECESSARY* (dont merge with one little one in the corner if we are already touching that side somewhere else)
 	private CurrentGame curr; // Current game
 	private IndivBoard indivBoard;
 	private DijkstraBoard dijkstraBoard = null;
 	private ClassicBlock classicBlock;
+	private HexPoint first = null;	// the first move we made (so we can calculate left and right sides correctly)
 
 	public SolverController(CurrentGame curr)
 	{
@@ -548,6 +545,16 @@ public class SolverController
 		}
 
 		return false;
+	}
+
+	public HexPoint getFirst()
+	{
+		return first;
+	}
+
+	public void setFirst(HexPoint first)
+	{
+		this.first = first;
 	}
 
 }

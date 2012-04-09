@@ -1,6 +1,5 @@
 package solution.solvers;
 
-import java.util.Arrays;
 import java.util.List;
 
 import solution.CurrentGame;
@@ -11,7 +10,6 @@ import solution.board.implementations.indivBoard.IndivNode;
 import solution.debug.DebugWindow;
 
 /**
- * 
  * Implements the classic block from http://www.hexwiki.org/index.php?title=Basic_%28strategy_guide%29
  * 
  * @author Daniel Centore
@@ -62,10 +60,12 @@ public class ClassicBlock
 
 		if (part == 1)
 		{
+			// Do our first move if they just put down an initial move
 			pt = blockPoints[part - 1];
 		}
 		else
 		{
+			// Decides which move to put down next and whether or not they are appropriate using black magic and voodoo
 			for (int i = 1; i < blockPoints.length; i++)
 			{
 				if (blockPoints[i] != null && blockPoints[i].isGood() && blockPoints[i].touching().contains(lastMove))
@@ -96,7 +96,7 @@ public class ClassicBlock
 
 					if (good)
 					{
-						DebugWindow.println("C"+i);
+						DebugWindow.println("C" + i);
 						pt = blockPoints[i];
 					}
 				}
@@ -109,10 +109,11 @@ public class ClassicBlock
 			}
 		}
 
+		// Decides when it's time to really give up on the classic block or put in one last effort
 		while (pt == null || !pt.isGood() || indivBoard.getNode(pt).getOccupied() != Player.EMPTY)
 		{
 			part++;
-			
+
 			if (part == 3 && blockPoints[1] != null)
 			{
 				DebugWindow.println("E");
@@ -132,7 +133,7 @@ public class ClassicBlock
 				pt = blockPoints[part - 1];
 			}
 		}
-		
+
 		if (pt == blockPoints[3] && blockPoints[1] != null)
 		{
 			DebugWindow.println("H");
@@ -141,24 +142,24 @@ public class ClassicBlock
 		}
 		DebugWindow.println("I");
 
-		// == cleanup
-
-		// remove the point we used
-		// it's not an option anymore
+		// Remove the point we are about to use. It will no longer be an option.
 		for (int i = 0; i < blockPoints.length; i++)
 		{
 			if (blockPoints[i] == pt)
 				blockPoints[i] = null;
 		}
 
-		part++;
+		part++; // Move on to the next step
 
 		return pt;
 	}
 
+	/**
+	 * Initializes our data for the first move
+	 */
 	private void initialize()
 	{
-		// find their initial point (they should definitely have one the 1st time this gets called)
+		// Find their initial point (they should definitely have one the 1st time this gets called)
 		for (IndivNode node : indivBoard.getPoints())
 		{
 			if (node.getOccupied() == Player.YOU)
@@ -167,8 +168,10 @@ public class ClassicBlock
 			}
 		}
 
-		// Calculate our differences for where we should place them based on our new initial
+		if (initial == null)
+			throw new RuntimeException("THEY HAD NO INITIAL POINT!!! WHY ARE WE DOING A CLASSIC BLOCK!?!?");
 
+		// Figure out which group of points makes the most sense for our current situation
 		HexPoint[] group = null;
 
 		if (curr.getConnectRoute() == CurrentGame.CONNECT_LETTERS && initial.getX() < 6)
@@ -176,25 +179,23 @@ public class ClassicBlock
 			DebugWindow.println("Group A");
 			group = groupA;
 		}
-
 		else if (curr.getConnectRoute() == CurrentGame.CONNECT_NUMBERS && initial.getY() < 'f')
 		{
 			DebugWindow.println("Group B");
 			group = groupB;
 		}
-
 		else if (curr.getConnectRoute() == CurrentGame.CONNECT_NUMBERS && initial.getY() >= 'f')
 		{
 			DebugWindow.println("Group C");
 			group = groupC;
 		}
-
 		else if (curr.getConnectRoute() == CurrentGame.CONNECT_LETTERS && initial.getX() >= 6)
 		{
 			DebugWindow.println("Group D");
 			group = groupD;
 		}
 
+		// No calculate the new set of points based on the differences in theirs
 		for (int i = 0; i < 4; i++)
 		{
 			int xDiff = group[0].getX() - group[i + 1].getX();
@@ -202,21 +203,23 @@ public class ClassicBlock
 
 			blockPoints[i] = new HexPoint(initial.getX() + xDiff, (char) (initial.getY() + yDiff));
 		}
-
-		DebugWindow.println(initial.toString() + " " + Arrays.toString(blockPoints));
 	}
 
 	/**
-	 * Finds out if we should still be using this block
+	 * Finds out if we should still be using this block.
+	 * Will return true iff
+	 *  1. We havn't completed the block or given up or
+	 *  2. We were the first player to go
+	 * 
 	 * @param lastMove The last move the other player made
 	 * @return True if we should use it; False otherwise 
 	 */
 	public boolean shouldBlock()
 	{
+		// Some initialization (should ideally be somewhere else...)
 		if (curr.getConnectRoute() < 0)
 			curr.setConnectRoute(CurrentGame.CONNECT_LETTERS);
-		
-		// return false;
+
 		return (part <= 4 && curr.getConnectRoute() == CurrentGame.CONNECT_LETTERS);
 	}
 

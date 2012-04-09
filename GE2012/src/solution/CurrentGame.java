@@ -32,7 +32,7 @@ public class CurrentGame
 
 	public static final int CONNECT_NUMBERS = 0; // connect from 1-11 wins (white)
 	public static final int CONNECT_LETTERS = 1; // connect from A-K wins (black)
-	private int connectRoute = -1; //the connection direction we need to solve for to win
+	private int connectRoute = -1; // the connection direction we need to solve for to win
 
 	public void init()
 	{
@@ -55,6 +55,7 @@ public class CurrentGame
 		{
 			// we're going first - do a nice default move
 			HexPoint me = new HexPoint(5, 'f');
+			solverController.setFirst(me);
 
 			result = toHexMove(me);
 
@@ -69,52 +70,33 @@ public class CurrentGame
 			boardController.applyMove(point.getX(), point.getY(), Player.YOU);
 
 			// calculate our next move
-			
-			//
-//			if (connectRoute < 0) // our first move (they just went first)
-//			{
-//				// TODO: smarter first point choice. get far enough away from enemy.
-			// XXX: Doing classblock now
-//				HexPoint initial;
-//				if (boardController.getIndivBoard().getNode(5, 'f').getOccupied() == Player.YOU)
-//					initial = new HexPoint(7, 'f');
-//				else
-//					initial = new HexPoint(5, 'f');
-//
-//				solverController.setInitial(initial);
-//
-//				connectRoute = CONNECT_LETTERS;
-//
-//				result = toHexMove(initial);
-//			}
-//			else
-			{
-				HexPoint move = null;
-				
-				try
-				{
-					move = solverController.getMove(point);// .toHexPoint();
-					
-					
-//					DijkstraBoard board = new DijkstraBoard(boardController.getIndivBoard(), this);
-					
-					
-//					DebugWindow.println("Weight: "+board.findDistance(new HexPoint(3, 'd'), board.getWallA()));
-					
-				} catch (Exception e)
-				{
-					DebugWindow.println("ERROR: CHECK THE STACK TRACE!!!!");
-					e.printStackTrace();
-				}
 
-				if (move == null)
-				{
-					DebugWindow.println("WARNING: Resorting to random because we couldn't find a usable path");
-					result = chooseRandomPoint(state);
-				}
-				else
-					result = toHexMove(move);
+			HexPoint move = null;
+
+			try
+			{
+				move = solverController.getMove(point);// .toHexPoint();
+
+				if (solverController.getFirst() == null)
+					solverController.setFirst(move);
+
+				// DijkstraBoard board = new DijkstraBoard(boardController.getIndivBoard(), this);
+
+				// DebugWindow.println("Weight: "+board.findDistance(new HexPoint(3, 'd'), board.getWallA()));
+
+			} catch (Exception e)
+			{
+				DebugWindow.println("ERROR: CHECK THE STACK TRACE!!!!");
+				e.printStackTrace();
 			}
+
+			if (move == null)
+			{
+				DebugWindow.println("WARNING: Resorting to random because we couldn't find a usable path");
+				result = chooseRandomPoint(state);
+			}
+			else
+				result = toHexMove(move);
 
 		}
 
@@ -128,7 +110,7 @@ public class CurrentGame
 
 		return result;
 	}
-	
+
 	/**
 	 * selects a random {@link HexMove}
 	 * @param state the current {@link GameState}
@@ -153,7 +135,7 @@ public class CurrentGame
 		}
 		int which = Util.randInt(0, list.size() - 1);
 		return list.get(which);
-}
+	}
 
 	/**
 	 * Converts one of our {@link HexPoint}s in to one of their {@link HexMove}s
@@ -178,7 +160,7 @@ public class CurrentGame
 		String[] k = move.split("-");
 		if (k.length != 2)
 			return null;
-		
+
 		int x = Integer.parseInt(k[0]) + 1;
 		char y = (char) (Integer.parseInt(k[1]) + CHARACTER_SUBTRACT + 1);
 
