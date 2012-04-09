@@ -33,6 +33,10 @@ public class SolverController
 	private ClassicBlock classicBlock;
 	private HexPoint first = null;	// the first move we made (so we can calculate left and right sides correctly)
 
+	/**
+	 * Creates a new {@link SolverController}
+	 * @param curr The {@link CurrentGame}
+	 */
 	public SolverController(CurrentGame curr)
 	{
 		this.curr = curr;
@@ -49,9 +53,16 @@ public class SolverController
 		HexPoint broken = null;
 
 		// Fix chains between points if necessary
-		broken = twoChainsBroken();
-		if (broken != null)
-			return broken;
+		try
+		{
+			broken = twoChainsBroken();
+			if (broken != null)
+				return broken;
+		} catch (Exception e2)
+		{
+			DebugWindow.println("ERROR: TwoChainsBroken crashed. Take a look at the trace. Using Default solver.");
+			e2.printStackTrace();
+		}
 		
 		try
 		{
@@ -61,11 +72,13 @@ public class SolverController
 				return broken;
 		} catch (Exception e)
 		{
+			DebugWindow.println("WARNING: BaseTwoChains crashed. This is usually normal: just a corner case.");
 			// Fails on some corner cases. just ignore this.
 		}
 
 		try
 		{
+			// Does a classic block if necessary
 			if (classicBlock.shouldBlock())
 			{
 				broken = classicBlock.block(lastMove);
@@ -81,17 +94,20 @@ public class SolverController
 
 		dijkstraBoard = new DijkstraBoard(indivBoard, curr);
 
-		
-
-		// grab immediate fixes
-		broken = immediatePoint();
-		if (broken != null)
-			return broken;
+		try
+		{
+			// grab immediate fixes
+			broken = immediatePoint();
+			if (broken != null)
+				return broken;
+		} catch (Exception e)
+		{
+			DebugWindow.println("ERROR: ImmediatePoint crashed. Take a look at the trace. Using Default solver.");
+			e.printStackTrace();
+		}
 
 		// follow chain down board
 		return followChain();
-
-		// TODO: Use a new method which actually checks all 2 chains and makes sure they're connected
 	}
 
 	/**

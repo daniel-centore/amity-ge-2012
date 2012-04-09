@@ -110,7 +110,6 @@ public class ClassicBlock
 		}
 
 		// Decides when it's time to really give up on the classic block or put in one last effort
-		
 		while (pt == null || !pt.isGood() || indivBoard.getNode(pt).getOccupied() != Player.EMPTY)
 		{
 			part++;
