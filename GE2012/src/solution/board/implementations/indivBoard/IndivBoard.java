@@ -2,7 +2,6 @@ package solution.board.implementations.indivBoard;
 
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.List;
 
 import solution.board.BoardInterface;
 import solution.board.HexPoint;

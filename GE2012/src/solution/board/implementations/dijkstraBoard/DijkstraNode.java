@@ -5,19 +5,33 @@ import java.util.List;
 
 import solution.board.Player;
 
+/**
+ * A node used in Dijkstra's algorithm
+ * 
+ * @author Daniel Centore
+ *
+ */
 public class DijkstraNode
 {
-	private List<DijkstraNode> touching = new ArrayList<DijkstraNode>();
+	private List<DijkstraNode> touching = new ArrayList<DijkstraNode>(); // All the nodes touching this one
+	
+	// Our position and occupier
 	private int x;
 	private char y;
 	private Player player;
 	
-	// For dijkstra's algorithm
+	// Info for Dijkstra's
 	private DijkstraNode from = null;
 	private double weight = Double.MAX_VALUE;
 	private boolean completed = false;
 	
-	public DijkstraNode(int x, char y, Player player)
+	/**
+	 * Create a node for Dijkstra's algorithm
+	 * @param x The X location
+	 * @param y The Y location
+	 * @param player The occupying {@link Player} (with some quirks for bridges)
+	 */
+	protected DijkstraNode(int x, char y, Player player)
 	{
 		this.x = x;
 		this.y = y;
@@ -26,8 +40,12 @@ public class DijkstraNode
 	}
 	
 	
-	// true if we actually took the new weight
-	// weight should be the total this would be
+	/**
+	 * Tries to set a new weight for this node
+	 * @param from Where the path is coming from (used for debug)
+	 * @param weight The new weight to add
+	 * @return True if we applied it (it is lower than the current); False otherwise
+	 */
 	protected boolean setNode(DijkstraNode from, double weight)
 	{
 		if (weight < this.weight)
@@ -41,6 +59,9 @@ public class DijkstraNode
 		return false;
 	}
 	
+	/**
+	 * Resets the node so we can do another round of distance finding
+	 */
 	protected void resetNode()
 	{
 		from = null;
@@ -48,17 +69,30 @@ public class DijkstraNode
 		completed = false;
 	}
 	
+	/**
+	 * Marks a node as a neighbor of this one
+	 * @param node The {@link DijkstraNode} to add
+	 */
 	protected void addNeighbor(DijkstraNode node)
 	{
 		touching.add(node);
 	}
 
-	public List<DijkstraNode> getNeighbors()
+	/**
+	 * Gets all neighbors of this node (including walls)
+	 * @return The {@link List} of neighbors
+	 */
+	protected List<DijkstraNode> getNeighbors()
 	{
 		return touching;
 	}
 
-	public int getX()
+	/**
+	 * Gets the X value of the node
+	 * @return The X value
+	 * @throws RuntimeException If you try to get the value of a wall
+	 */
+	protected int getX()
 	{
 		if (x < 0)
 			throw new RuntimeException("DONT GET THE VALUE OF A WALL!!");
@@ -66,7 +100,12 @@ public class DijkstraNode
 		return x;
 	}
 
-	public char getY()
+	/**
+	 * Gets the Y value of the node
+	 * @return The Y value
+	 * @throws RuntimeException If you try to get the value of a wall
+	 */
+	protected char getY()
 	{
 		if (x < 0)
 			throw new RuntimeException("DONT GET THE VALUE OF A WALL!!");
@@ -80,37 +119,39 @@ public class DijkstraNode
 		return "DijkstraNode [x=" + x + ", y=" + y + "]";
 	}
 
-
-	public boolean isCompleted()
+	/**
+	 * Are we done with this node in Dijkstra's?
+	 * @return True if we are; False otherwise
+	 */
+	protected boolean isCompleted()
 	{
 		return completed;
 	}
 
-
-	public void setCompleted(boolean completed)
+	protected void setCompleted(boolean completed)
 	{
 		this.completed = completed;
 	}
 
-	public DijkstraNode getFrom()
+	protected DijkstraNode getFrom()
 	{
 		return from;
 	}
 
 
-	public double getWeight()
+	protected double getWeight()
 	{
 		return weight;
 	}
 
 
-	public Player getPlayer()
+	protected Player getPlayer()
 	{
 		return player;
 	}
 
 
-	public void setPlayer(Player player)
+	protected void setPlayer(Player player)
 	{
 		this.player = player;
 	}
