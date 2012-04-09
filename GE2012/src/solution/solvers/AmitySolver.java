@@ -18,10 +18,5 @@ public interface AmitySolver
 	 */
 	public float getWeight();
 	
-	/**
-	 * Gets a {@link List} of {@link WeightedPoint}s that this solver generates
-	 * @return
-	 */
-	public List<WeightedPoint> getPoints();
 	
 }

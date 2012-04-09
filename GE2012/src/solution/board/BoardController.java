@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import solution.CurrentGame;
-import solution.board.implementations.blobBoard.BlobBoard;
 import solution.board.implementations.indivBoard.IndivBoard;
 
 /**
@@ -16,17 +15,15 @@ import solution.board.implementations.indivBoard.IndivBoard;
  */
 public class BoardController
 {
-	private List<BoardInterface> boards = new ArrayList<BoardInterface>();	// all the boards in the game
-	
+	private List<BoardInterface> boards = new ArrayList<BoardInterface>(); // all the boards in the game
+
 	// List of all the boards (so we can get them separately)
 	private IndivBoard indivBoard;
-	private BlobBoard blobBoard;
 
 	public BoardController(CurrentGame curr)
 	{
 		// Add boards here
 		boards.add(indivBoard = new IndivBoard());
-		boards.add(blobBoard = new BlobBoard(curr));
 	}
 
 	/**
@@ -59,14 +56,5 @@ public class BoardController
 	public IndivBoard getIndivBoard()
 	{
 		return indivBoard;
-	}
-
-	/**
-	 * Gets the instance of {@link BlobBoard} for this game
-	 * @return blobBoard
-	 */
-	public BlobBoard getBlobBoard()
-	{
-		return blobBoard;
 	}
 }
