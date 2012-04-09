@@ -15,6 +15,7 @@ import solution.CurrentGame;
  */
 public class HexPoint
 {
+	// Location of our point
 	private int x;
 	private char y;
 
@@ -65,12 +66,8 @@ public class HexPoint
 		return result;
 	}
 
-	// public static void main(String args[])
-	// {
-	// System.out.println(new HexPoint(7, 'e').connections(new HexPoint(5, 'f')));
-	// }
 	/**
-	 * GENERATES an array of {@link HexPoint}s next to this {@link HexPoint}
+	 * Generates an array of {@link HexPoint}s next to this {@link HexPoint}
 	 * @return an array of all the {@link HexPoint}s touching this {@link HexPoint}
 	 */
 	public List<HexPoint> touching()
@@ -154,9 +151,6 @@ public class HexPoint
 		return true;
 	}
 
-	/**
-	 * returns a String representation of a HexPoint
-	 */
 	@Override
 	public String toString()
 	{

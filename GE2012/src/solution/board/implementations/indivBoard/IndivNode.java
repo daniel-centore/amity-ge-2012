@@ -97,10 +97,10 @@ public class IndivNode implements NodeInterface
 	}
 
 	/**
-	 * finds all possible locations that a two-chain can be made from this {@link IndivNode}
+	 * Finds all possible locations that a two-chain can be made from this {@link IndivNode}
 	 * @return a list of possible two-chain locations
 	 */
-	public List<HexPoint> getTwoChains()//IndivBoard board)
+	public List<HexPoint> getTwoChains()
 	{
 		List<HexPoint> twoChains = new ArrayList<HexPoint>();
 		
@@ -115,7 +115,7 @@ public class IndivNode implements NodeInterface
 		
 		for (HexPoint h : chains)
 		{
-			if (h.isGood())// && empty(h.connections(this.points.get(0)), board))
+			if (h.isGood())
 				twoChains.add(h);
 		}
 		
