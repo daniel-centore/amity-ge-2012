@@ -110,6 +110,7 @@ public class ClassicBlock
 		}
 
 		// Decides when it's time to really give up on the classic block or put in one last effort
+		
 		while (pt == null || !pt.isGood() || indivBoard.getNode(pt).getOccupied() != Player.EMPTY)
 		{
 			part++;
@@ -120,27 +121,35 @@ public class ClassicBlock
 				part = 50;
 				return null;
 			}
-
-			if (part > 4)
+			
+			
+			if (part == 4 && indivBoard.getNode(blockPoints[2]).getOccupied() == Player.YOU)
 			{
 				DebugWindow.println("F");
 				part = 50;
 				return null;
 			}
-			else
+			
+			if (part > 4)
 			{
 				DebugWindow.println("G");
+				part = 50;
+				return null;
+			}
+			else
+			{
+				DebugWindow.println("H");
 				pt = blockPoints[part - 1];
 			}
 		}
 
 		if (pt == blockPoints[3] && blockPoints[1] != null)
 		{
-			DebugWindow.println("H");
+			DebugWindow.println("I");
 			part = 50;
 			return null;
 		}
-		DebugWindow.println("I");
+		DebugWindow.println("J");
 
 		// Remove the point we are about to use. It will no longer be an option.
 		for (int i = 0; i < blockPoints.length; i++)
