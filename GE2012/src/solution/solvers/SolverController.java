@@ -40,7 +40,7 @@ public class SolverController
 	{
 		this.curr = curr;
 		indivBoard = curr.getBoardController().getIndivBoard();
-		classicBlock = new ClassicBlock(indivBoard, curr, this);
+		classicBlock = new ClassicBlock(indivBoard, curr);
 	}
 
 	/**

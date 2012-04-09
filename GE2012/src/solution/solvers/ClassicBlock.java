@@ -21,42 +21,38 @@ public class ClassicBlock
 {
 	private int part = 1; // which of the four parts we're on
 
-	private IndivBoard indivBoard;
-	private CurrentGame curr;
-	private HexPoint initial;
-	private HexPoint[] blockPoints = new HexPoint[4]; // where we put the block pieces
+	private IndivBoard indivBoard; // The board we are on
+	private CurrentGame curr; // The Current Game
+	private HexPoint initial; // The initial move made by the enemy
+	private HexPoint[] blockPoints = new HexPoint[4]; // The pattern we will be using based on situation
 
-	// ====
-	// == These are all relative. We calc the difference from initial on the fly. ==
-	// initial, move1, move2, 3, 4
-
-	// letters, x < 6
+	// Move lists for different starting situations
+	// These are all relative. We calculate our actual move list on the fly based on these templates
+	// Format: initial, move1, move2, 3, 4
 	private HexPoint[] groupA = { new HexPoint(6, 'f'), new HexPoint(3, 'h'), new HexPoint(3, 'g'), new HexPoint(4, 'i'), new HexPoint(4, 'e') };
-
-	// numbers, y > f
 	private HexPoint[] groupB = { new HexPoint(6, 'k'), new HexPoint(7, 'h'), new HexPoint(8, 'h'), new HexPoint(5, 'i'), new HexPoint(9, 'i') };
-
-	// numbers, y <= f
 	private HexPoint[] groupC = { new HexPoint(7, 'a'), new HexPoint(6, 'd'), new HexPoint(5, 'd'), new HexPoint(8, 'c'), new HexPoint(4, 'c') };
-
-	// letters, x >=6
 	private HexPoint[] groupD = { new HexPoint(1, 'f'), new HexPoint(4, 'd'), new HexPoint(4, 'e'), new HexPoint(3, 'c'), new HexPoint(3, 'g') };
 
-	// ====
-
-	private SolverController solverController;
-
-	public ClassicBlock(IndivBoard indivBoard, CurrentGame curr, SolverController solverController)
+	/**
+	 * Creates a controller for making a classic block (as an initial defence)
+	 * @param indivBoard The {@link IndivBoard} being used
+	 * @param curr The current game
+	 */
+	public ClassicBlock(IndivBoard indivBoard, CurrentGame curr)
 	{
 		this.indivBoard = indivBoard;
 		this.curr = curr;
-		this.solverController = solverController;
 	}
 
-	// return true to coninue blocking
-	// return false if we're done
+	/**
+	 * Finds the next move to put down
+	 * @param lastMove The move the last player took
+	 * @return The {@link HexPoint} to apply (or null to skip to our next algorithm)
+	 */
 	public HexPoint block(HexPoint lastMove)
 	{
+		// Intialize stuff if we're just starting
 		if (part == 1)
 		{
 			initialize();
@@ -162,9 +158,6 @@ public class ClassicBlock
 
 	private void initialize()
 	{
-		if (curr.getConnectRoute() < 0)
-			curr.setConnectRoute(CurrentGame.CONNECT_LETTERS);
-
 		// find their initial point (they should definitely have one the 1st time this gets called)
 		for (IndivNode node : indivBoard.getPoints())
 		{
@@ -213,16 +206,18 @@ public class ClassicBlock
 		DebugWindow.println(initial.toString() + " " + Arrays.toString(blockPoints));
 	}
 
-	// returns the four points we want in order
-	public HexPoint[] getSpots()
-	{
-		return null;
-	}
-
+	/**
+	 * Finds out if we should still be using this block
+	 * @param lastMove The last move the other player made
+	 * @return True if we should use it; False otherwise 
+	 */
 	public boolean shouldBlock()
 	{
+		if (curr.getConnectRoute() < 0)
+			curr.setConnectRoute(CurrentGame.CONNECT_LETTERS);
+		
 		// return false;
-		return (part <= 4);
+		return (part <= 4 && curr.getConnectRoute() == CurrentGame.CONNECT_LETTERS);
 	}
 
 }
