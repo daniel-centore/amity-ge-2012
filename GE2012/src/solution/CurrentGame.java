@@ -1,18 +1,16 @@
 package solution;
 
-import java.util.ArrayList;
-
 import game.GameMove;
 import game.GameState;
 import game.Util;
-
 import hex.HexMove;
 import hex.HexState;
+
+import java.util.ArrayList;
 
 import solution.board.BoardController;
 import solution.board.HexPoint;
 import solution.board.Player;
-import solution.board.implementations.dijkstraBoard.DijkstraBoard;
 import solution.debug.DebugWindow;
 import solution.solvers.SolverController;
 
@@ -25,7 +23,7 @@ import solution.solvers.SolverController;
  */
 public class CurrentGame
 {
-	public static final int CHARACTER_SUBTRACT = 96;
+	public static final int CHARACTER_SUBTRACT = 96; // subtract this from a character to get it's integer value (starting at 1)
 
 	private BoardController boardController;
 	private SolverController solverController;
@@ -34,6 +32,9 @@ public class CurrentGame
 	public static final int CONNECT_LETTERS = 1; // connect from A-K wins (black)
 	private int connectRoute = -1; // the connection direction we need to solve for to win
 
+	/**
+	 * Initializes our controllers and such (can't do this until we've established 'this'!)
+	 */
 	public void init()
 	{
 		boardController = new BoardController(this);
