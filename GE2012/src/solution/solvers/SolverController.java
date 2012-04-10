@@ -107,7 +107,7 @@ public class SolverController
 		}
 
 		// follow chain down board
-		return followChain.followChain(this);
+		return followChain.followChain(this, lastMove);
 	}
 
 	/**

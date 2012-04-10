@@ -24,9 +24,10 @@ public class FollowChain
 	/**
 	 * Gets the next {@link HexPoint} in order to follow a two-chain across the board
 	 * @param solverController TODO
+	 * @param lastMove 
 	 * @return The next {@link HexPoint} to continue the chain
 	 */
-	protected HexPoint followChain(SolverController solverController)
+	protected HexPoint followChain(SolverController solverController, HexPoint lastMove)
 	{
 		List<HexPoint> possible = new ArrayList<HexPoint>();
 	
@@ -64,6 +65,7 @@ public class FollowChain
 			
 			double leftDist = calculateDistance(solverController, h, true);
 			double rightDist = calculateDistance(solverController, h, false);
+			
 			
 			if (leftDist < left)
 			{
