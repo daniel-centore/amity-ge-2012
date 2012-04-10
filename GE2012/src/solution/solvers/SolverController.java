@@ -29,8 +29,8 @@ public class SolverController
 	DijkstraBoard dijkstraBoard = null;
 	private ClassicBlock classicBlock;
 	private HexPoint first = null;	// the first move we made (so we can calculate left and right sides correctly)
-	MapTools mapTools = new MapTools();
-	FollowChain followChain = new FollowChain();
+	protected MapTools mapTools = new MapTools();
+	private FollowChain followChain;
 
 	/**
 	 * Creates a new {@link SolverController}
@@ -41,6 +41,7 @@ public class SolverController
 		this.curr = curr;
 		indivBoard = curr.getBoardController().getIndivBoard();
 		classicBlock = new ClassicBlock(indivBoard, curr);
+		followChain = new FollowChain(this);
 	}
 
 	/**
@@ -145,7 +146,7 @@ public class SolverController
 	 * @param b The end node
 	 * @return True if it is BROKEN. False if all's good.
 	 */
-	private boolean broken(HexPoint a, HexPoint b)
+	protected boolean broken(HexPoint a, HexPoint b) 
 	{
 		List<HexPoint> conns = a.connections(b);
 
