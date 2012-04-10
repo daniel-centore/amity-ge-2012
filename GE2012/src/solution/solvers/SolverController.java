@@ -52,6 +52,18 @@ public class SolverController
 	{
 		HexPoint broken = null;
 
+		try
+		{
+			// Fix chains between a point and the wall if necessary
+			broken = baseTwoChainsBroken();
+			if (broken != null)
+				return broken;
+		} catch (Exception e)
+		{
+			DebugWindow.println("WARNING: BaseTwoChains crashed. This is usually normal: just a corner case.");
+			// Fails on some corner cases. just ignore this.
+		}
+		
 		// Fix chains between points if necessary
 		try
 		{
@@ -64,18 +76,6 @@ public class SolverController
 			e2.printStackTrace();
 		}
 		
-		try
-		{
-			// Fix chains between a point and the wall if necessary
-			broken = baseTwoChainsBroken();
-			if (broken != null)
-				return broken;
-		} catch (Exception e)
-		{
-			DebugWindow.println("WARNING: BaseTwoChains crashed. This is usually normal: just a corner case.");
-			// Fails on some corner cases. just ignore this.
-		}
-
 		try
 		{
 			// Does a classic block if necessary

@@ -73,7 +73,7 @@ public class HexPlayer_Amity extends GamePlayer
 	 */
 	public void endGame(int result)
 	{
-		DebugWindow.println("Game ended. Amity Solver " + (result == -1 ? "lost" :  "won"));	// its impossible to have a draw....
+		DebugWindow.println("Game ended. Amity Solver " + super.nickname + (result == -1 ? "lost" :  "won"));	// its impossible to have a draw....
 		DebugWindow.setUpdate(false);
 	}
 
