@@ -122,7 +122,7 @@ public class ClassicBlock
 			}
 			
 			
-			if (part == 4 && (indivBoard.getNode(blockPoints[2]) == null || indivBoard.getNode(blockPoints[2]).getOccupied() == Player.YOU))
+			if (part == 4 && (blockPoints[2] == null || indivBoard.getNode(blockPoints[2]).getOccupied() == Player.YOU))
 			{
 				DebugWindow.println("F");
 				part = 50;
