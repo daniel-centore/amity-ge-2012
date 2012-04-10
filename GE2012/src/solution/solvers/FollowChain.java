@@ -50,9 +50,11 @@ public class FollowChain
 		Iterator<HexPoint> itr = possible.iterator();
 	
 		double left = Double.MAX_VALUE;
+		double leftLast = -1;
 		HexPoint bestLeft = null;
 	
 		double right = Double.MAX_VALUE;
+		double rightLast = -1;
 		HexPoint bestRight = null;
 	
 		if (!itr.hasNext())
@@ -66,16 +68,20 @@ public class FollowChain
 			double leftDist = calculateDistance(solverController, h, true);
 			double rightDist = calculateDistance(solverController, h, false);
 			
+			DebugWindow.println("Dist "+h.toString()+solverController.dijkstraBoard.findDistance(lastMove, h)+" "+leftDist+" "+rightDist);
+			
 			
 			if (leftDist < left)
 			{
 				bestLeft = h;
+				leftLast = solverController.dijkstraBoard.findDistance(lastMove, h);
 				left = leftDist;
 			}
 			
 			if (rightDist < right)
 			{
 				bestRight = h;
+				rightLast = solverController.dijkstraBoard.findDistance(lastMove, h);
 				right = rightDist;
 			}
 	
@@ -89,6 +95,9 @@ public class FollowChain
 		else if (solverController.mapTools.across(solverController, false) && bestLeft != null)
 			return bestLeft;
 	
+		left /= leftLast;
+		right /= rightLast;
+		
 		if (left > right && bestLeft != null)
 			return bestLeft;
 		else
