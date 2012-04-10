@@ -27,11 +27,12 @@ import solution.debug.DebugWindow;
  */
 public class SolverController
 {
-	private CurrentGame curr; // Current game
-	private IndivBoard indivBoard;
+	CurrentGame curr; // Current game
+	IndivBoard indivBoard;
 	private DijkstraBoard dijkstraBoard = null;
 	private ClassicBlock classicBlock;
 	private HexPoint first = null;	// the first move we made (so we can calculate left and right sides correctly)
+	private MapTools mapTools = new MapTools();
 
 	/**
 	 * Creates a new {@link SolverController}
@@ -55,7 +56,7 @@ public class SolverController
 		// Fix chains between points if necessary
 		try
 		{
-			broken = twoChainsBroken();
+			broken = mapTools.twoChainsBroken(this);
 			if (broken != null)
 				return broken;
 		} catch (Exception e2)
@@ -111,192 +112,6 @@ public class SolverController
 	}
 
 	/**
-	 * Checks to see if there are two-chains all the way across the board
-	 * Assumes that all points are connected either by bridges or directly touching, so this 
-	 *    will fail if we have resorted to random. Our fate is determined by then anyways.
-	 * @return true if there is a two-chain path across the board, false if not
-	 */
-	private boolean across(boolean left)
-	{
-		boolean a = false;
-		boolean b = false;
-
-		for (IndivNode node : indivBoard.getPoints())
-		{
-			if (node.getOccupied() == Player.ME)
-			{
-				if (curr.getConnectRoute() == CurrentGame.CONNECT_LETTERS)
-				{
-					if (node.getY() == 'a')
-						a = true;
-					else if (node.getY() == 'b')
-					{
-						// check the connection to the wall
-						HexPoint[] k = { new HexPoint(node.getX(), 'a'), new HexPoint(node.getX() + 1, 'a') };
-						List<HexPoint> good = new ArrayList<HexPoint>();
-						for (HexPoint j : k)
-						{
-							if (j.isGood())
-								good.add(j);
-						}
-
-						if (IndivNode.empty(good, indivBoard) && good.size() == 2) // only if both connections are good
-							a = true;
-					}
-
-					if (node.getY() == 'k')
-						b = true;
-					else if (node.getY() == 'j')
-					{
-						// check the connection to the wall
-						HexPoint[] k = { new HexPoint(node.getX(), 'k'), new HexPoint(node.getX() - 1, 'k') };
-
-						List<HexPoint> good = new ArrayList<HexPoint>();
-						for (HexPoint j : k)
-						{
-							if (j.isGood())
-								good.add(j);
-						}
-
-						if (IndivNode.empty(good, indivBoard) && good.size() == 2) // only if both connections are good
-							b = true;
-					}
-				}
-				else
-				{
-					if (node.getX() == 1)
-						a = true;
-					else if (node.getX() == 2)
-					{
-						// check the connection to the wall
-						HexPoint[] k = { new HexPoint(1, node.getY()), new HexPoint(1, (char) (node.getY() + 1)) };
-
-						List<HexPoint> good = new ArrayList<HexPoint>();
-						for (HexPoint j : k)
-						{
-							if (j.isGood())
-								good.add(j);
-						}
-
-						if (IndivNode.empty(good, indivBoard)) // only if both connections are good
-							a = true;
-					}
-
-					if (node.getX() == 11)
-						b = true;
-					else if (node.getX() == 10)
-					{
-						// check the connection to the wall
-						HexPoint[] k = { new HexPoint(11, node.getY()), new HexPoint(11, (char) (node.getY() - 1)) };
-
-						List<HexPoint> good = new ArrayList<HexPoint>();
-						for (HexPoint j : k)
-						{
-							if (j.isGood())
-								good.add(j);
-						}
-
-						if (IndivNode.empty(good, indivBoard)) // only if both connections are good
-							b = true;
-					}
-				}
-			}
-		}
-
-		DebugWindow.println("Left: "+a+". Right: "+b+".");
-
-		return (left ? a : b);
-
-	}
-
-	/**
-	 * Checks if a hex piece is connected to a *home wall* via bridge or touching
-	 * @param node The {@link HexPoint} to check
-	 * @return True if connected; False otherwise
-	 */
-	private boolean connectedToWall(HexPoint node)
-	{
-		if (curr.getConnectRoute() == CurrentGame.CONNECT_LETTERS)
-		{
-			if (node.getY() == 'a')
-				return true;
-			else if (node.getY() == 'b')
-			{
-				// check the connection to the wall
-				HexPoint[] k = { new HexPoint(node.getX(), 'a'), new HexPoint(node.getX() + 1, 'a') };
-
-				List<HexPoint> good = new ArrayList<HexPoint>();
-				for (HexPoint j : k)
-				{
-					if (j.isGood())
-						good.add(j);
-				}
-
-				if (IndivNode.empty(good, indivBoard)) // only if both connections are good
-					return true;
-			}
-
-			if (node.getY() == 'k')
-				return true;
-			else if (node.getY() == 'j')
-			{
-				// check the connection to the wall
-				HexPoint[] k = { new HexPoint(node.getX(), 'k'), new HexPoint(node.getX() - 1, 'k') };
-
-				List<HexPoint> good = new ArrayList<HexPoint>();
-				for (HexPoint j : k)
-				{
-					if (j.isGood())
-						good.add(j);
-				}
-
-				if (IndivNode.empty(good, indivBoard)) // only if both connections are good
-					return true;
-			}
-		}
-		else
-		{
-			if (node.getX() == 1)
-				return true;
-			else if (node.getX() == 2)
-			{
-				// check the connection to the wall
-				HexPoint[] k = { new HexPoint(1, node.getY()), new HexPoint(1, (char) (node.getY() + 1)) };
-
-				List<HexPoint> good = new ArrayList<HexPoint>();
-				for (HexPoint j : k)
-				{
-					if (j.isGood())
-						good.add(j);
-				}
-
-				if (IndivNode.empty(good, indivBoard)) // only if both connections are good
-					return true;
-			}
-
-			if (node.getX() == 11)
-				return true;
-			else if (node.getX() == 10)
-			{
-				// check the connection to the wall
-				HexPoint[] k = { new HexPoint(11, node.getY()), new HexPoint(11, (char) (node.getY() - 1)) };
-
-				List<HexPoint> good = new ArrayList<HexPoint>();
-				for (HexPoint j : k)
-				{
-					if (j.isGood())
-						good.add(j);
-				}
-
-				if (IndivNode.empty(good, indivBoard)) // only if both connections are good
-					return true;
-			}
-		}
-
-		return false;
-	}
-
-	/**
 	 * Looks around and sees if there is a point which when put down will connect us with an edge either
 	 *    by bridge or direct connection
 	 * @return The {@link HexPoint} if there is one; Null if not
@@ -309,14 +124,14 @@ public class SolverController
 			{
 				for (HexPoint around : node.getPoints().get(0).touching())
 				{
-					if (connectedToWall(around) && indivBoard.getNode(around).getOccupied() == Player.EMPTY)
+					if (mapTools.connectedToWall(this, around) && indivBoard.getNode(around).getOccupied() == Player.EMPTY)
 					{
 						boolean left = false;
 						if ((curr.getConnectRoute() == CurrentGame.CONNECT_LETTERS && around.getY() < 'f') ||
 								(curr.getConnectRoute() == CurrentGame.CONNECT_NUMBERS && around.getX() < 6))
 							left = true;
 
-						if (!across(left))
+						if (!mapTools.across(this, left))
 							return around;
 					}
 				}
@@ -385,9 +200,9 @@ public class SolverController
 
 		// Choose the piece which is *weaker* so that we strengthen the link with that wall
 		// TODO: Include number of paths available in this calculation
-		if (across(true) && bestRight != null)
+		if (mapTools.across(this, true) && bestRight != null)
 			return bestRight;
-		else if (across(false) && bestLeft != null)
+		else if (mapTools.across(this, false) && bestLeft != null)
 			return bestLeft;
 
 		if (left > right && bestLeft != null)
@@ -512,45 +327,6 @@ public class SolverController
 		}
 
 		return null;
-	}
-
-	/**
-	 * Checks if a two chain has been broken. 
-	 * @return the {@link HexPoint} needed to fix a broken two-chain (or null if none are broken)
-	 */
-	private HexPoint twoChainsBroken()
-	{
-		for (IndivNode node : indivBoard.getPoints())
-		{
-			if (node.getOccupied() == Player.ME)
-			{
-				List<HexPoint> chains = node.getTwoChains();// indivBoard);
-				for (HexPoint pnt : chains)
-				{
-					if (indivBoard.getNode(pnt).getOccupied() == Player.ME)
-					{
-						List<HexPoint> connections = pnt.connections(node.getPoints().get(0));
-
-						if (connections.size() < 2)
-							throw new RuntimeException("Size less than 2!");
-
-						HexPoint a = connections.get(0);
-						HexPoint b = connections.get(1);
-
-						// if (checkConnected(node.getPoints().get(0), pnt)) // skip if we are connected anyway in a triangle
-						// continue;
-
-						// if either connector is broken, then cling onto the other
-						if (indivBoard.getNode(a).getOccupied() == Player.YOU && indivBoard.getNode(b).getOccupied() == Player.EMPTY)
-							return b;
-						else if (indivBoard.getNode(b).getOccupied() == Player.YOU && indivBoard.getNode(a).getOccupied() == Player.EMPTY)
-							return a;
-					}
-				}
-			}
-		}
-
-		return null; // nothing broken
 	}
 
 	/**
