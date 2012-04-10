@@ -1,14 +1,11 @@
 package solution.solvers;
 
-import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import solution.CurrentGame;
 import solution.board.HexPoint;
 import solution.board.Player;
 import solution.board.implementations.dijkstraBoard.DijkstraBoard;
-import solution.board.implementations.dijkstraBoard.DijkstraNode;
 import solution.board.implementations.indivBoard.IndivBoard;
 import solution.board.implementations.indivBoard.IndivNode;
 import solution.debug.DebugWindow;
@@ -29,10 +26,11 @@ public class SolverController
 {
 	CurrentGame curr; // Current game
 	IndivBoard indivBoard;
-	private DijkstraBoard dijkstraBoard = null;
+	DijkstraBoard dijkstraBoard = null;
 	private ClassicBlock classicBlock;
 	private HexPoint first = null;	// the first move we made (so we can calculate left and right sides correctly)
-	private MapTools mapTools = new MapTools();
+	MapTools mapTools = new MapTools();
+	FollowChain followChain = new FollowChain();
 
 	/**
 	 * Creates a new {@link SolverController}
@@ -108,7 +106,7 @@ public class SolverController
 		}
 
 		// follow chain down board
-		return followChain();
+		return followChain.followChain(this);
 	}
 
 	/**
@@ -139,106 +137,6 @@ public class SolverController
 		}
 
 		return null;
-	}
-
-	/**
-	 * Gets the next {@link HexPoint} in order to follow a two-chain across the board
-	 * @return The next {@link HexPoint} to continue the chain
-	 */
-	private HexPoint followChain()
-	{
-		List<HexPoint> possible = new ArrayList<HexPoint>();
-
-		// Add all points which are two-chains from one of our own pieces
-		for (IndivNode node : indivBoard.getPoints())
-		{
-			if (node.getOccupied() == Player.ME)
-			{
-				List<HexPoint> chains = node.getTwoChains();
-				for (HexPoint pnt : chains)
-				{
-					if (indivBoard.getNode(pnt).getOccupied() == Player.EMPTY && IndivNode.empty(pnt.connections(node.getPoints().get(0)), indivBoard))
-					{
-						possible.add(pnt);
-					}
-				}
-			}
-		}
-
-		Iterator<HexPoint> itr = possible.iterator();
-
-		double left = Double.MAX_VALUE;
-		HexPoint bestLeft = null;
-
-		double right = Double.MAX_VALUE;
-		HexPoint bestRight = null;
-
-		if (!itr.hasNext())
-			return null;
-
-		// Find the best move for connecting to both the left and right walls
-		do
-		{
-			HexPoint h = itr.next();
-			
-			double leftDist = calculateDistance(h, true);
-			double rightDist = calculateDistance(h, false);
-			
-			if (leftDist < left)
-			{
-				bestLeft = h;
-				left = leftDist;
-			}
-			
-			if (rightDist < right)
-			{
-				bestRight = h;
-				right = rightDist;
-			}
-
-		} while (itr.hasNext());
-
-		// Choose the piece which is *weaker* so that we strengthen the link with that wall
-		// TODO: Include number of paths available in this calculation
-		if (mapTools.across(this, true) && bestRight != null)
-			return bestRight;
-		else if (mapTools.across(this, false) && bestLeft != null)
-			return bestLeft;
-
-		if (left > right && bestLeft != null)
-			return bestLeft;
-		else
-			return bestRight;
-
-	}
-
-	/**
-	 * Figures out how hard it would be to get to the closest wall
-	 * @param pnt the starting {@link HexPoint}
-	 * @return The difficulty (arbitrary scale)
-	 */
-	private double calculateDistance(HexPoint pnt, boolean left)
-	{
-
-		DijkstraNode wall;
-
-		if (curr.getConnectRoute() == CurrentGame.CONNECT_LETTERS)
-		{
-			if (left)
-				wall = dijkstraBoard.getWallA();
-			else
-				wall = dijkstraBoard.getWallK();
-		}
-		else
-		{
-			if (left)
-				wall = dijkstraBoard.getWallOne();
-			else
-				wall = dijkstraBoard.getWallEle();
-		}
-
-		return dijkstraBoard.findDistance(pnt, wall);
-
 	}
 
 	/**
