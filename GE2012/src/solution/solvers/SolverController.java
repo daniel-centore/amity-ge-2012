@@ -173,7 +173,7 @@ public class SolverController
 					if (node.equals(b))
 						continue niceloop;
 				}
-
+				
 				// Basically checks the appropriate positions to see if one is broken
 				// very ugly code...
 				if (curr.getConnectRoute() == CurrentGame.CONNECT_LETTERS && (pt.getY() == 'b' || pt.getY() == 'j'))
@@ -187,6 +187,7 @@ public class SolverController
 						if ((indivBoard.getNode(pt.getX() + 1, 'a').getOccupied() == Player.YOU))
 							if ((indivBoard.getNode(pt.getX(), 'a').getOccupied() == Player.EMPTY))
 								return new HexPoint(pt.getX(), 'a');
+						
 					}
 					else
 					{
