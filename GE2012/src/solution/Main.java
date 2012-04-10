@@ -11,7 +11,7 @@ import solution.debug.DebugWindow;
 
 /**
  * THIS CLASS SHOULD NOT BE INCLUDED IN THE FINAL COPY
- * It is just so we don't have to run their shitty setup all the time.
+ * It is just so we don't have to run their setup all the time.
  * 
  * @author Daniel Centore
  *
