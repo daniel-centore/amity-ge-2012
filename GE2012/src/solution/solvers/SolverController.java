@@ -112,6 +112,8 @@ public class SolverController
 
 	/**
 	 * Checks to see if there are two-chains all the way across the board
+	 * Assumes that all points are connected either by bridges or directly touching, so this 
+	 *    will fail if we have resorted to random. Our fate is determined by then anyways.
 	 * @return true if there is a two-chain path across the board, false if not
 	 */
 	private boolean across(boolean left)
@@ -201,13 +203,17 @@ public class SolverController
 			}
 		}
 
-		System.out.println("Left" + a);
-		System.out.println("right" + b);
+		DebugWindow.println("Left: "+a+". Right: "+b+".");
 
 		return (left ? a : b);
 
 	}
 
+	/**
+	 * Checks if a hex piece is connected to a *home wall* via bridge or touching
+	 * @param node The {@link HexPoint} to check
+	 * @return True if connected; False otherwise
+	 */
 	private boolean connectedToWall(HexPoint node)
 	{
 		if (curr.getConnectRoute() == CurrentGame.CONNECT_LETTERS)
@@ -290,15 +296,17 @@ public class SolverController
 		return false;
 	}
 
-	// tries to find a point right around a hex which will connect to a side
+	/**
+	 * Looks around and sees if there is a point which when put down will connect us with an edge either
+	 *    by bridge or direct connection
+	 * @return The {@link HexPoint} if there is one; Null if not
+	 */
 	private HexPoint immediatePoint()
 	{
 		for (IndivNode node : indivBoard.getPoints())
 		{
 			if (node.getOccupied() == Player.ME)
 			{
-				// DebugWindow.println(node.toString() + " " + node.getPoints().get(0).touching().toString());
-
 				for (HexPoint around : node.getPoints().get(0).touching())
 				{
 					if (connectedToWall(around) && indivBoard.getNode(around).getOccupied() == Player.EMPTY)
@@ -319,20 +327,19 @@ public class SolverController
 	}
 
 	/**
-	 * gets the next {@link HexPoint} in order to follow a two-chain across the board
-	 * used when there is a complete two-chain connection from one side to the other
-	 * @return the next {@link HexPoint} to complete the chain
+	 * Gets the next {@link HexPoint} in order to follow a two-chain across the board
+	 * @return The next {@link HexPoint} to continue the chain
 	 */
 	private HexPoint followChain()
 	{
 		List<HexPoint> possible = new ArrayList<HexPoint>();
 
-		// add all 2-chains as possible
+		// Add all points which are two-chains from one of our own pieces
 		for (IndivNode node : indivBoard.getPoints())
 		{
 			if (node.getOccupied() == Player.ME)
 			{
-				List<HexPoint> chains = node.getTwoChains();// indivBoard);
+				List<HexPoint> chains = node.getTwoChains();
 				for (HexPoint pnt : chains)
 				{
 					if (indivBoard.getNode(pnt).getOccupied() == Player.EMPTY && IndivNode.empty(pnt.connections(node.getPoints().get(0)), indivBoard))
@@ -343,7 +350,6 @@ public class SolverController
 			}
 		}
 
-		// DebugWindow.println(possible.toString());
 		Iterator<HexPoint> itr = possible.iterator();
 
 		double left = Double.MAX_VALUE;
@@ -355,6 +361,7 @@ public class SolverController
 		if (!itr.hasNext())
 			return null;
 
+		// Find the best move for connecting to both the left and right walls
 		do
 		{
 			HexPoint h = itr.next();
@@ -376,6 +383,8 @@ public class SolverController
 
 		} while (itr.hasNext());
 
+		// Choose the piece which is *weaker* so that we strengthen the link with that wall
+		// TODO: Include number of paths available in this calculation
 		if (across(true) && bestRight != null)
 			return bestRight;
 		else if (across(false) && bestLeft != null)
@@ -418,10 +427,10 @@ public class SolverController
 	}
 
 	/**
-	 * Checks if the path ehre is broken
-	 * @param a
-	 * @param b
-	 * @return
+	 * Checks if a two-chain is broken
+	 * @param a The start node
+	 * @param b The end node
+	 * @return True if it is BROKEN. False if all's good.
 	 */
 	private boolean broken(HexPoint a, HexPoint b)
 	{
@@ -444,16 +453,15 @@ public class SolverController
 
 				HexPoint[] bad = { new HexPoint(11, 'b'), new HexPoint(1, 'j'), new HexPoint(2, 'k'), new HexPoint(10, 'a') };
 
-				// skip the corners - these aren't two chains anyway
+				// Skip the corners - We can't two-chain here!
 				for (HexPoint b : bad)
 				{
-					// DebugWindow.println("Skipping over: "+b.toString());
 					if (node.equals(b))
 						continue niceloop;
 				}
 
-				// DebugWindow.println("Testing bridge: "+node.toString());
-
+				// Basically checks the appropriate positions to see if one is broken
+				// very ugly code...
 				if (curr.getConnectRoute() == CurrentGame.CONNECT_LETTERS && (pt.getY() == 'b' || pt.getY() == 'j'))
 				{
 					if (pt.getY() == 'b')
@@ -529,8 +537,8 @@ public class SolverController
 						HexPoint a = connections.get(0);
 						HexPoint b = connections.get(1);
 
-						if (checkConnected(node.getPoints().get(0), pnt)) // skip if we are connected anyway in a triangle
-							continue;
+						// if (checkConnected(node.getPoints().get(0), pnt)) // skip if we are connected anyway in a triangle
+						// continue;
 
 						// if either connector is broken, then cling onto the other
 						if (indivBoard.getNode(a).getOccupied() == Player.YOU && indivBoard.getNode(b).getOccupied() == Player.EMPTY)
@@ -545,9 +553,14 @@ public class SolverController
 		return null; // nothing broken
 	}
 
-	// check if these 2 are connected by 2 chains in a triangle fashion
-	// assumes a and b are same color
-	private boolean checkConnected(HexPoint a, HexPoint b)
+	/**
+	 * Checks if two points are connected by a third in a triangle
+	 * @param a First point
+	 * @param b Second point
+	 * @return True if they are; False otherwise
+	 * @deprecated These are very loosely connected. They can be easily broken.
+	 */
+	private boolean checkConnectedTriangle(HexPoint a, HexPoint b)
 	{
 		for (HexPoint p : indivBoard.getNode(a).getTwoChains())
 		{
@@ -563,11 +576,19 @@ public class SolverController
 		return false;
 	}
 
+	/**
+	 * Gets the first point issued on the board
+	 * @return The first point (or null if we haven't gone yet)
+	 */
 	public HexPoint getFirst()
 	{
 		return first;
 	}
 
+	/**
+	 * Sets the first point
+	 * @param first The first point
+	 */
 	public void setFirst(HexPoint first)
 	{
 		this.first = first;
