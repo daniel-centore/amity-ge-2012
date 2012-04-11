@@ -90,13 +90,13 @@ public class HSearchPlayer extends GamePlayer
 
 						if (PointUtilities.areNeighbors(g1, g2))
 						{
-							resistance[x1][y1][x2][y2] = r1 + r2;
-							resistance[x2][y2][x1][y1] = r1 + r2;
+							resistance[x1][y1][x2][y2] = (r1 + r2) / 2;
+							resistance[x2][y2][x1][y1] = (r1 + r2) / 2;
 						}
 						else if (!C[x1][y1][x2][y2].isEmpty())
 						{
-							resistance[x1][y1][x2][y2] = r1 + r2 + 0.5;
-							resistance[x2][y2][x1][y1] = r1 + r2 + 0.5;
+							resistance[x1][y1][x2][y2] = (r1 + r2) / 2;
+							resistance[x2][y2][x1][y1] = (r1 + r2) / 2;
 						}
 						else
 						{
@@ -208,31 +208,31 @@ public class HSearchPlayer extends GamePlayer
 
 	}
 
-	public static void main(String[] args)
-	{
-		IndivBoard board = new IndivBoard();
-		board.applyMove(1, 'a', Player.ME);
-		board.applyMove(2, 'b', Player.ME);
-
-		HSearchPlayer test = new HSearchPlayer(board);
-		test.hSearch();
-
-		for (int x1 = 0; x1 < test.N; x1++)
-		{
-			for (int y1 = 0; y1 < test.N; y1++)
-			{
-				for (int x2 = x1; x2 < test.N; x2++)
-				{
-					for (int y2 = y1; y2 < test.N; y2++)
-					{
-						System.out.println((1 + x1) + "," + (char) ('a' + y1) + " to " + (1 + x2) + "," + (char) ('a' + y2) + ":");
-						System.out.println("\tVC:" + test.C[x1][y1][x2][y2]);
-						System.out.println("\tVSC:" + test.SC[x1][y1][x2][y2]);
-					}
-				}
-			}
-		}
-	}
+	// public static void main(String[] args)
+	// {
+	// IndivBoard board = new IndivBoard();
+	// board.applyMove(1, 'a', Player.ME);
+	// board.applyMove(2, 'b', Player.ME);
+	//
+	// HSearchPlayer test = new HSearchPlayer(board);
+	// test.hSearch();
+	//
+	// for (int x1 = 0; x1 < test.N; x1++)
+	// {
+	// for (int y1 = 0; y1 < test.N; y1++)
+	// {
+	// for (int x2 = x1; x2 < test.N; x2++)
+	// {
+	// for (int y2 = y1; y2 < test.N; y2++)
+	// {
+	// System.out.println((1 + x1) + "," + (char) ('a' + y1) + " to " + (1 + x2) + "," + (char) ('a' + y2) + ":");
+	// System.out.println("\tVC:" + test.C[x1][y1][x2][y2]);
+	// System.out.println("\tVSC:" + test.SC[x1][y1][x2][y2]);
+	// }
+	// }
+	// }
+	// }
+	// }
 
 	public HSearchPlayer()
 	{
@@ -752,7 +752,7 @@ public class HSearchPlayer extends GamePlayer
 					double yourResistance = calculateResistance(state.who == Who.AWAY, false);
 					double value = myResistance / yourResistance;
 
-					DebugWindow.println((char) ('a' + y) + "" + (1 + x) + ": " + myResistance + " " + yourResistance + " " + value);
+					System.out.println((char) ('a' + y) + "" + (1 + x) + ": " + myResistance + " " + yourResistance + " " + value);
 					if (value < minValue)
 					{
 						minValue = value;
