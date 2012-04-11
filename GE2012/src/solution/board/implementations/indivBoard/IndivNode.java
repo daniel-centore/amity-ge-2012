@@ -90,8 +90,8 @@ public class IndivNode implements NodeInterface
 	 */
 	public void setOccupied(Player occupied)
 	{
-		if (occupied == Player.EMPTY)
-			throw new RuntimeException("We can\'t change to empty once the game has started...");
+//		if (occupied == Player.EMPTY)
+//			throw new RuntimeException("We can\'t change to empty once the game has started...");
 
 		this.occupied = occupied;
 	}
