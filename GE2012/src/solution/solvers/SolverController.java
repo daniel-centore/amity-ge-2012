@@ -4,6 +4,7 @@ import java.util.List;
 
 import solution.CurrentGame;
 import solution.board.HexPoint;
+import solution.board.NodeInterface;
 import solution.board.Player;
 import solution.board.implementations.dijkstraBoard.DijkstraBoard;
 import solution.board.implementations.indivBoard.IndivBoard;
@@ -28,7 +29,7 @@ public class SolverController
 	IndivBoard indivBoard;
 	DijkstraBoard dijkstraBoard = null;
 	private ClassicBlock classicBlock;
-	private HexPoint first = null;	// the first move we made (so we can calculate left and right sides correctly)
+	private HexPoint first = null; // the first move we made (so we can calculate left and right sides correctly)
 	protected MapTools mapTools = new MapTools();
 	private FollowChain followChain;
 
@@ -63,7 +64,7 @@ public class SolverController
 			DebugWindow.println("WARNING: BaseTwoChains crashed. This is usually normal: just a corner case.");
 			// Fails on some corner cases. just ignore this.
 		}
-		
+
 		// Fix chains between points if necessary
 		try
 		{
@@ -75,7 +76,7 @@ public class SolverController
 			DebugWindow.println("ERROR: TwoChainsBroken crashed. Take a look at the trace. Using Default solver.");
 			e2.printStackTrace();
 		}
-		
+
 		try
 		{
 			// Does a classic block if necessary
@@ -90,6 +91,24 @@ public class SolverController
 		{
 			DebugWindow.println("ERROR: ClassicBlock crashed. Take a look at the trace. Using Default solver.");
 			e1.printStackTrace();
+		}
+
+		if (mapTools.across(this, true) && mapTools.across(this, false))
+		{
+			// start filling in pieces
+			try
+			{
+				broken = fillWall();
+
+				if (broken != null)
+					return broken;
+			} catch (Exception e1)
+			{
+				DebugWindow.println("ERROR: fillWall crashed. Take a look at the trace. Using Default solver.");
+				e1.printStackTrace();
+			}
+			
+			// TODO: fillSpaces
 		}
 
 		dijkstraBoard = new DijkstraBoard(indivBoard, curr);
@@ -108,6 +127,35 @@ public class SolverController
 
 		// follow chain down board
 		return followChain.followChain(this, lastMove);
+	}
+
+	/**
+	 * If we've already established a 2-chain across then fill in the wall nodes
+	 */
+	private HexPoint fillWall()
+	{
+		boolean leftWall = false;
+		boolean rightWall = false;
+
+		for (IndivNode node : indivBoard.getPoints())
+		{
+			if (curr.getConnectRoute() == CurrentGame.CONNECT_LETTERS)
+			{
+				if (node.getX() == 1)
+					leftWall = true;
+				if (node.getY() == 11)
+					rightWall = true;
+			}
+			else
+			{
+				if (node.getY() == 'a')
+					leftWall = true;
+				if (node.getY() == 'k')
+					rightWall = true;
+			}
+		}
+
+		return null;
 	}
 
 	/**
@@ -146,7 +194,7 @@ public class SolverController
 	 * @param b The end node
 	 * @return True if it is BROKEN. False if all's good.
 	 */
-	protected boolean broken(HexPoint a, HexPoint b) 
+	protected boolean broken(HexPoint a, HexPoint b)
 	{
 		List<HexPoint> conns = a.connections(b);
 
@@ -173,83 +221,88 @@ public class SolverController
 					if (node.equals(b))
 						continue niceloop;
 				}
-				
+
 				// Basically checks the appropriate positions to see if one is broken
-				// very ugly code...
+				// Very ugly and fragile code. Be careful! Things are repeated over and over again with small changes!
 				if (curr.getConnectRoute() == CurrentGame.CONNECT_LETTERS && (pt.getY() == 'b' || pt.getY() == 'j'))
 				{
 					if (pt.getY() == 'b')
 					{
-						if ((indivBoard.getNode(pt.getX(), 'a').getOccupied() == Player.YOU))
-							if ((indivBoard.getNode(pt.getX() + 1, 'a').getOccupied() == Player.EMPTY))
-								return new HexPoint(pt.getX() + 1, 'a');
+						NodeInterface first = indivBoard.getNode(pt.getX(), 'a');
+						NodeInterface second = indivBoard.getNode(pt.getX() + 1, 'a');
 
-						if ((indivBoard.getNode(pt.getX() + 1, 'a').getOccupied() == Player.YOU))
-							if ((indivBoard.getNode(pt.getX(), 'a').getOccupied() == Player.EMPTY))
-								return new HexPoint(pt.getX(), 'a');
-						
+						if (first.getOccupied() == Player.YOU)
+						{
+							if (second.getOccupied() == Player.EMPTY)
+								return second.getPoints().get(0);
+						}
+
+						if (second.getOccupied() == Player.YOU)
+						{
+							if (first.getOccupied() == Player.EMPTY)
+								return first.getPoints().get(0);
+						}
+
 					}
 					else
 					{
-						if ((indivBoard.getNode(pt.getX(), 'k').getOccupied() == Player.YOU))
-							if ((indivBoard.getNode(pt.getX() - 1, 'k').getOccupied() == Player.EMPTY))
-								return new HexPoint(pt.getX() - 1, 'k');
+						NodeInterface first = indivBoard.getNode(pt.getX(), 'k');
+						NodeInterface second = indivBoard.getNode(pt.getX() - 1, 'k');
 
-						if ((indivBoard.getNode(pt.getX() - 1, 'k').getOccupied() == Player.YOU))
-							if ((indivBoard.getNode(pt.getX(), 'k').getOccupied() == Player.EMPTY))
-								return new HexPoint(pt.getX(), 'k');
+						if ((first.getOccupied() == Player.YOU))
+						{
+							if ((second.getOccupied() == Player.EMPTY))
+								return second.getPoints().get(0);
+						}
+
+						if ((second.getOccupied() == Player.YOU))
+						{
+							if ((first.getOccupied() == Player.EMPTY))
+								return first.getPoints().get(0);
+						}
 					}
 				}
 				else if (curr.getConnectRoute() == CurrentGame.CONNECT_NUMBERS && (pt.getX() == 2 || pt.getX() == 10))
 				{
 					if (pt.getX() == 2)
 					{
-						if ((indivBoard.getNode(1, pt.getY()).getOccupied() == Player.YOU))
-							if ((indivBoard.getNode(1, (char) (pt.getY() + 1)).getOccupied() == Player.EMPTY))
-								return new HexPoint(1, (char) (pt.getY() + 1));
+						NodeInterface first = indivBoard.getNode(1, pt.getY());
+						NodeInterface second = indivBoard.getNode(1, (char) (pt.getY() + 1));
 
-						if ((indivBoard.getNode(1, (char) (pt.getY() + 1)).getOccupied() == Player.YOU))
-							if ((indivBoard.getNode(1, pt.getY()).getOccupied() == Player.EMPTY))
-								return new HexPoint(1, pt.getY());
+						if ((first.getOccupied() == Player.YOU))
+						{
+							if ((second.getOccupied() == Player.EMPTY))
+								return second.getPoints().get(0);
+						}
+
+						if (second.getOccupied() == Player.YOU)
+						{
+							if ((first.getOccupied() == Player.EMPTY))
+								return first.getPoints().get(0);
+						}
 					}
 					else
 					{
-						if ((indivBoard.getNode(11, pt.getY()).getOccupied() == Player.YOU))
-							if ((indivBoard.getNode(11, (char) (pt.getY() - 1)).getOccupied() == Player.EMPTY))
-								return new HexPoint(11, (char) (pt.getY() - 1));
+						NodeInterface first = indivBoard.getNode(11, pt.getY());
+						NodeInterface second = indivBoard.getNode(11, (char) (pt.getY() - 1));
 
-						if ((indivBoard.getNode(11, (char) (pt.getY() - 1)).getOccupied() == Player.YOU))
-							if ((indivBoard.getNode(11, pt.getY()).getOccupied() == Player.EMPTY))
-								return new HexPoint(11, pt.getY());
+						if ((first.getOccupied() == Player.YOU))
+						{
+							if ((second.getOccupied() == Player.EMPTY))
+								return second.getPoints().get(0);
+						}
+
+						if ((second.getOccupied() == Player.YOU))
+						{
+							if ((second.getOccupied() == Player.EMPTY))
+								return first.getPoints().get(0);
+						}
 					}
 				}
 			}
 		}
 
 		return null;
-	}
-
-	/**
-	 * Checks if two points are connected by a third in a triangle
-	 * @param a First point
-	 * @param b Second point
-	 * @return True if they are; False otherwise
-	 * @deprecated These are very loosely connected. They can be easily broken.
-	 */
-	private boolean checkConnectedTriangle(HexPoint a, HexPoint b)
-	{
-		for (HexPoint p : indivBoard.getNode(a).getTwoChains())
-		{
-			for (HexPoint k : indivBoard.getNode(b).getTwoChains())
-			{
-				if (k.equals(p) && !broken(k, a) && !broken(k, b) && !k.equals(a) && !k.equals(b) && indivBoard.getNode(k).getOccupied() == indivBoard.getNode(a).getOccupied())
-				{
-					return true;
-				}
-			}
-		}
-
-		return false;
 	}
 
 	/**
