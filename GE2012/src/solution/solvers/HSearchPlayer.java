@@ -15,7 +15,6 @@ import java.util.PriorityQueue;
 import solution.board.BoardInterface;
 import solution.board.HexPoint;
 import solution.board.Player;
-import solution.board.PointUtilities;
 import solution.board.implementations.indivBoard.IndivBoard;
 import solution.debug.DebugWindow;
 
@@ -34,7 +33,7 @@ public class HSearchPlayer extends GamePlayer
 	private final BoardInterface board;
 	private final List<Connection>[][][][] C, SC;
 	private final int N;
-	private List<int[]> currConnections = new ArrayList<>(), prevConnections = new ArrayList<>();
+	private List<int[]> currConnections = new ArrayList<int[]>(), prevConnections = new ArrayList<int[]>();
 
 	public double calculateResistance(final boolean home, boolean me)
 	{
@@ -88,7 +87,7 @@ public class HSearchPlayer extends GamePlayer
 							r2 = 1;
 						}
 
-						if (PointUtilities.areNeighbors(g1, g2))
+						if (areNeighbors(g1, g2))
 						{
 							resistance[x1][y1][x2][y2] = (r1 + r2) / 2;
 							resistance[x2][y2][x1][y1] = (r1 + r2) / 2;
@@ -141,7 +140,7 @@ public class HSearchPlayer extends GamePlayer
 				}
 			}
 
-			PriorityQueue<int[]> queue = new PriorityQueue<>(N * N,
+			PriorityQueue<int[]> queue = new PriorityQueue<int[]>(N * N,
 					new Comparator<int[]>()
 					{
 
@@ -294,7 +293,7 @@ public class HSearchPlayer extends GamePlayer
 				int x1 = pos1 % N, y1 = pos1 / N;
 				int x2 = pos2 % N, y2 = pos2 / N;
 
-				if (PointUtilities.areNeighbors(new HexPoint(1 + x1, (char) ('a' + y1)),
+				if (areNeighbors(new HexPoint(1 + x1, (char) ('a' + y1)),
 						new HexPoint(1 + x2, (char) ('a' + y2))))
 				{
 					addVirtualConnection(x1, y1, x2, y2, new Connection(new ArrayList<HexPoint>(), step));
@@ -385,14 +384,14 @@ public class HSearchPlayer extends GamePlayer
 
 								if (board.getNode(g.getX(), g.getY()).getOccupied().equals(Player.ME))
 								{
-									ArrayList<HexPoint> carriers = new ArrayList<>();
+									ArrayList<HexPoint> carriers = new ArrayList<HexPoint>();
 									carriers.addAll(vc1.carriers);
 									carriers.addAll(vc2.carriers);
 									addVirtualConnection(x1, y1, x2, y2, new Connection(carriers, step));
 								}
 								else
 								{
-									ArrayList<HexPoint> carriers = new ArrayList<>();
+									ArrayList<HexPoint> carriers = new ArrayList<HexPoint>();
 									carriers.addAll(vc1.carriers);
 									carriers.addAll(vc2.carriers);
 									carriers.add(g);
@@ -568,12 +567,12 @@ public class HSearchPlayer extends GamePlayer
 
 		for (Connection sc1 : SC)
 		{
-			ArrayList<HexPoint> carriers = new ArrayList<>();
+			ArrayList<HexPoint> carriers = new ArrayList<HexPoint>();
 			carriers.addAll(u.carriers);
 			carriers.addAll(sc1.carriers);
 			Connection u1 = new Connection(carriers, step);
 
-			carriers = new ArrayList<>();
+			carriers = new ArrayList<HexPoint>();
 			for (HexPoint hp : i.carriers)
 			{
 				if (sc1.carriers.contains(hp))
@@ -589,7 +588,7 @@ public class HSearchPlayer extends GamePlayer
 			}
 			else
 			{
-				List<Connection> SC2 = new ArrayList<>(SC);
+				List<Connection> SC2 = new ArrayList<Connection>(SC);
 				SC2.remove(sc1);
 				applyOrDeductionRuleAndUpdate(C, SC2, x1, y1, x2, y2, u1, i1, step);
 			}
@@ -770,4 +769,44 @@ public class HSearchPlayer extends GamePlayer
 
 		return toHexMove(best);
 	}
+	
+	/**
+     * Generates a {@link List} of {@link HexPoint}s which are directly surrounding a point
+     * @param of The {@link HexPoint} in the center
+     * @return The neighboring points
+     */
+    public static List<HexPoint> getNeighbors(HexPoint of)
+    {
+            int x = of.getX();
+            char y = of.getY();
+
+            // These are possible surroundings (gotta check bounds)
+            HexPoint[] potential = {
+                            new HexPoint(x, (char) (y - 1)),
+                            new HexPoint(x - 1, y),
+                            new HexPoint(x - 1, (char) (y + 1)),
+                            new HexPoint(x, (char) (y + 1)),
+                            new HexPoint(x + 1, y),
+                            new HexPoint(x + 1, (char) (y - 1)) };
+            
+            List<HexPoint> result = new ArrayList<HexPoint>();
+            for (HexPoint p : potential)
+            {
+                    // Make sure the point is on the board
+                    if (p.getX() >= 1 && p.getX() <= 11 && p.getY() >= 'a' && p.getY() <= 'k')
+                            result.add(p);
+            }
+            
+            return result;
+    }
+    
+    /**
+     * Checks if two {@link HexPoint}s are neighbors
+     * @param hp1 first {@link HexPOint}
+     * @param hp2 second {@link HexPoint}
+     * @return Whether they are neighbors
+     */
+    public static boolean areNeighbors(HexPoint hp1, HexPoint hp2) {
+            return getNeighbors(hp1).contains(hp2);
+    }
 }
