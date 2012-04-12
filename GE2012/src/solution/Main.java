@@ -2,11 +2,7 @@ package solution;
 
 import game.GamePlayer;
 import game.Tournament;
-
-import hex.HumanHexPlayer;
 import hex.RandomHexPlayer;
-import hex.RoteHexPlayer;
-
 import solution.debug.DebugWindow;
 
 /**
