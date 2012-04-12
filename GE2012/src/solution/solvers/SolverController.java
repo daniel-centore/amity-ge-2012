@@ -56,7 +56,7 @@ public class SolverController
 		try
 		{
 			// Fix chains between a point and the wall if necessary
-			broken = baseTwoChainsBroken();
+			broken = baseTwoChainsBroken(false, false);
 			if (broken != null)
 				return broken;
 		} catch (Exception e)
@@ -107,8 +107,10 @@ public class SolverController
 				DebugWindow.println("ERROR: fillWall crashed. Take a look at the trace. Using Default solver.");
 				e1.printStackTrace();
 			}
-			
+
 			// TODO: fillSpaces
+
+			DebugWindow.println("Had nothing to fill");
 		}
 
 		dijkstraBoard = new DijkstraBoard(indivBoard, curr);
@@ -139,20 +141,39 @@ public class SolverController
 
 		for (IndivNode node : indivBoard.getPoints())
 		{
-			if (curr.getConnectRoute() == CurrentGame.CONNECT_LETTERS)
+			if (node.getOccupied() == Player.ME)
 			{
-				if (node.getX() == 1)
-					leftWall = true;
-				if (node.getY() == 11)
-					rightWall = true;
+				if (curr.getConnectRoute() == CurrentGame.CONNECT_LETTERS)
+				{
+					if (node.getY() == 'a')
+						leftWall = true;
+					if (node.getY() == 'k')
+						rightWall = true;
+				}
+				else
+				{
+					if (node.getX() == 1)
+						leftWall = true;
+					if (node.getY() == 11)
+						rightWall = true;
+				}
 			}
-			else
-			{
-				if (node.getY() == 'a')
-					leftWall = true;
-				if (node.getY() == 'k')
-					rightWall = true;
-			}
+		}
+
+		DebugWindow.println("LeftWall: " + leftWall + " " + rightWall);
+
+		if (!leftWall)
+		{
+			HexPoint broken = baseTwoChainsBroken(true, true);
+			if (broken != null)
+				return broken;
+		}
+
+		if (!rightWall)
+		{
+			HexPoint broken = baseTwoChainsBroken(true, false);
+			if (broken != null)
+				return broken;
 		}
 
 		return null;
@@ -205,7 +226,7 @@ public class SolverController
 	 * Checks if two-chains to the walls are broken
 	 * @return the {@link HexPoint} needed to fix a broken two-chain between a point and the wall (or null if none are broken)
 	 */
-	private HexPoint baseTwoChainsBroken()
+	private HexPoint baseTwoChainsBroken(boolean force, boolean left)
 	{
 		niceloop: for (IndivNode node : indivBoard.getPoints())
 		{
@@ -231,7 +252,7 @@ public class SolverController
 						NodeInterface first = indivBoard.getNode(pt.getX(), 'a');
 						NodeInterface second = indivBoard.getNode(pt.getX() + 1, 'a');
 
-						if (first.getOccupied() == Player.YOU)
+						if (first.getOccupied() == Player.YOU || (force && left))
 						{
 							if (second.getOccupied() == Player.EMPTY)
 								return second.getPoints().get(0);
@@ -249,7 +270,7 @@ public class SolverController
 						NodeInterface first = indivBoard.getNode(pt.getX(), 'k');
 						NodeInterface second = indivBoard.getNode(pt.getX() - 1, 'k');
 
-						if ((first.getOccupied() == Player.YOU))
+						if ((first.getOccupied() == Player.YOU) || (force && !left))
 						{
 							if ((second.getOccupied() == Player.EMPTY))
 								return second.getPoints().get(0);
@@ -269,7 +290,7 @@ public class SolverController
 						NodeInterface first = indivBoard.getNode(1, pt.getY());
 						NodeInterface second = indivBoard.getNode(1, (char) (pt.getY() + 1));
 
-						if ((first.getOccupied() == Player.YOU))
+						if ((first.getOccupied() == Player.YOU) || force && !left)
 						{
 							if ((second.getOccupied() == Player.EMPTY))
 								return second.getPoints().get(0);
@@ -286,7 +307,7 @@ public class SolverController
 						NodeInterface first = indivBoard.getNode(11, pt.getY());
 						NodeInterface second = indivBoard.getNode(11, (char) (pt.getY() - 1));
 
-						if ((first.getOccupied() == Player.YOU))
+						if ((first.getOccupied() == Player.YOU) || (force && left))
 						{
 							if ((second.getOccupied() == Player.EMPTY))
 								return second.getPoints().get(0);
