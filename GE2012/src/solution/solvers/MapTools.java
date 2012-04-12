@@ -6,17 +6,23 @@ import java.util.List;
 import solution.CurrentGame;
 import solution.board.HexPoint;
 import solution.board.Player;
-import solution.board.implementations.indivBoard.IndivBoard;
 import solution.board.implementations.indivBoard.IndivNode;
 import solution.debug.DebugWindow;
 
+/**
+ * Class which handles functions directly pertaining to the structure of the map (board)
+ * 
+ * @author Daniel Centore
+ *
+ */
 public class MapTools
 {
 
 	/**
 	 * Checks to see if there are two-chains all the way across the board
 	 * Assumes that all points are connected either by bridges or directly touching, so this 
-	 *    will fail if we have resorted to random. Our fate is determined by then anyways.
+	 *    will fail if we have resorted to random. Our fate is basically determined by then
+	 *    anyways.
 	 * @param solverController The {@link SolverController} we are linked with
 	 * @param left The side to check for
 	 * @return true if there is a two-chain path across the board, false if not
@@ -226,9 +232,6 @@ public class MapTools
 						HexPoint a = connections.get(0);
 						HexPoint b = connections.get(1);
 
-						// if (checkConnected(node.getPoints().get(0), pnt)) // skip if we are connected anyway in a triangle
-						// continue;
-
 						if (solverController.dijkstraBoard.findDistance(a, b) > 0) // if it's 0, they're already touching somehow. dont waste a turn.
 						{
 							// if either connector is broken, then cling onto the other
@@ -236,8 +239,11 @@ public class MapTools
 								return b;
 							else if (solverController.indivBoard.getNode(b).getOccupied() == Player.YOU && solverController.indivBoard.getNode(a).getOccupied() == Player.EMPTY)
 								return a;
-							else if (force && IndivNode.empty(connections, solverController.indivBoard)) // pick one even if we aren't forced to
+							else if (force && IndivNode.empty(connections, solverController.indivBoard))
+							{
+								// pick one even if we aren't forced to (because we are forced to. ironic, eh?)
 								return a;
+							}
 						}
 
 					}
@@ -245,7 +251,7 @@ public class MapTools
 			}
 		}
 
-		return null; // nothing broken
+		return null; // nothing broken. woo!
 	}
 
 }

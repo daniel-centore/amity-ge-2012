@@ -25,9 +25,9 @@ import solution.debug.DebugWindow;
  */
 public class SolverController
 {
-	CurrentGame curr; // Current game
-	IndivBoard indivBoard;
-	DijkstraBoard dijkstraBoard = null;
+	protected CurrentGame curr; // Current game
+	protected IndivBoard indivBoard;
+	protected DijkstraBoard dijkstraBoard = null;
 	private ClassicBlock classicBlock;
 	private HexPoint first = null; // the first move we made (so we can calculate left and right sides correctly)
 	protected MapTools mapTools = new MapTools();
@@ -95,7 +95,8 @@ public class SolverController
 
 		if (mapTools.across(this, true) && mapTools.across(this, false))
 		{
-			// start filling in pieces
+			// start filling in pieces because we've completed an almost-guaranteed connection of 2-chains and it was
+			// (hopefully) not disrupted during the last move
 			try
 			{
 				broken = fillWall();
@@ -119,15 +120,13 @@ public class SolverController
 				DebugWindow.println("ERROR: fillSpaces crashed. Take a look at the trace. Using Default solver.");
 				e1.printStackTrace();
 			}
-
-			DebugWindow.println("Had nothing to fill");
 		}
 
-		dijkstraBoard = new DijkstraBoard(indivBoard, curr);
+		dijkstraBoard = new DijkstraBoard(indivBoard, curr); // create our dijkstra's board
 
 		try
 		{
-			// grab immediate fixes
+			// grab immediate 1-step fixes
 			broken = immediatePoint();
 			if (broken != null)
 				return broken;
@@ -137,10 +136,14 @@ public class SolverController
 			e.printStackTrace();
 		}
 
-		// follow chain down board
+		// follow chain down/across board
 		return followChain.followChain(this, lastMove);
 	}
 
+	/**
+	 * Completes the next 2-chain
+	 * @return The {@link HexPoint} to apply or null if there are no applicable chains
+	 */
 	private HexPoint fillSpaces()
 	{
 		return mapTools.twoChainsBroken(this, true);
@@ -154,6 +157,7 @@ public class SolverController
 		boolean leftWall = false;
 		boolean rightWall = false;
 
+		// checks if we've fully contacted the wall yet
 		for (IndivNode node : indivBoard.getPoints())
 		{
 			if (node.getOccupied() == Player.ME)
@@ -175,7 +179,7 @@ public class SolverController
 			}
 		}
 
-		DebugWindow.println("LeftWall: " + leftWall + " " + rightWall);
+		// Puts baseTwoChains into force mode so it doesn't need the bridge to be broken to apply the move
 
 		if (!leftWall)
 		{
@@ -191,7 +195,7 @@ public class SolverController
 				return broken;
 		}
 
-		return null;
+		return null; // all bases connected or failed
 	}
 
 	/**
