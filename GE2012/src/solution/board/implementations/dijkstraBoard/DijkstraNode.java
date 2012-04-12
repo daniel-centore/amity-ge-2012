@@ -128,29 +128,46 @@ public class DijkstraNode
 		return completed;
 	}
 
+	/**
+	 * Marks a node as having been traversed or not
+	 * @param completed True to mark it so; False otherwise
+	 */
 	protected void setCompleted(boolean completed)
 	{
 		this.completed = completed;
 	}
 
+	/**
+	 * Gets the node which led to this one on the path (or null for initial)
+	 * @return The {@link DijkstraNode} that led to this one
+	 */
 	protected DijkstraNode getFrom()
 	{
 		return from;
 	}
 
-
+	/**
+	 * Gets the weight that this node was assiged
+	 * @return The weight that the path to this node is
+	 */
 	protected double getWeight()
 	{
 		return weight;
 	}
 
-
+	/**
+	 * Gets the {@link Player} currently occupying this space
+	 * @return The {@link Player}
+	 */
 	protected Player getPlayer()
 	{
 		return player;
 	}
 
-
+	/**
+	 * Sets the {@link Player} currently occupying this space
+	 * @param player The {@link Player} to set it to
+	 */
 	protected void setPlayer(Player player)
 	{
 		this.player = player;
