@@ -8,11 +8,10 @@ import solution.CurrentGame;
 import solution.board.HexPoint;
 import solution.board.Player;
 import solution.board.implementations.dijkstraBoard.DijkstraNode;
-import solution.board.implementations.indivBoard.IndivBoard;
 import solution.board.implementations.indivBoard.IndivNode;
-import solution.debug.DebugWindow;
 
 /**
+ * Solver which has us push towards both sides using weighted chains of nodes
  * 
  * @author Daniel Centore
  *
@@ -61,8 +60,6 @@ public class FollowChain
 			}
 		}
 
-		// DebugWindow.println(possible.toString());
-
 		Iterator<HexPoint> itr = possible.iterator();
 
 		double left = Double.MAX_VALUE;
@@ -84,8 +81,6 @@ public class FollowChain
 			double leftDist = calculateDistance(solverController, h, true);
 			double rightDist = calculateDistance(solverController, h, false);
 
-			// DebugWindow.println("Dist "+h.toString()+solverController.dijkstraBoard.findDistance(lastMove, h)+" "+leftDist+" "+rightDist);
-
 			if (leftDist < left)
 			{
 				bestLeft = h;
@@ -102,26 +97,18 @@ public class FollowChain
 
 		} while (itr.hasNext());
 
-		// DebugWindow.println(bestLeft.toString());
-
-		// Choose the piece which is *weaker* so that we strengthen the link with that wall
-		// TODO: Include number of paths available in this calculation
+		// If we have completed a side already, just go for the other one
 		if (solverController.mapTools.across(solverController, true) && bestRight != null)
 			return bestRight;
 		else if (solverController.mapTools.across(solverController, false) && bestLeft != null)
 			return bestLeft;
 
-		// Determine the route which has the most difficulty now
-
-		// DebugWindow.println(left + "");
-
+		// Choose the piece which is *weaker* so that we strengthen the link with that wall
 		left += within(bestLeft, 2);
 		right += within(bestRight, 2);
 
-		DebugWindow.println(within(bestLeft, 2) + " " + within(bestRight, 2));
-
-		 left /= leftLast;
-		 right /= rightLast;
+		left /= leftLast;
+		right /= rightLast;
 
 		if (left > right && bestLeft != null)
 			return bestLeft;
@@ -130,6 +117,12 @@ public class FollowChain
 	}
 
 	// finds all enemy point within radius within
+	/**
+	 * Counts how many enemy hexes are in a certain radius from one of our points
+	 * @param ours The {@link HexPoint} representing where we are
+	 * @param within The radius of nodes to look around it
+	 * @return The number of enemy hexes in the radius
+	 */
 	protected int within(HexPoint ours, int within)
 	{
 		int result = 0;
@@ -152,9 +145,9 @@ public class FollowChain
 
 	/**
 	 * Figures out how hard it would be to get to the closest wall
-	 * @param solverController TODO
+	 * @param solverController Our {@link SolverController}
 	 * @param pnt the starting {@link HexPoint}
-	 * @param left TODO
+	 * @param left Are we on the left side?
 	 * @return The difficulty (arbitrary scale)
 	 */
 	protected double calculateDistance(SolverController solverController, HexPoint pnt, boolean left)
