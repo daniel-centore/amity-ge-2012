@@ -30,11 +30,20 @@ public class IndivBoard implements BoardInterface
 		}
 	}
 	
+	/**
+	 * Gets the {@link IndivNode} at a certain position
+	 * @param point A {@link HexPoint} representing the position
+	 * @return The {@link IndivNode} at the position
+	 */
 	public IndivNode getNode(HexPoint point)
 	{
 		return (IndivNode) getNode(point.getX(), point.getY());
 	}
 	
+	/**
+	 * Gets a {@link Collection} of all the {@link IndivNode}s in the board
+	 * @return The {@link Collection}
+	 */
 	public Collection<IndivNode> getPoints()
 	{
 		return map.values();
