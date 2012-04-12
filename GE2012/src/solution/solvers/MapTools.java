@@ -25,7 +25,7 @@ public class MapTools
 	{
 		boolean a = false;
 		boolean b = false;
-	
+
 		for (IndivNode node : solverController.indivBoard.getPoints())
 		{
 			if (node.getOccupied() == Player.ME)
@@ -44,25 +44,25 @@ public class MapTools
 							if (j.isGood())
 								good.add(j);
 						}
-	
+
 						if (IndivNode.empty(good, solverController.indivBoard) && good.size() == 2) // only if both connections are good
 							a = true;
 					}
-	
+
 					if (node.getY() == 'k')
 						b = true;
 					else if (node.getY() == 'j')
 					{
 						// check the connection to the wall
 						HexPoint[] k = { new HexPoint(node.getX(), 'k'), new HexPoint(node.getX() - 1, 'k') };
-	
+
 						List<HexPoint> good = new ArrayList<HexPoint>();
 						for (HexPoint j : k)
 						{
 							if (j.isGood())
 								good.add(j);
 						}
-	
+
 						if (IndivNode.empty(good, solverController.indivBoard) && good.size() == 2) // only if both connections are good
 							b = true;
 					}
@@ -75,43 +75,43 @@ public class MapTools
 					{
 						// check the connection to the wall
 						HexPoint[] k = { new HexPoint(1, node.getY()), new HexPoint(1, (char) (node.getY() + 1)) };
-	
+
 						List<HexPoint> good = new ArrayList<HexPoint>();
 						for (HexPoint j : k)
 						{
 							if (j.isGood())
 								good.add(j);
 						}
-	
+
 						if (IndivNode.empty(good, solverController.indivBoard)) // only if both connections are good
 							a = true;
 					}
-	
+
 					if (node.getX() == 11)
 						b = true;
 					else if (node.getX() == 10)
 					{
 						// check the connection to the wall
 						HexPoint[] k = { new HexPoint(11, node.getY()), new HexPoint(11, (char) (node.getY() - 1)) };
-	
+
 						List<HexPoint> good = new ArrayList<HexPoint>();
 						for (HexPoint j : k)
 						{
 							if (j.isGood())
 								good.add(j);
 						}
-	
+
 						if (IndivNode.empty(good, solverController.indivBoard)) // only if both connections are good
 							b = true;
 					}
 				}
 			}
 		}
-	
-		DebugWindow.println("Left: "+a+". Right: "+b+".");
-	
+
+		DebugWindow.println("Left: " + a + ". Right: " + b + ".");
+
 		return (left ? a : b);
-	
+
 	}
 
 	/**
@@ -130,32 +130,32 @@ public class MapTools
 			{
 				// check the connection to the wall
 				HexPoint[] k = { new HexPoint(node.getX(), 'a'), new HexPoint(node.getX() + 1, 'a') };
-	
+
 				List<HexPoint> good = new ArrayList<HexPoint>();
 				for (HexPoint j : k)
 				{
 					if (j.isGood())
 						good.add(j);
 				}
-	
+
 				if (IndivNode.empty(good, solverController.indivBoard)) // only if both connections are good
 					return true;
 			}
-	
+
 			if (node.getY() == 'k')
 				return true;
 			else if (node.getY() == 'j')
 			{
 				// check the connection to the wall
 				HexPoint[] k = { new HexPoint(node.getX(), 'k'), new HexPoint(node.getX() - 1, 'k') };
-	
+
 				List<HexPoint> good = new ArrayList<HexPoint>();
 				for (HexPoint j : k)
 				{
 					if (j.isGood())
 						good.add(j);
 				}
-	
+
 				if (IndivNode.empty(good, solverController.indivBoard)) // only if both connections are good
 					return true;
 			}
@@ -168,37 +168,37 @@ public class MapTools
 			{
 				// check the connection to the wall
 				HexPoint[] k = { new HexPoint(1, node.getY()), new HexPoint(1, (char) (node.getY() + 1)) };
-	
+
 				List<HexPoint> good = new ArrayList<HexPoint>();
 				for (HexPoint j : k)
 				{
 					if (j.isGood())
 						good.add(j);
 				}
-	
+
 				if (IndivNode.empty(good, solverController.indivBoard)) // only if both connections are good
 					return true;
 			}
-	
+
 			if (node.getX() == 11)
 				return true;
 			else if (node.getX() == 10)
 			{
 				// check the connection to the wall
 				HexPoint[] k = { new HexPoint(11, node.getY()), new HexPoint(11, (char) (node.getY() - 1)) };
-	
+
 				List<HexPoint> good = new ArrayList<HexPoint>();
 				for (HexPoint j : k)
 				{
 					if (j.isGood())
 						good.add(j);
 				}
-	
+
 				if (IndivNode.empty(good, solverController.indivBoard)) // only if both connections are good
 					return true;
 			}
 		}
-	
+
 		return false;
 	}
 
@@ -207,7 +207,7 @@ public class MapTools
 	 * @param solverController {@link SolverController} we're connected to
 	 * @return the {@link HexPoint} needed to fix a broken two-chain (or null if none are broken)
 	 */
-	protected HexPoint twoChainsBroken(SolverController solverController)
+	protected HexPoint twoChainsBroken(SolverController solverController, boolean force)
 	{
 		for (IndivNode node : solverController.indivBoard.getPoints())
 		{
@@ -219,26 +219,32 @@ public class MapTools
 					if (solverController.indivBoard.getNode(pnt).getOccupied() == Player.ME)
 					{
 						List<HexPoint> connections = pnt.connections(node.getPoints().get(0));
-	
+
 						if (connections.size() < 2)
 							throw new RuntimeException("Size less than 2!");
-	
+
 						HexPoint a = connections.get(0);
 						HexPoint b = connections.get(1);
-	
+
 						// if (checkConnected(node.getPoints().get(0), pnt)) // skip if we are connected anyway in a triangle
 						// continue;
-	
-						// if either connector is broken, then cling onto the other
-						if (solverController.indivBoard.getNode(a).getOccupied() == Player.YOU && solverController.indivBoard.getNode(b).getOccupied() == Player.EMPTY)
-							return b;
-						else if (solverController.indivBoard.getNode(b).getOccupied() == Player.YOU && solverController.indivBoard.getNode(a).getOccupied() == Player.EMPTY)
-							return a;
+
+						if (solverController.dijkstraBoard.findDistance(a, b) > 0) // if it's 0, they're already touching somehow. dont waste a turn.
+						{
+							// if either connector is broken, then cling onto the other
+							if (solverController.indivBoard.getNode(a).getOccupied() == Player.YOU && solverController.indivBoard.getNode(b).getOccupied() == Player.EMPTY)
+								return b;
+							else if (solverController.indivBoard.getNode(b).getOccupied() == Player.YOU && solverController.indivBoard.getNode(a).getOccupied() == Player.EMPTY)
+								return a;
+							else if (force && IndivNode.empty(connections, solverController.indivBoard)) // pick one even if we aren't forced to
+								return a;
+						}
+
 					}
 				}
 			}
 		}
-	
+
 		return null; // nothing broken
 	}
 

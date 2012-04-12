@@ -68,7 +68,7 @@ public class SolverController
 		// Fix chains between points if necessary
 		try
 		{
-			broken = mapTools.twoChainsBroken(this);
+			broken = mapTools.twoChainsBroken(this, false);
 			if (broken != null)
 				return broken;
 		} catch (Exception e2)
@@ -108,7 +108,17 @@ public class SolverController
 				e1.printStackTrace();
 			}
 
-			// TODO: fillSpaces
+			try
+			{
+				broken = fillSpaces();
+
+				if (broken != null)
+					return broken;
+			} catch (Exception e1)
+			{
+				DebugWindow.println("ERROR: fillSpaces crashed. Take a look at the trace. Using Default solver.");
+				e1.printStackTrace();
+			}
 
 			DebugWindow.println("Had nothing to fill");
 		}
@@ -129,6 +139,11 @@ public class SolverController
 
 		// follow chain down board
 		return followChain.followChain(this, lastMove);
+	}
+
+	private HexPoint fillSpaces()
+	{
+		return mapTools.twoChainsBroken(this, true);
 	}
 
 	/**
