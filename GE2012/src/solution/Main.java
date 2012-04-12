@@ -48,9 +48,10 @@ public class Main
 		// GamePlayer competitor = new RoteHexPlayer("Rote");
 		// GamePlayer competitor = new RandomHexPlayer("Random");
 		// GamePlayer competitor = new HexPlayer_Amity("Other one");
+		//GamePlayer competitor = new solution.solvers.HSearchPlayer();
 
 		/** Uncomment this if the competitor isn't a HumanHexPlayer */
-		// competitor.makeFrameVisible();
+		//competitor.makeFrameVisible();
 		competitor.compete(args, 0);
 	}
 
