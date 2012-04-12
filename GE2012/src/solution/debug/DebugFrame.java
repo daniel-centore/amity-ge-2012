@@ -23,6 +23,7 @@ public class DebugFrame extends javax.swing.JFrame
     public DebugFrame()
     {
         initComponents();
+        setDefaultCloseOperation(EXIT_ON_CLOSE);
     }
     
     public void setMoveTime(String s)
