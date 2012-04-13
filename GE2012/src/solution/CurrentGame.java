@@ -29,9 +29,9 @@ public class CurrentGame
 	private SolverController solverController;
 
 	//variable for determining which sides are solver is trying to connect
-	public static final int CONNECT_NUMBERS = 0; // tring to connect from 1-11 (white)
-	public static final int CONNECT_LETTERS = 1; // tring to connect from A-K (black)
-	private int connectRoute = -1; // a variable that stores the sides we are tring to connect (0 for black, 1 for white)
+	public static final int CONNECT_NUMBERS = 0; // trying to connect from 1-11 (white)
+	public static final int CONNECT_LETTERS = 1; // trying to connect from 'a'-'k' (black)
+	private int connectRoute = -1; // a variable that stores the sides we are tring to connect (0 for white, 1 for black)
 
 	/**
 	 * Initializes our controllers and such (can't do this until we've established 'this'!)
@@ -149,7 +149,7 @@ public class CurrentGame
 
 	/**
 	 * Converts the {@link String} we got with the last move to a {@link HexPoint}
-	 * @param move A {@link String} in the format of x-y (ie 3-4) where x is the row (starting at 0) and y is the column(starting at a)
+	 * @param move A {@link String} in the format of x-y (ie 3-4) where x is the row (starting at 0) and y is the column(starting at 'a')
 	 * @return A {@link HexPoint} following our standards
 	 */
 	public HexPoint parseTheirString(String move)
