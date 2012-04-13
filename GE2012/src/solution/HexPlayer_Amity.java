@@ -3,14 +3,13 @@ package solution;
 import game.GameMove;
 import game.GamePlayer;
 import game.GameState;
-
 import hex.HexState;
-
-import solution.debug.DebugWindow;
 
 /**
  * Our own custom solver designed to compete in a Hex tornament
+ * 
  * @author Mike DiBuduo
+ * @author Daniel Centore
  *
  */
 public class HexPlayer_Amity extends GamePlayer
@@ -30,11 +29,7 @@ public class HexPlayer_Amity extends GamePlayer
 	 */
 	public void init()
 	{
-		DebugWindow.println("Amity: Began Init");
-		
 		System.gc();	// let's clean up other people's junk
-		
-		DebugWindow.println("Amity: Finished Init");
 	}
 
 	/**
@@ -48,12 +43,6 @@ public class HexPlayer_Amity extends GamePlayer
 	{
 		currentGame = new CurrentGame();
 		currentGame.init();
-		
-		// Debug prints
-		DebugWindow.println("Game Started. Opponent: " + opponent);
-		DebugWindow.resetGameTime();
-		DebugWindow.resetMoveTime();
-		DebugWindow.setUpdate(true);
 	}
 
 	/**
@@ -73,8 +62,6 @@ public class HexPlayer_Amity extends GamePlayer
 	 */
 	public void endGame(int result)
 	{
-		DebugWindow.println("Game ended. Amity Solver " + super.nickname + (result == -1 ? "lost" :  "won"));	// its impossible to have a draw....
-		DebugWindow.setUpdate(false);
 	}
 
 	/**
@@ -96,13 +83,15 @@ public class HexPlayer_Amity extends GamePlayer
 	 */
 	public GameMove getMove(GameState state, String lastMove)
 	{
-		DebugWindow.resetMoveTime();
 		GameMove result = currentGame.getMove(state, lastMove);
 		
-		
-		DebugWindow.resetMoveTime();
-		
 		return result;
+	}
+	
+	public static void main(String[] args)
+	{
+		GamePlayer p = new HexPlayer_Amity("Amity"); // give your player a name here
+		p.compete(args, 1);
 	}
 
 }

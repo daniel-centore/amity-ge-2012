@@ -7,7 +7,6 @@ import solution.board.HexPoint;
 import solution.board.Player;
 import solution.board.implementations.indivBoard.IndivBoard;
 import solution.board.implementations.indivBoard.IndivNode;
-import solution.debug.DebugWindow;
 
 /**
  * Implements the classic block from http://www.hexwiki.org/index.php?title=Basic_%28strategy_guide%29
@@ -76,17 +75,14 @@ public class ClassicBlock
 						if (indivBoard.getNode(p).getOccupied() == Player.ME)
 						{
 							List<HexPoint> conns = p.connections(blockPoints[i]);
-							DebugWindow.println(conns.toString());
 							if (indivBoard.getNode(conns.get(0)).getOccupied() == Player.YOU)
 							{
-								DebugWindow.println("A");
 								blockPoints[i] = null;
 								pt = conns.get(1);
 								good = false;
 							}
 							else if (indivBoard.getNode(conns.get(1)).getOccupied() == Player.YOU)
 							{
-								DebugWindow.println("B");
 								blockPoints[i] = null;
 								pt = conns.get(0);
 								good = false;
@@ -96,7 +92,6 @@ public class ClassicBlock
 
 					if (good)
 					{
-						DebugWindow.println("C" + i);
 						pt = blockPoints[i];
 					}
 				}
@@ -104,7 +99,6 @@ public class ClassicBlock
 
 			if (pt == null)
 			{
-				DebugWindow.println("D");
 				pt = blockPoints[part - 1];
 			}
 		}
@@ -116,7 +110,6 @@ public class ClassicBlock
 
 			if (part == 3 && blockPoints[1] != null)
 			{
-				DebugWindow.println("E");
 				part = 50;
 				return null;
 			}
@@ -124,31 +117,26 @@ public class ClassicBlock
 			
 			if (part == 4 && (blockPoints[2] == null || indivBoard.getNode(blockPoints[2]).getOccupied() == Player.YOU))
 			{
-				DebugWindow.println("F");
 				part = 50;
 				return null;
 			}
 			
 			if (part > 4)
 			{
-				DebugWindow.println("G");
 				part = 50;
 				return null;
 			}
 			else
 			{
-				DebugWindow.println("H");
 				pt = blockPoints[part - 1];
 			}
 		}
 
 		if (pt == blockPoints[3] && blockPoints[1] != null)
 		{
-			DebugWindow.println("I");
 			part = 50;
 			return null;
 		}
-		DebugWindow.println("J");
 
 		// Remove the point we are about to use. It will no longer be an option.
 		for (int i = 0; i < blockPoints.length; i++)
@@ -184,22 +172,18 @@ public class ClassicBlock
 
 		if (curr.getConnectRoute() == CurrentGame.CONNECT_LETTERS && initial.getX() < 6)
 		{
-			DebugWindow.println("Group A");
 			group = groupA;
 		}
 		else if (curr.getConnectRoute() == CurrentGame.CONNECT_NUMBERS && initial.getY() < 'f')
 		{
-			DebugWindow.println("Group B");
 			group = groupB;
 		}
 		else if (curr.getConnectRoute() == CurrentGame.CONNECT_NUMBERS && initial.getY() >= 'f')
 		{
-			DebugWindow.println("Group C");
 			group = groupC;
 		}
 		else if (curr.getConnectRoute() == CurrentGame.CONNECT_LETTERS && initial.getX() >= 6)
 		{
-			DebugWindow.println("Group D");
 			group = groupD;
 		}
 

@@ -8,7 +8,6 @@ import solution.board.HexPoint;
 import solution.board.Player;
 import solution.board.implementations.indivBoard.IndivBoard;
 import solution.board.implementations.indivBoard.IndivNode;
-import solution.debug.DebugWindow;
 
 /**
  * A board used for calculating the dificulty to reach a node using a modification of Dijkstra's algorithm
@@ -47,8 +46,6 @@ public class DijkstraBoard
 	{
 
 		this.indivBoard = indivBoard;
-
-		DebugWindow.println("Initializing map");
 
 		// Initialize our map
 		HexPoint test = new HexPoint(1, 'a');
@@ -97,8 +94,6 @@ public class DijkstraBoard
 			if (n.getY() == 'k')
 				makeNeighbors(wallK, n);
 		}
-
-		DebugWindow.println("Done map");
 	}
 
 	/**

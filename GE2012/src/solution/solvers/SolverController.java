@@ -9,7 +9,6 @@ import solution.board.Player;
 import solution.board.implementations.dijkstraBoard.DijkstraBoard;
 import solution.board.implementations.indivBoard.IndivBoard;
 import solution.board.implementations.indivBoard.IndivNode;
-import solution.debug.DebugWindow;
 
 /**
  * This is the main solver class which links some other solver info
@@ -62,7 +61,6 @@ public class SolverController
 				return broken;
 		} catch (Exception e)
 		{
-			DebugWindow.println("WARNING: BaseTwoChains crashed. This is usually normal: just a corner case.");
 			// Fails on some corner cases. just ignore this.
 		}
 
@@ -74,8 +72,6 @@ public class SolverController
 				return broken;
 		} catch (Exception e2)
 		{
-			DebugWindow.println("ERROR: TwoChainsBroken crashed. Take a look at the trace. Using Default solver.");
-			e2.printStackTrace();
 		}
 
 		try
@@ -90,8 +86,6 @@ public class SolverController
 			}
 		} catch (Exception e1)
 		{
-			DebugWindow.println("ERROR: ClassicBlock crashed. Take a look at the trace. Using Default solver.");
-			e1.printStackTrace();
 		}
 
 		if (mapTools.across(this, true) && mapTools.across(this, false))
@@ -106,8 +100,6 @@ public class SolverController
 					return broken;
 			} catch (Exception e1)
 			{
-				DebugWindow.println("ERROR: fillWall crashed. Take a look at the trace. Using Default solver.");
-				e1.printStackTrace();
 			}
 
 			try
@@ -118,8 +110,6 @@ public class SolverController
 					return broken;
 			} catch (Exception e1)
 			{
-				DebugWindow.println("ERROR: fillSpaces crashed. Take a look at the trace. Using Default solver.");
-				e1.printStackTrace();
 			}
 		}
 
@@ -133,8 +123,6 @@ public class SolverController
 				return broken;
 		} catch (Exception e)
 		{
-			DebugWindow.println("ERROR: ImmediatePoint crashed. Take a look at the trace. Using Default solver.");
-			e.printStackTrace();
 		}
 
 		// follow chain down/across board
