@@ -11,7 +11,7 @@ public interface BoardInterface
 	/**
 	 * Returns the {@link NodeInterface} representing this position
 	 * @param x The row (int) we are representing
-	 * @param y The column (char) we are represening
+	 * @param y The column (char) we are representing
 	 * @return The respective {@link NodeInterface}
 	 */
 	public NodeInterface getNode(int x, char y);

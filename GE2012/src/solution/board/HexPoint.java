@@ -8,7 +8,7 @@ import solution.CurrentGame;
 
 /**
  * Represents a single point on the hex grid
- * This is done by using a 0-11 number system for the rows, and a a-k system for the columns
+ * This is done by using a 1-11 number system for the rows, and a 'a'-'k' system for the columns
  * 
  * @author Daniel Centore
  * @author Mike DiBuduo
@@ -151,10 +151,7 @@ public class HexPoint
 
 		return true;
 	}
-
-	/**
-	 * A simple string representation of our HexPoint
-	 */
+	
 	@Override
 	public String toString()
 	{
