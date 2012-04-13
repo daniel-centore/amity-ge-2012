@@ -11,9 +11,12 @@ import solution.board.implementations.indivBoard.IndivNode;
 import solution.debug.DebugWindow;
 
 /**
- * A board used for calculating distances using a modification of Dijkstra's algorithm 
+ * A board used for calculating the dificulty to reach a node using a modification of Dijkstra's algorithm
+ * Distance between nodes plays a major factor in calculating the difficulty
+ * Certain patterns are weighted higher in order to avoid them
  * 
  * @author Daniel Centore
+ * @author Mike DiBuduo
  *
  */
 public class DijkstraBoard
@@ -115,7 +118,7 @@ public class DijkstraBoard
 	}
 
 	/**
-	 * Finds the distance between two nodes
+	 * Finds the dificulty of a connection between two nodes
 	 * @param a The first node
 	 * @param b The second node
 	 * @return The distance (arbitrary units)
@@ -129,7 +132,7 @@ public class DijkstraBoard
 	}
 
 	/**
-	 * Finds the distance between two nodes
+	 * Finds the difficulty of a connection between two nodes
 	 * @param a The first node
 	 * @param dB The second node
 	 * @return The distance (arbitrary units)
@@ -142,7 +145,7 @@ public class DijkstraBoard
 	}
 
 	/**
-	 * Finds the distance between two nodes
+	 * Finds the difficulty of a connection between two nodes
 	 * @param dA The first node
 	 * @param dB The second node
 	 * @return The distance (arbitrary units)
@@ -200,7 +203,7 @@ public class DijkstraBoard
 	}
 
 	/**
-	 * Resets the node's distances so we can run a new algorithm round
+	 * Resets the node's difficulties so we can run a new algorithm round
 	 */
 	private void resetNodes()
 	{
@@ -209,7 +212,7 @@ public class DijkstraBoard
 	}
 
 	/**
-	 * Marks to nodes as eachother's neighbors
+	 * Marks two nodes as each other's neighbors
 	 * @param a The first node
 	 * @param b The second node
 	 */

@@ -8,7 +8,7 @@ import java.util.List;
  * Some may have it represent one position, others may have it represent blobs.
  * 
  * @author Daniel Centore
- * @author Mike
+ * @author Mike DiBuduo
  *
  */
 public interface NodeInterface

@@ -25,7 +25,7 @@ public class MapTools
 	 *    anyways.
 	 * @param solverController The {@link SolverController} we are linked with
 	 * @param left The side to check for
-	 * @return true if there is a two-chain path across the board, false if not
+	 * @return True if there is a two-chain path across the board, false if not
 	 */
 	protected boolean across(SolverController solverController, boolean left)
 	{
@@ -211,7 +211,7 @@ public class MapTools
 	/**
 	 * Checks if a two chain has been broken. 
 	 * @param solverController {@link SolverController} we're connected to
-	 * @return the {@link HexPoint} needed to fix a broken two-chain (or null if none are broken)
+	 * @return The {@link HexPoint} needed to fix a broken two-chain (or null if none are broken)
 	 */
 	protected HexPoint twoChainsBroken(SolverController solverController, boolean force)
 	{

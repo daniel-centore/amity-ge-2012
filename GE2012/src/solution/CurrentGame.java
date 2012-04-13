@@ -25,12 +25,13 @@ public class CurrentGame
 {
 	public static final int CHARACTER_SUBTRACT = 96; // subtract this from a character to get it's integer value (starting at 1)
 
-	private BoardController boardController;
+	private BoardController boardController; 
 	private SolverController solverController;
 
-	public static final int CONNECT_NUMBERS = 0; // connect from 1-11 wins (white)
-	public static final int CONNECT_LETTERS = 1; // connect from A-K wins (black)
-	private int connectRoute = -1; // the connection direction we need to solve for to win
+	//variable for determining which sides are solver is trying to connect
+	public static final int CONNECT_NUMBERS = 0; // tring to connect from 1-11 (white)
+	public static final int CONNECT_LETTERS = 1; // tring to connect from A-K (black)
+	private int connectRoute = -1; // a variable that stores the sides we are tring to connect (0 for black, 1 for white)
 
 	/**
 	 * Initializes our controllers and such (can't do this until we've established 'this'!)
@@ -76,15 +77,11 @@ public class CurrentGame
 
 			try
 			{
-				move = solverController.getMove(point);// .toHexPoint();
+				move = solverController.getMove(point);
 
 				if (solverController.getFirst() == null)
 					solverController.setFirst(move);
-
-				// DijkstraBoard board = new DijkstraBoard(boardController.getIndivBoard(), this);
-
-				// DebugWindow.println("Weight: "+board.findDistance(new HexPoint(3, 'd'), board.getWallA()));
-
+				
 			} catch (Exception e)
 			{
 				DebugWindow.println("ERROR: CHECK THE STACK TRACE!!!!");
@@ -107,15 +104,14 @@ public class CurrentGame
 		DebugWindow.println("OUR MOVE:" + point.toString());
 
 		boardController.applyMove(point.getX(), point.getY(), Player.ME);
-		// /\ == == /\
 
 		return result;
 	}
 
 	/**
-	 * selects a random {@link HexMove}
-	 * @param state the current {@link GameState}
-	 * @return a random {@link HexMove}
+	 * Selects a random {@link HexMove}
+	 * @param state The current {@link GameState}
+	 * @return A random, valid {@link HexMove}
 	 */
 	public HexMove chooseRandomPoint(GameState state)
 	{
@@ -139,9 +135,9 @@ public class CurrentGame
 	}
 
 	/**
-	 * Converts one of our {@link HexPoint}s in to one of their {@link HexMove}s
+	 * Converts one of our {@link HexPoint}s in to a valid {@link HexMove}
 	 * @param point The {@link HexPoint} to convert
-	 * @return A nice {@link HexMove}
+	 * @return The {@link HexMove} representation of our point
 	 */
 	public HexMove toHexMove(HexPoint point)
 	{
@@ -153,7 +149,7 @@ public class CurrentGame
 
 	/**
 	 * Converts the {@link String} we got with the last move to a {@link HexPoint}
-	 * @param move A {@link String} in the format of x-y (ie 3-4) where x is the row (starting at 0) and y is the column
+	 * @param move A {@link String} in the format of x-y (ie 3-4) where x is the row (starting at 0) and y is the column(starting at a)
 	 * @return A {@link HexPoint} following our standards
 	 */
 	public HexPoint parseTheirString(String move)
@@ -170,7 +166,7 @@ public class CurrentGame
 
 	/**
 	 * Gets the {@link BoardController} we are using in this game
-	 * @return
+	 * @return The current {@link BoardController}
 	 */
 	public BoardController getBoardController()
 	{
@@ -179,7 +175,7 @@ public class CurrentGame
 
 	/**
 	 * Gets the {@link SolverController} we are using in this game
-	 * @return the current {@link SolverController}
+	 * @return The current {@link SolverController}
 	 */
 	public SolverController getSolverController()
 	{
@@ -187,14 +183,18 @@ public class CurrentGame
 	}
 
 	/**
-	 * gets the connection route we need to take in order to win
-	 * @return the current connection direction
+	 * Gets the connection route we need to take in order to win
+	 * @return The current connection direction
 	 */
 	public int getConnectRoute()
 	{
 		return connectRoute;
 	}
 
+	/**
+	 * Sets the connection route for this game
+	 * @param connectRoute The sides to connect
+	 */
 	public void setConnectRoute(int connectRoute)
 	{
 		this.connectRoute = connectRoute;
