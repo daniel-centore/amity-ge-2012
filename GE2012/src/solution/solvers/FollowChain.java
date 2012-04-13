@@ -14,6 +14,7 @@ import solution.board.implementations.indivBoard.IndivNode;
  * Solver which has us push towards both sides using weighted chains of nodes
  * 
  * @author Daniel Centore
+ * @author Mike DiBuduo
  *
  */
 public class FollowChain
@@ -27,8 +28,8 @@ public class FollowChain
 
 	/**
 	 * Gets the next {@link HexPoint} in order to follow a two-chain across the board
-	 * @param solverController TODO
-	 * @param lastMove 
+	 * @param solverController The current {@link SolverController}
+	 * @param lastMove The last move made by the opponent
 	 * @return The next {@link HexPoint} to continue the chain
 	 */
 	protected HexPoint followChain(SolverController solverController, HexPoint lastMove)
@@ -116,7 +117,6 @@ public class FollowChain
 			return bestRight;
 	}
 
-	// finds all enemy point within radius within
 	/**
 	 * Counts how many enemy hexes are in a certain radius from one of our points
 	 * @param ours The {@link HexPoint} representing where we are
@@ -146,7 +146,7 @@ public class FollowChain
 	/**
 	 * Figures out how hard it would be to get to the closest wall
 	 * @param solverController Our {@link SolverController}
-	 * @param pnt the starting {@link HexPoint}
+	 * @param pnt The starting {@link HexPoint}
 	 * @param left Are we on the left side?
 	 * @return The difficulty (arbitrary scale)
 	 */

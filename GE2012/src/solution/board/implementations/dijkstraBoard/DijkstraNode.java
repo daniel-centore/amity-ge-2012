@@ -60,7 +60,7 @@ public class DijkstraNode
 	}
 	
 	/**
-	 * Resets the node so we can do another round of distance finding
+	 * Resets the node so we can do another round of difficulty finding
 	 */
 	protected void resetNode()
 	{

@@ -47,7 +47,8 @@ public class SolverController
 
 	/**
 	 * Chooses our next move
-	 * @return the next {@link HexPoint} to occupy
+	 * @param lastMove The last move made by the opponent
+	 * @return The next {@link HexPoint} to occupy
 	 */
 	public HexPoint getMove(HexPoint lastMove)
 	{
@@ -243,7 +244,9 @@ public class SolverController
 
 	/**
 	 * Checks if two-chains to the walls are broken
-	 * @return the {@link HexPoint} needed to fix a broken two-chain between a point and the wall (or null if none are broken)
+	 * @param force True if we want to force a connection to the wall, false if not
+	 * @param left Are we on the left side? 
+	 * @return The {@link HexPoint} needed to fix a broken two-chain between a point and the wall (or null if none are broken)
 	 */
 	private HexPoint baseTwoChainsBroken(boolean force, boolean left)
 	{

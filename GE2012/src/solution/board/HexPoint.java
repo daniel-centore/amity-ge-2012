@@ -8,6 +8,7 @@ import solution.CurrentGame;
 
 /**
  * Represents a single point on the hex grid
+ * This is done by using a 0-11 number system for the rows, and a a-k system for the columns
  * 
  * @author Daniel Centore
  * @author Mike DiBuduo
@@ -33,7 +34,7 @@ public class HexPoint
 
 	/**
 	 * Returns true if its a valid point on a board
-	 * @return true if the point is in the 11x11 grid, false if not
+	 * @return True if the point is in the 11x11 grid, false if not
 	 */
 	public boolean isGood()
 	{
@@ -43,7 +44,7 @@ public class HexPoint
 
 	/**
 	 * Finds the 2 connections to a 2-bridge
-	 * @param bridge Must create a 2-bridge with this
+	 * @param bridge The second point that must be included in the 2-bridge
 	 * @return the 2 {@link HexPoint}s that can complete the two-chain
 	 */
 	public List<HexPoint> connections(HexPoint bridge)
@@ -68,7 +69,7 @@ public class HexPoint
 
 	/**
 	 * Generates an array of {@link HexPoint}s next to this {@link HexPoint}
-	 * @return an array of all the {@link HexPoint}s touching this {@link HexPoint}
+	 * @return An array of all the {@link HexPoint}s touching this {@link HexPoint}
 	 */
 	public List<HexPoint> touching()
 	{
@@ -102,7 +103,7 @@ public class HexPoint
 
 	/**
 	 * Sets the row
-	 * @param x The row to set it to
+	 * @param x The row to set this point to
 	 */
 	public void setX(int x)
 	{
@@ -110,7 +111,7 @@ public class HexPoint
 	}
 
 	/**
-	 * Gets the column as a char
+	 * Gets the column (char) of the point
 	 * @return y
 	 */
 	public char getY()
@@ -120,7 +121,7 @@ public class HexPoint
 
 	/**
 	 * Sets the column
-	 * @param y 
+	 * @param y The column to set this point to
 	 */
 	public void setY(char y)
 	{
@@ -151,6 +152,9 @@ public class HexPoint
 		return true;
 	}
 
+	/**
+	 * A simple string representation of our HexPoint
+	 */
 	@Override
 	public String toString()
 	{

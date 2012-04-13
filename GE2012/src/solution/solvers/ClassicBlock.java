@@ -203,7 +203,7 @@ public class ClassicBlock
 			group = groupD;
 		}
 
-		// No calculate the new set of points based on the differences in theirs
+		// Now calculate the new set of points based on the differences in theirs
 		for (int i = 0; i < 4; i++)
 		{
 			int xDiff = group[0].getX() - group[i + 1].getX();

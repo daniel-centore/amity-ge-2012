@@ -56,6 +56,7 @@ public class IndivNode implements NodeInterface
 	}
 
 	/**
+	 * Gets the row for this node
 	 * @return The 'x' location of this spot
 	 */
 	public int getX()
@@ -64,6 +65,7 @@ public class IndivNode implements NodeInterface
 	}
 
 	/**
+	 * gets the column for this node
 	 * @return The 'y' location of this spot
 	 */
 	public char getY()
@@ -120,10 +122,10 @@ public class IndivNode implements NodeInterface
 	}
 
 	/**
-	 * checks to see if all of the points in an {@link List<E>} are unoccupied
-	 * @param connections the {@link List<E>} to check
-	 * @param board the current {@link IndivBoard}
-	 * @return true if all are unoccupied, false if any one {@link HexPoint} is occupied
+	 * Checks to see if all of the points in an {@link List<E>} are unoccupied
+	 * @param connections The {@link List<E>} to check
+	 * @param board The current {@link IndivBoard}
+	 * @return True if all are unoccupied, false if any one {@link HexPoint} is occupied
 	 */
 	public static boolean empty(List<HexPoint> connections, IndivBoard board)
 	{
