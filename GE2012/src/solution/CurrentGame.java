@@ -11,7 +11,6 @@ import java.util.ArrayList;
 import solution.board.BoardController;
 import solution.board.HexPoint;
 import solution.board.Player;
-import solution.debug.DebugWindow;
 import solution.solvers.SolverController;
 
 /**
@@ -68,7 +67,6 @@ public class CurrentGame
 			// they just went - time to counter
 
 			// apply their move to our boards
-			DebugWindow.println("THEIR MOVE:" + point.toString());
 			boardController.applyMove(point.getX(), point.getY(), Player.YOU);
 
 			// calculate our next move
@@ -84,13 +82,10 @@ public class CurrentGame
 				
 			} catch (Exception e)
 			{
-				DebugWindow.println("ERROR: CHECK THE STACK TRACE!!!!");
-				e.printStackTrace();
 			}
 
 			if (move == null)
 			{
-				DebugWindow.println("WARNING: Resorting to random because we couldn't find a usable path");
 				result = chooseRandomPoint(state);
 			}
 			else
@@ -100,8 +95,6 @@ public class CurrentGame
 
 		// apply our move to the board
 		point = parseTheirString(result.toString());
-
-		DebugWindow.println("OUR MOVE:" + point.toString());
 
 		boardController.applyMove(point.getX(), point.getY(), Player.ME);
 

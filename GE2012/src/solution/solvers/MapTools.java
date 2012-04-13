@@ -7,7 +7,6 @@ import solution.CurrentGame;
 import solution.board.HexPoint;
 import solution.board.Player;
 import solution.board.implementations.indivBoard.IndivNode;
-import solution.debug.DebugWindow;
 
 /**
  * Class which handles functions directly pertaining to the structure of the map (board)
@@ -113,8 +112,6 @@ public class MapTools
 				}
 			}
 		}
-
-		DebugWindow.println("Left: " + a + ". Right: " + b + ".");
 
 		return (left ? a : b);
 
